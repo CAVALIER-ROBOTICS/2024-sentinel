@@ -24,9 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   XboxController driver = new XboxController(0);
   DriveSubsystem driveSubsystem = new DriveSubsystem();
-  IntakeSubsystem intake = new IntakeSubsystem();
-
-  int runIntake = 4;
+  // IntakeSubsystem intake = new IntakeSubsystem();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -47,11 +45,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    
-   if (driver.getLeftBumperPressed()) {
-
-    intake.runIntake();
-   }
   }
 
   /**
