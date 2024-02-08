@@ -23,8 +23,12 @@ public final class Constants {
 
   public static final double retractedPos = 0;
   public static final double extendedPos = .7;
-  
 
+  public static final double FLEFT_OFFSET = -2.876213977285577;
+  public static final double FRIGHT_OFFSET = -2.311709047343661;
+  public static final double BLEFT_OFFSET = -2.16444689170664;
+  public static final double BRIGHT_OFFSET = -0.193281579273591;
+  
   public static final int FLEFT_DRIVE_ID = 1;
   public static final int FLEFT_STEER_ID = 2;
 
@@ -49,14 +53,15 @@ public final class Constants {
   public static final int bottom_shooter_id = 14;
   public static final int top_shooter_id = 15;
   
+  public static final String CANIVORE = "OTHERCANIVORE";
 
   private static double L = .5;
   private static double W = .5;
 
   public static final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     new Translation2d(L/2, W/2),
-    new Translation2d(-L/2, W/2),
     new Translation2d(L/2, -W/2),
+    new Translation2d(-L/2, W/2),
     new Translation2d(-L/2, -W/2)
   );
 
