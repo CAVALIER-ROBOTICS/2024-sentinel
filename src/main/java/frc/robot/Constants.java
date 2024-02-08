@@ -37,13 +37,17 @@ public final class Constants {
   public static final int bright_drive_id = 7;
   public static final int bright_steer_id = 8;
 
-  public static final int fleft_cancoder_id = 10;
-  public static final int fright_cancoder_id = 11;
-  public static final int bleft_cancoder_id = 12;
-  public static final int bright_cancoder_id = 13;
+  // public static final int fleft_cancoder_id = 10;
+  // public static final int fright_cancoder_id = 11;
+  // public static final int bleft_cancoder_id = 12;
+  // public static final int bright_cancoder_id = 13;
 
+  public static final int right_shooter_pivot = 11;
+  public static final int left_shooter_pivot = 12;
+  public static final int kicker = 13;
   public static final int bottom_shooter_id = 14;
   public static final int top_shooter_id = 15;
+  
 
   private static double L = .5;
   private static double W = .5;
