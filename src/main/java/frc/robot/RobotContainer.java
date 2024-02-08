@@ -9,6 +9,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.RobotDrive;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -23,12 +24,17 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   XboxController driver = new XboxController(0);
   DriveSubsystem driveSubsystem = new DriveSubsystem();
+  IntakeSubsystem intake = new IntakeSubsystem();
+
+  int runIntake = 4;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     driveSubsystem.setDefaultCommand(new RobotDrive(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX));
     // Configure the trigger bindings
     configureBindings();
+
+    
   }
 
   /**
@@ -42,6 +48,10 @@ public class RobotContainer {
    */
   private void configureBindings() {
     
+   if (driver.getLeftBumperPressed()) {
+
+    intake.runIntake();
+   }
   }
 
   /**

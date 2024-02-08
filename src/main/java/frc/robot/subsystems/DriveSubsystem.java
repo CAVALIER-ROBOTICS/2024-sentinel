@@ -14,8 +14,8 @@ public class DriveSubsystem extends SubsystemBase {
   NeoSteveModule fleft, fright, bleft, bright;
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
-    fleft = new NeoSteveModule(Constants.FLEFT_DRIVE_ID, Constants.FLEFT_STEER_ID, Constants.fleft_cancoder_id, 0);
-    fright = new NeoSteveModule(Constants.FRIGHT_DRIVE_ID, Constants.FRIGHT_STEER_ID, Constants.fright_cancoder_id, 0);
+    fleft = new NeoSteveModule(Constants.FLEFT_DRIVE_ID, Constants.FRIGHT_STEER_ID, Constants.fleft_cancoder_id, 0);
+    fright = new NeoSteveModule(Constants.FRIGHT_DRIVE_ID, Constants.FLEFT_STEER_ID, Constants.fright_cancoder_id, 0);
     bleft = new NeoSteveModule(Constants.bleft_drive_id, Constants.bleft_steer_id, Constants.bleft_cancoder_id, 0);
     bright = new NeoSteveModule(Constants.bright_drive_id, Constants.bright_steer_id, Constants.bright_cancoder_id, 0);
   }
