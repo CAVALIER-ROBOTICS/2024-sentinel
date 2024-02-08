@@ -39,15 +39,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void runIntake() {
-    if (isExtended) {
-
-      //stopIntake();
-      isExtended = false;
-    } else {
-      
-      //intakeSpin.set(0);
-      isExtended = true;
-    }
+    isExtended = !isExtended;
   }
 
   public void stopIntake() {
