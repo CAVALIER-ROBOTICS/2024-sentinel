@@ -35,7 +35,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
     //enc.setPositionOffset(0);
     intakeLeft.setInverted(true);
+    intakeRight.setInverted(false);
     intakeSpin.setIdleMode(IdleMode.kBrake);
+    intakeRight.setIdleMode(IdleMode.kBrake);
+    intakeLeft.setIdleMode(IdleMode.kBrake);
 
   }
 

@@ -21,6 +21,9 @@ public final class Constants {
   public static final int RIGHT_INTAKE_ID = 17;
   public static final int SPIN_INTAKE_ID = 18;
 
+  public static final int LEFT_CLIMB = 20;
+  public static final int RIGHT_CLIMB = 21;
+
   public static final double retractedPos = 0;
   public static final double extendedPos = .7;
 
