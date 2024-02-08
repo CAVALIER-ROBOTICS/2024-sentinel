@@ -22,14 +22,10 @@ public class IntakeSubsystem extends SubsystemBase {
     CANSparkMax intakeRight = new CANSparkMax(Constants.RIGHT_INTAKE_ID, MotorType.kBrushless);
     CANSparkMax intakeSpin = new CANSparkMax(Constants.SPIN_INTAKE_ID, MotorType.kBrushless);
 
-
     PIDController pid = new PIDController(0, 0, 0);
     DutyCycleEncoder enc = new DutyCycleEncoder(0);
 
     boolean isExtended = false;
-
-    
-
 
   public IntakeSubsystem() {
 
@@ -42,7 +38,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
   }
 
-
   public void runIntake() {
     if (isExtended) {
 
@@ -53,18 +48,15 @@ public class IntakeSubsystem extends SubsystemBase {
       //intakeSpin.set(0);
       isExtended = true;
     }
-    
-
-
   }
 
   public void stopIntake() {
+
     intakeSpin.set(0);
     isExtended = false;
   }
 
   public void setPos() {
-
 
     if (isExtended) {
 

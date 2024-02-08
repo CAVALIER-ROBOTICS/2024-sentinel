@@ -17,6 +17,13 @@ public class ShooterSubsystem extends SubsystemBase {
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {}
 
+  /*Formula for going from degrees to setpoint
+
+   ((theta/90) * (max-min)) + min
+   90 is the range of motion
+   
+   */
+
   public void setSpeed(double speed) {
     top.set(speed);
     bottom.set(speed);
