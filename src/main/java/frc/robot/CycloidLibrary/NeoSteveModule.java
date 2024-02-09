@@ -136,10 +136,6 @@ public class NeoSteveModule {
         return (this.encoderObject.getAbsolutePosition().getValueAsDouble() * Math.PI * 2) - offset;
     }
 
-    public double getError() {
-        return ((getEncoderPosition() + Math.PI) - (setPoint + Math.PI)) % (Math.PI * 2);
-    }
-
     public double getSpeedMPS() {
         return Math.abs(driveEncoder.getVelocity());
     }

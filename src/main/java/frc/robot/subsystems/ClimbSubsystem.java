@@ -16,19 +16,16 @@ public class ClimbSubsystem extends SubsystemBase {
 
   /** Creates a new ClimbSubsystem. */
   public ClimbSubsystem() {
-
     leftClimb.setInverted(true);
     rightClimb.setInverted(false);
   }
 
   
   public void setPercentOutput(double percent) {
-
-    
+    leftClimb.set(percent);
+    rightClimb.set(percent);
   } 
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+  public void periodic() {}
 }

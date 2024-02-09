@@ -13,47 +13,65 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ShooterSubsystem extends SubsystemBase {
-  CANSparkMax top = new CANSparkMax(Constants.top_shooter_id, MotorType.kBrushless);
-  CANSparkMax bottom = new CANSparkMax(Constants.bottom_shooter_id, MotorType.kBrushless);
-  CANSparkMax left = new CANSparkMax(Constants.left_shooter_pivot, MotorType.kBrushless);
-  CANSparkMax right = new CANSparkMax(Constants.right_shooter_pivot, MotorType.kBrushless);
+  CANSparkMax top = new CANSparkMax(Constants.TOP_SHOOTER_ID, MotorType.kBrushless);
+  CANSparkMax bottom = new CANSparkMax(Constants.BOTTOM_SHOOTER_ID, MotorType.kBrushless);
+  CANSparkMax left = new CANSparkMax(Constants.LEFT_SHOOTER_PIVOT_ID, MotorType.kBrushless);
+  CANSparkMax right = new CANSparkMax(Constants.RIGHT_SHOOTER_PIVOT_ID, MotorType.kBrushless);
+  CANSparkMax kicker = new CANSparkMax(Constants.KICKER_ID, MotorType.kBrushless);
 
-  DutyCycleEncoder enc = new DutyCycleEncoder(0);
+  DutyCycleEncoder enc = new DutyCycleEncoder(1);
+  PIDController angleController = new PIDController(0, 0, 0);
 
-  double maxPos = 0;
-  double minPos = 0;
-
-  PIDController angler = new PIDController(0, 0, 0);
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
-
-    left.setInverted(true);
-    right.setInverted(false);
+    left.follow(right, false);
   }
 
-  /*Formula for going from degrees to setpoint
-
-   ((theta/90) * (max-min)) + min
-   90 is the range of motion
-   
-   */
-
-  public void setSpeed(double speed) {
+  public void setFlywheelSpeed(double speed) {
     top.set(speed);
     bottom.set(speed);
   }
 
-  public void setAngle(double theta) {
-
-    left.set(angler.calculate(enc.getAbsolutePosition(), angleToSetPoints(theta)));
-    right.set(angler.calculate(enc.getAbsolutePosition(), angleToSetPoints(theta)));
+  public void setAngleSpeed(double speed) {
+    left.set(speed);
   }
 
-  public double angleToSetPoints(double theta) {
-
-// 90 is the range of motion in degrees
-    return ((theta/90) * (maxPos - minPos)) + minPos;
+  public void setKickerSpeed(double speed) {
+    kicker.set(speed);
   }
+
+  public double getAbsolutePosition() {
+    return enc.getAbsolutePosition();
+  }
+
+  public void setPosition(double position) {
+    double setpoint = angleController.calculate(getAbsolutePosition(), position);
+    setAngleSpeed(setpoint);
+  }
+
+  public boolean atSetpoint() {
+    return angleController.atSetpoint();
+  }
+
+  /*Formula for going from degrees to setpoint
+
+  ((theta/90) * (max-min)) + min
+  90 is the range of motion
+   
+  */
+
+
+//   public void setAngle(double theta) {
+
+//     left.set(angler.calculate(enc.getAbsolutePosition(), angleToSetPoints(theta)));
+//     right.set(angler.calculate(enc.getAbsolutePosition(), angleToSetPoints(theta)));
+//   }
+
+//   public double angleToSetPoints(double theta) {
+
+// // 90 is the range of motion in degrees
+//     return ((theta/90) * (maxPos - minPos)) + minPos;
+//   }
 
   @Override
   public void periodic() {

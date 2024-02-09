@@ -30,20 +30,20 @@ public class IntakeCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    isub.setPercentOutput(set);
+    isub.setAnglePercentOutput(set);
     SmartDashboard.putBoolean("IsUp", isub.getIsUp());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    isub.setPercentOutput(0.0);
+    isub.setAnglePercentOutput(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    double goalPos = (isUp) ? Constants.extendedPos: Constants.retractedPos;
+    double goalPos = (isUp) ? Constants.EXTENDED_POS: Constants.RETRACTED_POS;
     SmartDashboard.putNumber("ShooterError", Math.abs(isub.getAbsolutePosition() - goalPos));
     if((Math.abs(goalPos - isub.getAbsolutePosition()) < .1)) {
       return true;

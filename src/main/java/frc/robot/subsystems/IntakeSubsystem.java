@@ -11,7 +11,6 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -19,16 +18,16 @@ import frc.robot.Constants;
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new Intake. */
 
-    public CANSparkMax intakeLeft = new CANSparkMax(Constants.LEFT_INTAKE_ID , MotorType.kBrushless);
+    CANSparkMax intakeLeft = new CANSparkMax(Constants.LEFT_INTAKE_ID , MotorType.kBrushless);
     CANSparkMax intakeRight = new CANSparkMax(Constants.RIGHT_INTAKE_ID, MotorType.kBrushless);
     CANSparkMax intakeSpin = new CANSparkMax(Constants.SPIN_INTAKE_ID, MotorType.kBrushless);
 
-    PIDController pid = new PIDController(0, 0, 0);
+    PIDController controller = new PIDController(0, 0, 0);
     DutyCycleEncoder enc = new DutyCycleEncoder(0);
 
     ColorSensorV3 csv3 = new ColorSensorV3(Constants.COLOR_PORT);
 
-    public boolean isExtended = false;
+    double currentGoalPos = getAbsolutePosition();
 
   public IntakeSubsystem() {
 
@@ -39,6 +38,8 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeRight.setIdleMode(IdleMode.kBrake);
     intakeLeft.setIdleMode(IdleMode.kBrake);
 
+    intakeRight.follow(intakeLeft, true);
+
   }
 
   public double getAbsolutePosition() {
@@ -46,12 +47,11 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public boolean getIsUp() {
-    return Math.abs(Constants.retractedPos - getAbsolutePosition()) < .1;
+    return Math.abs(Constants.RETRACTED_POS - getAbsolutePosition()) < .1;
   }
 
-  public void setPercentOutput(double point) {
+  public void setAnglePercentOutput(double point) {
     intakeLeft.set(point);
-    intakeRight.set(-point);
   }
 
   public void setIntakeSpin(double point) {
@@ -62,11 +62,22 @@ public class IntakeSubsystem extends SubsystemBase {
     return csv3.getProximity();
   }
 
+  public void setPosition(double position) {
+    double setpoint = controller.calculate(getAbsolutePosition(), position);
+    setAnglePercentOutput(setpoint);
+  }
+
+  public void setGoalPos(double pos) {
+    currentGoalPos = pos;
+  }
+
+  public boolean atSetpoint() {
+    return controller.atSetpoint();
+  }
+
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-
-    // setPos();
     SmartDashboard.putNumber("Intake Encoder" , enc.getAbsolutePosition());
+    // goToAbsolutePos(currentGoalPos);
   }
 }

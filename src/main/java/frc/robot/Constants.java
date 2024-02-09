@@ -25,9 +25,11 @@ public final class Constants {
   public static final int LEFT_CLIMB = 20;
   public static final int RIGHT_CLIMB = 21;
 
-  public static final double retractedPos = 0.783558944588974;
-  public static final double extendedPos = .077075026926876;
-  public static final double moveSpeed = 0.1;
+  public static final double RETRACTED_POS = 0.783558944588974;
+  public static final double EXTENDED_POS = .077075026926876;
+  public static final double INTAKE_LINEUP_POSITION = .5; //FIXME FIND THESE VALUES
+  public static final double SHOOTER_LINEUP_POSITION = .5; //FIXME FIND THESE VALUES
+  public static final double MOVE_SPEED = 0.1;
 
   public static final double FLEFT_OFFSET = -2.876213977285577;
   public static final double FRIGHT_OFFSET = -2.311709047343661;
@@ -40,23 +42,23 @@ public final class Constants {
   public static final int FRIGHT_DRIVE_ID = 3;
   public static final int FRIGHT_STEER_ID = 4;
 
-  public static final int bleft_drive_id = 5;
-  public static final int bleft_steer_id = 6;
+  public static final int BLEFT_DRIVE_ID = 5;
+  public static final int BLEFT_STEER_ID = 6;
 
-  public static final int bright_drive_id = 7;
-  public static final int bright_steer_id = 8;
+  public static final int BRIGHT_DRIVE_ID = 7;
+  public static final int BRIGHT_STEER_ID = 8;
 
-  public static final int pidgeon_2 = 19;
-  public static final int fleft_cancoder_id = 20;
-  public static final int fright_cancoder_id = 21;
-  public static final int bleft_cancoder_id = 22;
-  public static final int bright_cancoder_id = 23;
+  public static final int PIGEON = 19;
+  public static final int FLEFT_CANCODER_ID = 20;
+  public static final int FRIGHT_CANCODER_ID = 21;
+  public static final int BLEFT_CANCODER_ID = 22;
+  public static final int BRIGHT_CANCODER_ID = 23;
 
-  public static final int right_shooter_pivot = 11;
-  public static final int left_shooter_pivot = 12;
-  public static final int kicker = 13;
-  public static final int bottom_shooter_id = 14;
-  public static final int top_shooter_id = 15;
+  public static final int RIGHT_SHOOTER_PIVOT_ID = 11;
+  public static final int LEFT_SHOOTER_PIVOT_ID = 12;
+  public static final int KICKER_ID = 13;
+  public static final int BOTTOM_SHOOTER_ID = 14;
+  public static final int TOP_SHOOTER_ID = 15;
 
   public static final I2C.Port COLOR_PORT = I2C.Port.kOnboard;
   public static final int MINIMUM_PROXIMITY_TRIGGER = 1400;
