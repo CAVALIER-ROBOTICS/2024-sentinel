@@ -9,7 +9,9 @@ import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,7 +25,9 @@ public class IntakeSubsystem extends SubsystemBase {
     CANSparkMax intakeRight = new CANSparkMax(Constants.RIGHT_INTAKE_ID, MotorType.kBrushless);
     CANSparkMax intakeSpin = new CANSparkMax(Constants.SPIN_INTAKE_ID, MotorType.kBrushless);
 
-    PIDController controller = new PIDController(0, 0, 0);
+    PIDController controller = new PIDController(1.5, 0.0001, 0.05);
+    // PIDController upController= new PIDController(1.75, .0001, .05);
+    // ArmFeedforward feedforward = new ArmFeedforward(1.95, .01);
     DutyCycleEncoder enc = new DutyCycleEncoder(0);
 
     ColorSensorV3 csv3 = new ColorSensorV3(Constants.COLOR_PORT);
@@ -41,6 +45,7 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeLeft.setIdleMode(IdleMode.kBrake);
 
     intakeRight.follow(intakeLeft, true);
+    controller.enableContinuousInput(0, 1);
 
   }
 
@@ -65,7 +70,12 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void setPosition(double position) {
+    double direction = getAbsolutePosition() - position;
     double setpoint = controller.calculate(getAbsolutePosition(), position);
+    // if(direction < 0) {
+    //   setpoint = upController.calculate(getAbsolutePosition(), position);
+    // }
+    // double setpoint = controller.calculate(getAbsolutePosition(), position);
     setAnglePercentOutput(setpoint);
   }
 
@@ -81,6 +91,8 @@ public class IntakeSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Intake Encoder" , enc.getAbsolutePosition());
     SmartDashboard.putNumber("Sensor Proximty", csv3.getProximity());
+    // controller.setP(SmartDashboard.getNumber("Intake angle P", 0));
+    // SmartDashboard.putNumber("Current P", controller.getP());
     // goToAbsolutePos(currentGoalPos);
   }
 }

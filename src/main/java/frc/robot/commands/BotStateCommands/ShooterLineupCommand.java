@@ -25,8 +25,8 @@ public class ShooterLineupCommand extends Command {
 
   @Override
   public void execute() {
-    shooterSub.setPosition(Constants.SHOOTER_LINEUP_POSITION);
-    intakeSubsystem.setPosition(Constants.INTAKE_LINEUP_POSITION);
+    // shooterSub.setPosition(Constants.SHOOTER_LINEUP_POSITION);
+    intakeSubsystem.setPosition(Constants.RETRACTED_POS);
   }
 
   @Override
@@ -36,7 +36,9 @@ public class ShooterLineupCommand extends Command {
   }
 
   @Override
+  
   public boolean isFinished() {
-    return shooterSub.atSetpoint() && intakeSubsystem.atSetpoint();
+    return false;
+    // return shooterSub.atSetpoint() && intakeSubsystem.atSetpoint();
   }
 }

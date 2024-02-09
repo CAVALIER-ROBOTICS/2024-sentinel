@@ -31,8 +31,8 @@ public final class Constants {
 
   public static final double RETRACTED_POS = 0.783558944588974;
   public static final double EXTENDED_POS = .077075026926876;
-  public static final double INTAKE_LINEUP_POSITION = .5; //FIXME FIND THESE VALUES
-  public static final double SHOOTER_LINEUP_POSITION = .5; //FIXME FIND THESE VALUES
+  public static final double INTAKE_LINEUP_POSITION = Constants.RETRACTED_POS; //FIXME FIND THESE VALUES
+  public static final double SHOOTER_LINEUP_POSITION = .0810; //FIXME FIND THESE VALUES
   public static final double MOVE_SPEED = 0.1;
 
   public static final double FLEFT_OFFSET = -2.876213977285577;

@@ -5,7 +5,6 @@
 package frc.robot;
 
 import frc.robot.commands.ClimbCommand;
-import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.SpinCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
@@ -16,6 +15,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -29,10 +29,11 @@ public class RobotContainer {
   ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   IntakeSubsystem intake = new IntakeSubsystem();
   ClimbSubsystem climbSubsystem = new ClimbSubsystem();
-
+  
   public RobotContainer() {
-    driveSubsystem.setDefaultCommand(new GarrettDrive(driveSubsystem, driver::getLeftY, driver::getLeftX, driver::getRightTriggerAxis, driver::getRightX));
-    climbSubsystem.setDefaultCommand(new ClimbCommand(climbSubsystem, operator::getRightY));
+    // SmartDashboard.putNumber("Intake angle P", 0);
+    // driveSubsystem.setDefaultCommand(new GarrettDrive(driveSubsystem, driver::getLeftY, driver::getLeftX, driver::getRightTriggerAxis, driver::getRightX));
+    // climbSubsystem.setDefaultCommand(new ClimbCommand(climbSubsystem, operator::getRightY));
     
     configureBindings();
   }
