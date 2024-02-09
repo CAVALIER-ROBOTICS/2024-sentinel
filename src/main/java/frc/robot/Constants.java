@@ -60,6 +60,8 @@ public final class Constants {
   public static final int BOTTOM_SHOOTER_ID = 14;
   public static final int TOP_SHOOTER_ID = 15;
 
+  public static final int SHOOTER_LIMIT_SWITCH_ID = 1;
+
   public static final I2C.Port COLOR_PORT = I2C.Port.kOnboard;
   public static final int MINIMUM_PROXIMITY_TRIGGER = 1400;
   

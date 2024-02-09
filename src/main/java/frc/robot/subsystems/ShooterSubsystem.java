@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,6 +19,8 @@ public class ShooterSubsystem extends SubsystemBase {
   CANSparkMax left = new CANSparkMax(Constants.LEFT_SHOOTER_PIVOT_ID, MotorType.kBrushless);
   CANSparkMax right = new CANSparkMax(Constants.RIGHT_SHOOTER_PIVOT_ID, MotorType.kBrushless);
   CANSparkMax kicker = new CANSparkMax(Constants.KICKER_ID, MotorType.kBrushless);
+
+  DigitalInput limit = new DigitalInput(Constants.SHOOTER_LIMIT_SWITCH_ID);
 
   DutyCycleEncoder enc = new DutyCycleEncoder(1);
   PIDController angleController = new PIDController(0, 0, 0);
@@ -53,6 +56,9 @@ public class ShooterSubsystem extends SubsystemBase {
     return angleController.atSetpoint();
   }
 
+  public boolean hasNoteInShooter() {
+    return limit.get();
+  }
   /*Formula for going from degrees to setpoint
 
   ((theta/90) * (max-min)) + min

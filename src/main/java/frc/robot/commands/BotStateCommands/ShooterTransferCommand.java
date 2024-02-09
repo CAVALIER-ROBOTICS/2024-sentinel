@@ -37,6 +37,6 @@ public class ShooterTransferCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    return false; //TODO IMPLEMENT LIMIT SWITCH
+    return shooterSubsystem.hasNoteInShooter();
   }
 }
