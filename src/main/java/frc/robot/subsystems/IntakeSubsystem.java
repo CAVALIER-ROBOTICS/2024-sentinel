@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,6 +27,7 @@ public class IntakeSubsystem extends SubsystemBase {
     DutyCycleEncoder enc = new DutyCycleEncoder(0);
 
     ColorSensorV3 csv3 = new ColorSensorV3(Constants.COLOR_PORT);
+    DigitalInput breamBreak = new DigitalInput(3);
 
     double currentGoalPos = getAbsolutePosition();
 
@@ -78,6 +80,7 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Intake Encoder" , enc.getAbsolutePosition());
+    SmartDashboard.putNumber("Sensor Proximty", csv3.getProximity());
     // goToAbsolutePos(currentGoalPos);
   }
 }

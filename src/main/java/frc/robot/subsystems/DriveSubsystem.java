@@ -21,7 +21,7 @@ import frc.robot.CycloidLibrary.NeoSteveModule;
 public class DriveSubsystem extends SubsystemBase {
   NeoSteveModule fleft, fright, bleft, bright;
 
-  Pigeon2 pigeon = new Pigeon2(Constants.PIGEON);
+  Pigeon2 pigeon = new Pigeon2(Constants.PIGEON, Constants.CANIVORE);
   SwerveDriveOdometry odometry;
   Field2d field;
   /** Creates a new DriveSubsystem. */
@@ -29,7 +29,7 @@ public class DriveSubsystem extends SubsystemBase {
     fleft = new NeoSteveModule(Constants.FLEFT_DRIVE_ID, Constants.FLEFT_STEER_ID, Constants.FLEFT_CANCODER_ID, Constants.FLEFT_OFFSET, Constants.CANIVORE);
     fright = new NeoSteveModule(Constants.FRIGHT_DRIVE_ID, Constants.FRIGHT_STEER_ID, Constants.FRIGHT_CANCODER_ID, Constants.FRIGHT_OFFSET, Constants.CANIVORE);
     bleft = new NeoSteveModule(Constants.BLEFT_DRIVE_ID, Constants.BLEFT_STEER_ID, Constants.BLEFT_CANCODER_ID, Constants.BLEFT_OFFSET, Constants.CANIVORE);
-    bright = new NeoSteveModule(Constants.BRIGHT_DRIVE_ID, Constants.BRIGHT_STEER_ID, Constants.BLEFT_CANCODER_ID, Constants.BRIGHT_OFFSET, Constants.CANIVORE);
+    bright = new NeoSteveModule(Constants.BRIGHT_DRIVE_ID, Constants.BRIGHT_STEER_ID, Constants.BRIGHT_CANCODER_ID, Constants.BRIGHT_OFFSET, Constants.CANIVORE);
 
     odometry = new SwerveDriveOdometry(Constants.m_kinematics, getAngle(), getSwerveModulePositions());
     field = new Field2d();
