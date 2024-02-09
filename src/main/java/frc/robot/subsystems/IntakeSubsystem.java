@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -18,64 +19,54 @@ import frc.robot.Constants;
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new Intake. */
 
-    CANSparkMax intakeLeft = new CANSparkMax(Constants.LEFT_INTAKE_ID , MotorType.kBrushless);
+    public CANSparkMax intakeLeft = new CANSparkMax(Constants.LEFT_INTAKE_ID , MotorType.kBrushless);
     CANSparkMax intakeRight = new CANSparkMax(Constants.RIGHT_INTAKE_ID, MotorType.kBrushless);
     CANSparkMax intakeSpin = new CANSparkMax(Constants.SPIN_INTAKE_ID, MotorType.kBrushless);
 
     PIDController pid = new PIDController(0, 0, 0);
     DutyCycleEncoder enc = new DutyCycleEncoder(0);
 
-    boolean isExtended = false;
+    ColorSensorV3 csv3 = new ColorSensorV3(Constants.COLOR_PORT);
+
+    public boolean isExtended = false;
 
   public IntakeSubsystem() {
 
     //enc.setPositionOffset(0);
     intakeLeft.setInverted(true);
-    intakeRight.setInverted(false);
+    intakeRight.follow(intakeLeft, true);
     intakeSpin.setIdleMode(IdleMode.kBrake);
     intakeRight.setIdleMode(IdleMode.kBrake);
     intakeLeft.setIdleMode(IdleMode.kBrake);
 
   }
 
-  public void runIntake() {
-    isExtended = !isExtended;
+  public double getAbsolutePosition() {
+    return enc.getAbsolutePosition();
   }
 
-  public void stopIntake() {
-
-    intakeSpin.set(0);
-    isExtended = false;
+  public boolean getIsUp() {
+    return Math.abs(Constants.retractedPos - getAbsolutePosition()) < .1;
   }
 
-  public void setPos() {
+  public void setPercentOutput(double point) {
+    intakeLeft.set(point);
+    intakeRight.set(-point);
+  }
 
-    if (isExtended) {
+  public void setIntakeSpin(double point) {
+    intakeSpin.set(point);
+  }
 
-      intakeLeft.set(pid.calculate(enc.getAbsolutePosition(), Constants.extendedPos)); 
-      intakeRight.set(pid.calculate(enc.getAbsolutePosition(), Constants.extendedPos));
-      
-    } else {
-
-      intakeLeft.set(pid.calculate(enc.getAbsolutePosition(), Constants.retractedPos)); 
-      intakeRight.set(pid.calculate(enc.getAbsolutePosition(), Constants.retractedPos));
-    }
-
-    if(isExtended) {
-
-      intakeSpin.set(.5);
-    } else {
-
-      intakeSpin.set(0);
-    }
+  public double getProximity() {
+    return csv3.getProximity();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
 
-    setPos();
+    // setPos();
     SmartDashboard.putNumber("Intake Encoder" , enc.getAbsolutePosition());
-
   }
 }

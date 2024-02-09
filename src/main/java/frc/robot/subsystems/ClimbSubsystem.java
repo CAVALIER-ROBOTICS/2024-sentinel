@@ -21,17 +21,11 @@ public class ClimbSubsystem extends SubsystemBase {
     rightClimb.setInverted(false);
   }
 
-  public void raiseClimb() {
+  
+  public void setPercentOutput(double percent) {
 
-    leftClimb.set(0);
-    rightClimb.set(0);
-  }
-
-  public void lowerClimb() {
-
-    leftClimb.set(0);
-    rightClimb.set(0);
-  }
+    
+  } 
 
   @Override
   public void periodic() {

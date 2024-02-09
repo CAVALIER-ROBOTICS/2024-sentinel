@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.I2C;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -24,8 +25,9 @@ public final class Constants {
   public static final int LEFT_CLIMB = 20;
   public static final int RIGHT_CLIMB = 21;
 
-  public static final double retractedPos = 0;
-  public static final double extendedPos = .7;
+  public static final double retractedPos = 0.783558944588974;
+  public static final double extendedPos = .077075026926876;
+  public static final double moveSpeed = 0.1;
 
   public static final double FLEFT_OFFSET = -2.876213977285577;
   public static final double FRIGHT_OFFSET = -2.311709047343661;
@@ -55,6 +57,9 @@ public final class Constants {
   public static final int kicker = 13;
   public static final int bottom_shooter_id = 14;
   public static final int top_shooter_id = 15;
+
+  public static final I2C.Port COLOR_PORT = I2C.Port.kOnboard;
+  public static final int MINIMUM_PROXIMITY_TRIGGER = 1400;
   
   public static final String CANIVORE = "OTHERCANIVORE";
 
