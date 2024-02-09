@@ -18,6 +18,10 @@ import edu.wpi.first.wpilibj.I2C;
  */
 public final class Constants {
 
+  public static final int SPEED_SHOOTER = 1;
+  public static final int MAX_POSITION_SHOOTER = 1; //FIXME
+  public static final int MIN_POSITITON_SHOOTER = 0; //FIXME
+
   public static final int LEFT_INTAKE_ID = 16;
   public static final int RIGHT_INTAKE_ID = 17;
   public static final int SPIN_INTAKE_ID = 18;
