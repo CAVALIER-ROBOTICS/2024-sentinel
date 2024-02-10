@@ -20,9 +20,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 
 public class NeoSteveModule {
-    double NOMINAL_VOLTAGE = 12.8; // Can't be real
+    double NOMINAL_VOLTAGE = Constants.NOMINAL_VOLTAGE; // Can't be real
 
     CANSparkMax driveMotor;
     CANSparkMax steerMotor;
@@ -79,12 +80,17 @@ public class NeoSteveModule {
         configPls.apply(canCon);
     }
 
+    public void configureRampRate(double ramp) {
+        driveMotor.setClosedLoopRampRate(ramp);
+    }
+
     public NeoSteveModule(int drive, int steer, int encoderId, double offsetValue) {
         driveMotor = new CANSparkMax(drive, MotorType.kBrushless);
         steerMotor = new CANSparkMax(steer, MotorType.kBrushless);
         encoderObject = new CANcoder(encoderId);
         offset = offsetValue;
-
+        
+        configureRampRate(.5);
         setupEncoder(encoderObject);
         configDriveMotor(driveMotor);
         configSteerMotor(steerMotor);

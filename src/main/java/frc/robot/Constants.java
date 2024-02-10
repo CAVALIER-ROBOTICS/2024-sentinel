@@ -29,10 +29,10 @@ public final class Constants {
   public static final int LEFT_CLIMB = 24;
   public static final int RIGHT_CLIMB = 25;
 
-  public static final double RETRACTED_POS = 0.783558944588974;
+  public static final double RETRACTED_POS = 0.773558944588974;
   public static final double EXTENDED_POS = .077075026926876;
   public static final double INTAKE_LINEUP_POSITION = Constants.RETRACTED_POS;
-  public static final double SHOOTER_LINEUP_POSITION = .0810;
+  public static final double SHOOTER_LINEUP_POSITION = 0.06; 
   public static final double MOVE_SPEED = 0.1;
 
   public static final double FLEFT_OFFSET = -2.876213977285577;
@@ -67,7 +67,9 @@ public final class Constants {
   public static final int SHOOTER_LIMIT_SWITCH_ID = 2;
 
   public static final I2C.Port COLOR_PORT = I2C.Port.kOnboard;
-  public static final int MINIMUM_PROXIMITY_TRIGGER = 150;
+  public static final int MINIMUM_PROXIMITY_TRIGGER = 200;
+
+  public static final double NOMINAL_VOLTAGE = 12.2;
   
   public static final String CANIVORE = "OTHERCANIVORE";
   public static final double BOT_LENGTH = .5;

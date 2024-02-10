@@ -7,10 +7,16 @@ package frc.robot;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.ultrashot.Point2D;
+import frc.robot.ultrashot.UltraShot;
+import frc.robot.ultrashot.UltrashotConstants;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -25,6 +31,19 @@ public class Robot extends TimedRobot {
 
   String pathName = "autobuilder";
 
+  public void ultrashotTest() {
+     UltraShot shooter = new UltraShot();
+
+      shooter.setRobotPos(UltrashotConstants.robot);
+      shooter.setRobotVelocity(UltrashotConstants.robotVelocity);
+      shooter.setTargetPos(UltrashotConstants.speaker);
+      double startTime = Timer.getFPGATimestamp();
+      // for (int i = 0; i < 1; i++) {
+        Point2D angles = shooter.qoboticsUltimatum();
+        // System.out.println("phi: " + angles.getX() + "\ntheta: " + angles.getY());
+        SmartDashboard.putNumber("TimeToCalc", Timer.getFPGATimestamp() - startTime);
+      // }
+  }
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();

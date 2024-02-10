@@ -34,15 +34,14 @@ public class IntakeSubsystem extends SubsystemBase {
     double currentGoalPos = getAbsolutePosition();
 
   public IntakeSubsystem() {
-
+    // controller.setTolerance(.1);
     //enc.setPositionOffset(0);
-    intakeLeft.setInverted(true);
-    intakeRight.follow(intakeLeft, true);
+    // intakeLeft.setInverted(true);
     intakeSpin.setIdleMode(IdleMode.kBrake);
     intakeRight.setIdleMode(IdleMode.kBrake);
     intakeLeft.setIdleMode(IdleMode.kBrake);
 
-    intakeRight.follow(intakeLeft, true);
+    // intakeRight.follow(intakeLeft, true);
     controller.enableContinuousInput(0, 1);
 
   }
@@ -57,6 +56,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void setAnglePercentOutput(double point) {
     intakeLeft.set(point);
+    intakeRight.set(-point);
   }
 
   public void setIntakeSpin(double point) {
@@ -69,7 +69,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void setPosition(double position) {
     double setpoint = controller.calculate(getAbsolutePosition(), position);
-    setAnglePercentOutput(setpoint);
+    setAnglePercentOutput(-setpoint);
   }
 
   public void setGoalPos(double pos) {

@@ -5,6 +5,7 @@
 package frc.robot.commands.BotStateCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -25,14 +26,18 @@ public class ShooterTransferCommand extends Command {
 
   @Override
   public void execute() {
-    intakeSubsystem.setAnglePercentOutput(1);
-    shooterSubsystem.setKickerSpeed(1);
+    intakeSubsystem.setIntakeSpin(1);
+    shooterSubsystem.setKickerSpeed(-.5);
+    shooterSubsystem.setPosition(Constants.SHOOTER_LINEUP_POSITION);
+    intakeSubsystem.setPosition(Constants.RETRACTED_POS);
   }
 
   @Override
   public void end(boolean interrupted) {
+    intakeSubsystem.setIntakeSpin(0);
     intakeSubsystem.setAnglePercentOutput(0);
     shooterSubsystem.setKickerSpeed(0);
+    shooterSubsystem.setAngleSpeed(0);
   }
 
   @Override

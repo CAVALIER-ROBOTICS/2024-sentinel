@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -24,20 +26,36 @@ public class ShooterSubsystem extends SubsystemBase {
   DigitalInput limit = new DigitalInput(Constants.SHOOTER_LIMIT_SWITCH_ID);
 
   DutyCycleEncoder enc = new DutyCycleEncoder(1);
-  PIDController angleController = new PIDController(0, 0, 0);
+  PIDController angleController = new PIDController(1.5, 0.0001, 0.05);
+
+  RelativeEncoder rpmEncoder;
 
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
-    left.follow(right, false);
+    // angleController.setPositionTolerance(.001);
+    angleController.enableContinuousInput(0, 1);
+
+    top.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
+    bottom.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
+    left.setIdleMode(IdleMode.kBrake);
+    right.setIdleMode(IdleMode.kBrake);
+    top.setIdleMode(IdleMode.kCoast);
+    bottom.setIdleMode(IdleMode.kCoast);
+    // right.follow(left, true);
+    bottom.follow(top, true);
+
+    rpmEncoder = top.getEncoder();
   }
 
   public void setFlywheelSpeed(double speed) {
     top.set(speed);
-    bottom.set(speed);
+    // bottom.set(speed);
   }
 
   public void setAngleSpeed(double speed) {
+    SmartDashboard.putNumber("Requested shooter speed", speed);
     left.set(speed);
+    right.set(-speed);
   }
 
   public void setKickerSpeed(double speed) {
@@ -50,7 +68,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setPosition(double position) {
     double setpoint = angleController.calculate(getAbsolutePosition(), position);
-    setAngleSpeed(setpoint);
+    setAngleSpeed(-setpoint);
   }
 
   public boolean atSetpoint() {
@@ -59,6 +77,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public boolean hasNoteInShooter() {
     return limit.get();
+  }
+
+  public double getRPM() {
+    return rpmEncoder.getVelocity();
   }
   /*Formula for going from degrees to setpoint
 

@@ -7,12 +7,15 @@ package frc.robot.commands.BotStateCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 public class IntakeStateCommand extends Command {
   IntakeSubsystem intakeSubsystem;
-  public IntakeStateCommand(IntakeSubsystem intakeSubsystem) {
+  ShooterSubsystem shooterSubsystem;
+  public IntakeStateCommand(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
-    addRequirements(intakeSubsystem);
+    this.shooterSubsystem = shooterSubsystem;
+    addRequirements(intakeSubsystem, shooterSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -22,6 +25,7 @@ public class IntakeStateCommand extends Command {
   @Override
   public void execute() {
     intakeSubsystem.setPosition(Constants.EXTENDED_POS);
+    shooterSubsystem.setPosition(Constants.SHOOTER_LINEUP_POSITION);
     intakeSubsystem.setIntakeSpin(1);
   }
 
@@ -29,6 +33,7 @@ public class IntakeStateCommand extends Command {
   public void end(boolean interrupted) {
     intakeSubsystem.setIntakeSpin(0);
     intakeSubsystem.setAnglePercentOutput(0);
+    shooterSubsystem.setAngleSpeed(0);
   }
 
   @Override

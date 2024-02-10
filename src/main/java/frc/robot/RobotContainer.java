@@ -4,9 +4,14 @@
 
 package frc.robot;
 
+import frc.robot.commands.RunFlywheelCommand;
+import frc.robot.commands.StopFlywheelCommand;
+import frc.robot.commands.TestShooterAngleCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
+import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
 import frc.robot.commands.BotStateCommands.ShooterTransferCommand;
+import frc.robot.commands.DriveCommands.FieldDrive;
 import frc.robot.commands.DriveCommands.GarrettDrive;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -15,7 +20,10 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
@@ -28,11 +36,25 @@ public class RobotContainer {
   ClimbSubsystem climbSubsystem = new ClimbSubsystem();
   
   public RobotContainer() {
-    // SmartDashboard.putNumber("Intake angle P", 0);
-    // driveSubsystem.setDefaultCommand(new GarrettDrive(driveSubsystem, driver::getLeftY, driver::getLeftX, driver::getRightTriggerAxis, driver::getRightX));
-    // climbSubsystem.setDefaultCommand(new ClimbCommand(climbSubsystem, operator::getRightY));
+    shooterSubsystem.setDefaultCommand(new TestShooterAngleCommand(shooterSubsystem, () -> driver.getLeftTriggerAxis() - lol(driver.getRightBumperPressed())));
+    driveSubsystem.setDefaultCommand(new FieldDrive(
+
+    driveSubsystem,
+
+    () -> Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
+        * directionIsZero(driver.getLeftX(), driver.getLeftY()),
+
+    () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
+        * directionIsZero(driver.getLeftX(), driver.getLeftY()),
+
+    () -> driver.getRightX() * 2 * Math.PI));
     
     configureBindings();
+  }
+
+  public int lol(boolean b) {
+    if(b) {return 1;}
+    return 0;
   }
 
   public double directionIsZero(double x, double y) {
@@ -45,23 +67,21 @@ public class RobotContainer {
 
   private void configureBindings() {
     JoystickButton toggleIntake = new JoystickButton(driver, 1);
-    // toggleIntake.onTrue(new IntakeCommand(intake).andThen(new SpinCommand(intake)));
-
+    JoystickButton runFlywheel = new JoystickButton(driver, 2);
+    JoystickButton zeroGyro = new JoystickButton(driver, 4);
     SequentialCommandGroup intakeSequence = new SequentialCommandGroup(
-      new IntakeStateCommand(intake),
-      new ShooterLineupCommand(intake, shooterSubsystem),
-      new ShooterTransferCommand(intake, shooterSubsystem)
+      new IntakeStateCommand(intake, shooterSubsystem),
+      new RunCommand(() -> intake.setIntakeSpin(1), intake).raceWith(new WaitCommand(.05)),
+      new ShooterLineupCommand(intake, shooterSubsystem).raceWith(new WaitCommand(1)),
+      new ShooterTransferCommand(intake, shooterSubsystem),
+      new SendbackCommand(shooterSubsystem)
     );
 
-    toggleIntake.onTrue(intakeSequence);
-  }
+    runFlywheel.whileTrue(new RunFlywheelCommand(shooterSubsystem));
+    runFlywheel.whileFalse(new StopFlywheelCommand(shooterSubsystem));
 
-  public double directionIsZero(double x, double y) {
-    if (Math.abs(x) + Math.abs(y) < 0.1) {
-      return 0.0;
-    } else {
-      return 1.0;
-    }
+    toggleIntake.onTrue(intakeSequence);
+    zeroGyro.onTrue(new InstantCommand(driveSubsystem::zeroGyro));
   }
 
   public DriveSubsystem getDriveSubsystem() {

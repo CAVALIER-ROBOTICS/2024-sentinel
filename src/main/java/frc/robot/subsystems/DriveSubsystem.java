@@ -84,6 +84,9 @@ public class DriveSubsystem extends SubsystemBase {
     odometry.update(getAngle(), getSwerveModulePositions());
   }
 
+  public void zeroGyro() {
+    pigeon.reset();
+  }
   public void updateOdometry(Pose2d pose) {
     odometry.resetPosition(pose.getRotation(), getSwerveModulePositions(), pose);
   }
