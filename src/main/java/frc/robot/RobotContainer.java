@@ -4,21 +4,20 @@
 
 package frc.robot;
 
-import frc.robot.commands.ClimbCommand;
-import frc.robot.commands.SpinCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
 import frc.robot.commands.BotStateCommands.ShooterTransferCommand;
-import frc.robot.commands.DriveCommands.GarrettDrive;
+import frc.robot.commands.DriveCommands.FieldDrive;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
@@ -31,9 +30,20 @@ public class RobotContainer {
   ClimbSubsystem climbSubsystem = new ClimbSubsystem();
   
   public RobotContainer() {
-    // SmartDashboard.putNumber("Intake angle P", 0);
-    // driveSubsystem.setDefaultCommand(new GarrettDrive(driveSubsystem, driver::getLeftY, driver::getLeftX, driver::getRightTriggerAxis, driver::getRightX));
-    // climbSubsystem.setDefaultCommand(new ClimbCommand(climbSubsystem, operator::getRightY));
+    PathLoader.configureAutoBuilder(driveSubsystem);
+
+    driveSubsystem.setDefaultCommand(new FieldDrive(
+
+        driveSubsystem,
+
+        () -> Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
+            * directionIsZero(driver.getLeftX(), driver.getLeftY()),
+
+        () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
+            * directionIsZero(driver.getLeftX(), driver.getLeftY()),
+   
+        () -> driver.getRightX() * 2 * Math.PI));
+
     
     configureBindings();
   }
@@ -51,7 +61,19 @@ public class RobotContainer {
     toggleIntake.onTrue(intakeSequence);
   }
 
-  public Command getAutonomousCommand() {
-   return null;
+  public double directionIsZero(double x, double y) {
+    if (Math.abs(x) + Math.abs(y) < 0.1) {
+      return 0.0;
+    } else {
+      return 1.0;
+    }
+  }
+
+  public DriveSubsystem getDriveSubsystem() {
+    return driveSubsystem;
+  }
+
+  public Command getPathCommand(String path) {
+    return PathLoader.loadPath(path);
   }
 }

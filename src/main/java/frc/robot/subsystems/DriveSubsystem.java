@@ -61,6 +61,20 @@ public class DriveSubsystem extends SubsystemBase {
       bright.getSwerveModulePosition()};
   }
 
+  public SwerveModuleState[] getSwerveModuleStates() {
+    return new SwerveModuleState[] {
+      fleft.getSwerveModuleState(),
+      fright.getSwerveModuleState(),
+      bleft.getSwerveModuleState(),
+      fright.getSwerveModuleState()
+    };
+  }
+
+  public ChassisSpeeds getChassisSpeeds() {
+    SwerveModuleState[] currentStates = getSwerveModuleStates();
+    return Constants.m_kinematics.toChassisSpeeds(currentStates);
+  }
+
   public Rotation2d getAngle() {
     return Rotation2d.fromDegrees(-pigeon.getAngle());
   }
@@ -72,6 +86,14 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void updateOdometry(Pose2d pose) {
     odometry.resetPosition(pose.getRotation(), getSwerveModulePositions(), pose);
+  }
+
+  public Pose2d getOdometry() {
+    return odometry.getPoseMeters();
+  }
+
+  public void setYaw(double yaw) {
+    pigeon.setYaw(yaw);
   }
 
   @Override
