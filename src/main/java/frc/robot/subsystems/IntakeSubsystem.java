@@ -9,9 +9,7 @@ import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -70,12 +68,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void setPosition(double position) {
-    double direction = getAbsolutePosition() - position;
     double setpoint = controller.calculate(getAbsolutePosition(), position);
-    // if(direction < 0) {
-    //   setpoint = upController.calculate(getAbsolutePosition(), position);
-    // }
-    // double setpoint = controller.calculate(getAbsolutePosition(), position);
     setAnglePercentOutput(setpoint);
   }
 
