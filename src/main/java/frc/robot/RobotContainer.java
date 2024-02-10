@@ -9,6 +9,7 @@ import frc.robot.commands.SpinCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
 import frc.robot.commands.BotStateCommands.ShooterTransferCommand;
+import frc.robot.commands.DriveCommands.FieldDrive;
 import frc.robot.commands.DriveCommands.GarrettDrive;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -32,10 +33,27 @@ public class RobotContainer {
   
   public RobotContainer() {
     // SmartDashboard.putNumber("Intake angle P", 0);
-    // driveSubsystem.setDefaultCommand(new GarrettDrive(driveSubsystem, driver::getLeftY, driver::getLeftX, driver::getRightTriggerAxis, driver::getRightX));
-    // climbSubsystem.setDefaultCommand(new ClimbCommand(climbSubsystem, operator::getRightY));
+    driveSubsystem.setDefaultCommand(new FieldDrive(
+
+        driveSubsystem,
+
+        () -> Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
+            * directionIsZero(driver.getLeftX(), driver.getLeftY()),
+
+        () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
+            * directionIsZero(driver.getLeftX(), driver.getLeftY()),
+   
+        () -> driver.getRightX() * 2 * Math.PI));
     
     configureBindings();
+  }
+
+  public double directionIsZero(double x, double y) {
+    if (Math.abs(x) + Math.abs(y) < 0.1) {
+      return 0.0;
+    } else {
+      return 1.0;
+    }
   }
 
   private void configureBindings() {
