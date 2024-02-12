@@ -1,5 +1,9 @@
 package frc.robot.ultrashot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+
 public class UltraShot {
 
     private Point3D robot, robotVelocity, target;
@@ -26,8 +30,18 @@ public class UltraShot {
         this.robot = robot;
     }
 
+    public void setRobotPos(Pose2d pose) {
+        Point3D point = new Point3D(pose.getX(), pose.getY(), 0);
+        setRobotPos(point);
+    }
+
     public void setRobotVelocity(Point3D robotVelocity) {
         this.robotVelocity = robotVelocity;
+    }
+
+    public void setRobotVelocity(ChassisSpeeds speeds) {
+        Point3D point = new Point3D(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, 0);
+        setRobotVelocity(point);
     }
 
     public void setTargetPos(Point3D target) {

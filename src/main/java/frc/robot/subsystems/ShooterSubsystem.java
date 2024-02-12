@@ -10,11 +10,16 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.ultrashot.Point2D;
+import frc.robot.ultrashot.UltraShot;
+import frc.robot.ultrashot.UltrashotConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
   CANSparkMax top = new CANSparkMax(Constants.TOP_SHOOTER_ID, MotorType.kBrushless);
@@ -29,10 +34,10 @@ public class ShooterSubsystem extends SubsystemBase {
   PIDController angleController = new PIDController(1.5, 0.0001, 0.05);
 
   RelativeEncoder rpmEncoder;
+  UltraShot ultraShot = new UltraShot();
 
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
-    // angleController.setPositionTolerance(.001);
     angleController.enableContinuousInput(0, 1);
 
     top.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
@@ -41,10 +46,11 @@ public class ShooterSubsystem extends SubsystemBase {
     right.setIdleMode(IdleMode.kBrake);
     top.setIdleMode(IdleMode.kCoast);
     bottom.setIdleMode(IdleMode.kCoast);
-    // right.follow(left, true);
     bottom.follow(top, true);
 
     rpmEncoder = top.getEncoder();
+
+    ultraShot.setTargetPos(UltrashotConstants.speaker); //TODO make this dynamic based on our alliance
   }
 
   public void setFlywheelSpeed(double speed) {
@@ -81,6 +87,20 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double getRPM() {
     return rpmEncoder.getVelocity();
+  }
+
+  public void updateUltrashot(ChassisSpeeds botVelocity, Pose2d pose) {
+    ultraShot.setRobotPos(pose);
+    ultraShot.setRobotVelocity(botVelocity);
+  }
+
+  public void updateUltrashot(DriveSubsystem driveSubsystem) {
+    ultraShot.setRobotPos(driveSubsystem.getOdometry());
+    ultraShot.setRobotVelocity(driveSubsystem.getChassisSpeeds());
+  }
+
+  public Point2D getUltrashotParameters() {
+    return ultraShot.qoboticsUltimatum();
   }
   /*Formula for going from degrees to setpoint
 

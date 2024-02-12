@@ -4,15 +4,15 @@
 
 package frc.robot;
 
-import frc.robot.commands.RunFlywheelCommand;
-import frc.robot.commands.StopFlywheelCommand;
-import frc.robot.commands.TestShooterAngleCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
 import frc.robot.commands.BotStateCommands.ShooterTransferCommand;
 import frc.robot.commands.DriveCommands.FieldDrive;
 import frc.robot.commands.DriveCommands.GarrettDrive;
+import frc.robot.commands.ShooterCommands.RunFlywheelCommand;
+import frc.robot.commands.ShooterCommands.StopFlywheelCommand;
+import frc.robot.commands.ShooterCommands.TestShooterAngleCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
