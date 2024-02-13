@@ -11,7 +11,6 @@ import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
 import frc.robot.commands.BotStateCommands.ShooterTransferCommand;
 import frc.robot.commands.DriveCommands.FieldDrive;
 import frc.robot.commands.ShooterCommands.RunFlywheelCommand;
-import frc.robot.commands.ShooterCommands.StopFlywheelCommand;
 import frc.robot.commands.ShooterCommands.TestShooterAngleCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -35,7 +34,6 @@ public class RobotContainer {
   IntakeSubsystem intake = new IntakeSubsystem();
   
   public RobotContainer() {
-    shooterSubsystem.setDefaultCommand(new TestShooterAngleCommand(shooterSubsystem, () -> driver.getLeftTriggerAxis() - lol(driver.getRightBumperPressed())));
     driveSubsystem.setDefaultCommand(new FieldDrive(
 
     driveSubsystem,
@@ -78,7 +76,6 @@ public class RobotContainer {
     );
 
     runFlywheel.whileTrue(new RunFlywheelCommand(shooterSubsystem));
-    runFlywheel.whileFalse(new StopFlywheelCommand(shooterSubsystem));
     toggleIntake.onTrue(intakeSequence);
     zeroGyro.onTrue(new InstantCommand(driveSubsystem::resetGyroFieldDrive));
   }

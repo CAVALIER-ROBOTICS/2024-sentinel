@@ -5,7 +5,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ColorSensorV3;
+import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.Rev2mDistanceSensor.Port;
+import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -28,9 +30,7 @@ public class IntakeSubsystem extends SubsystemBase {
     // ArmFeedforward feedforward = new ArmFeedforward(1.95, .01);
     DutyCycleEncoder enc = new DutyCycleEncoder(0);
 
-    ColorSensorV3 csv3 = new ColorSensorV3(Constants.COLOR_PORT);
-    DigitalInput breamBreak = new DigitalInput(3);
-
+    Rev2mDistanceSensor distanceSensor = new Rev2mDistanceSensor(Port.kOnboard);
     double currentGoalPos = getAbsolutePosition();
 
   public IntakeSubsystem() {
@@ -40,6 +40,10 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeSpin.setIdleMode(IdleMode.kBrake);
     intakeRight.setIdleMode(IdleMode.kBrake);
     intakeLeft.setIdleMode(IdleMode.kBrake);
+
+    distanceSensor.setAutomaticMode(true);
+    distanceSensor.setEnabled(true);
+    distanceSensor.setRangeProfile(RangeProfile.kLongRange);
 
     // intakeRight.follow(intakeLeft, true);
     controller.enableContinuousInput(0, 1);
@@ -63,10 +67,6 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeSpin.set(point);
   }
 
-  public double getProximity() {
-    return csv3.getProximity();
-  }
-
   public void setPosition(double position) {
     double setpoint = controller.calculate(getAbsolutePosition(), position);
     setAnglePercentOutput(-setpoint);
@@ -80,10 +80,14 @@ public class IntakeSubsystem extends SubsystemBase {
     return controller.atSetpoint();
   }
 
+  public double getProximity() {
+    return distanceSensor.getRange();
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Intake Encoder" , enc.getAbsolutePosition());
-    SmartDashboard.putNumber("Sensor Proximty", csv3.getProximity());
+    SmartDashboard.putNumber("Sensor Proximty", distanceSensor.getRange());
     // controller.setP(SmartDashboard.getNumber("Intake angle P", 0));
     // SmartDashboard.putNumber("Current P", controller.getP());
     // goToAbsolutePos(currentGoalPos);

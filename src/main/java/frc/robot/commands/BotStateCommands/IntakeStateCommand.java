@@ -39,6 +39,6 @@ public class IntakeStateCommand extends Command {
   @Override
   public boolean isFinished() {
     //We have a note in the intake, now move it to the shooter.
-    return intakeSubsystem.getProximity() >= Constants.MINIMUM_PROXIMITY_TRIGGER;
+    return intakeSubsystem.getProximity() <= Constants.MINIMUM_PROXIMITY_TRIGGER;
   }
 }

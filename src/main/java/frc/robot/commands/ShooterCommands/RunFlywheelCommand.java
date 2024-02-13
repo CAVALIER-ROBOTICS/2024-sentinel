@@ -6,6 +6,7 @@ package frc.robot.commands.ShooterCommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class RunFlywheelCommand extends Command {
@@ -24,10 +25,11 @@ public class RunFlywheelCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    sub.setFlywheelSpeed(1);
+    sub.setFlywheelSpeed(.8);
+    sub.setPosition(Constants.SHOOTER_BASIC_SHOT_POSITION);
 
-    if(sub.getRPM() > 2500) {
-      sub.setKickerSpeed(-1);
+    if(sub.getRPM() > 3500 && (sub.getAbsolutePosition() <= .93 & sub.getAbsolutePosition() >= .91)) {
+      sub.setKickerSpeed(-.8);
     } else {
       sub.setKickerSpeed(0);
     }
@@ -38,6 +40,7 @@ public class RunFlywheelCommand extends Command {
   public void end(boolean interrupted) {
     sub.setFlywheelSpeed(0);
     sub.setKickerSpeed(0);
+    sub.setAngleSpeed(0);
   }
 
   // Returns true when the command should end.
