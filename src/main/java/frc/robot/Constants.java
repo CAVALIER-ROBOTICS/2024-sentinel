@@ -25,8 +25,6 @@ public final class Constants {
   public static final int LEFT_INTAKE_ID = 16;
   public static final int RIGHT_INTAKE_ID = 17;
   public static final int SPIN_INTAKE_ID = 18;
-  public static final boolean RIGHT_INTAKE_DIRECTION = false;
-  public static final boolean LEFT_INTAKE_DIRECTION = false;
 
   public static final int LEFT_CLIMB = 24;
   public static final int RIGHT_CLIMB = 25;

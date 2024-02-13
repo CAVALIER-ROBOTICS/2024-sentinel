@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
@@ -32,8 +33,10 @@ public class RobotContainer {
   DriveSubsystem driveSubsystem = new DriveSubsystem();
   ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   IntakeSubsystem intake = new IntakeSubsystem();
+  ClimbSubsystem climb = new ClimbSubsystem();
   
   public RobotContainer() {
+    climb.setDefaultCommand(new ClimbCommand(climb, operator::getLeftY, operator::getRightY));
     shooterSubsystem.setDefaultCommand(new TestShooterAngleCommand(shooterSubsystem, () -> driver.getLeftTriggerAxis() - lol(driver.getRightBumperPressed())));
     driveSubsystem.setDefaultCommand(new FieldDrive(
 
