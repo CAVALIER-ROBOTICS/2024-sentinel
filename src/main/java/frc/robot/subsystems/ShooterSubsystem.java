@@ -99,7 +99,7 @@ public class ShooterSubsystem extends SubsystemBase {
     ultraShot.setRobotVelocity(driveSubsystem.getChassisSpeeds());
   }
 
-  public Point2D getUltrashotParameters() {
+  public Point2D getUltraShotParameters() {
     return ultraShot.qoboticsUltimatum();
   }
   /*Formula for going from degrees to setpoint

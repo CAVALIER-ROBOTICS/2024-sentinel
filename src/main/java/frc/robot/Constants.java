@@ -67,7 +67,7 @@ public final class Constants {
   public static final int SHOOTER_LIMIT_SWITCH_ID = 2;
 
   public static final I2C.Port COLOR_PORT = I2C.Port.kOnboard;
-  public static final int MINIMUM_PROXIMITY_TRIGGER = 200;
+  public static final int MINIMUM_PROXIMITY_TRIGGER = 170;
 
   public static final double NOMINAL_VOLTAGE = 12.2;
   

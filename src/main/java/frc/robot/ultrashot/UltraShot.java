@@ -1,7 +1,6 @@
 package frc.robot.ultrashot;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class UltraShot {
@@ -49,9 +48,11 @@ public class UltraShot {
     }
 
     public Point2D qoboticsUltimatum() {
+        double l = UltrashotConstants.shooterLength;
         double thetaS = Point3D.difference(robot, target).getAngle();
         double thetaV = robotVelocity.getAngle();
         double phiGuess = parabolicAngles(robot, target);
+        double phiGuess2 = parabolicAngles(robotVelocity, robot);
         double thetaGuess = robotVelocity.getHypot() * Math.sin(thetaS - thetaV);
 
         Point2D initialGuess = new Point2D(0.9 * phiGuess, 0.08 * thetaGuess);

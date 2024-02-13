@@ -24,7 +24,7 @@ public class RunFlywheelCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    sub.setFlywheelSpeed(.5);
+    sub.setFlywheelSpeed(1);
 
     if(sub.getRPM() > 2500) {
       sub.setKickerSpeed(-1);

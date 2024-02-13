@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -17,13 +19,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.CycloidLibrary.NeoSteveModule;
+import frc.robot.vision.Limelight;
 
 public class DriveSubsystem extends SubsystemBase {
   NeoSteveModule fleft, fright, bleft, bright;
 
   Pigeon2 pigeon = new Pigeon2(Constants.PIGEON, Constants.CANIVORE);
+  PIDController headingController = new PIDController(.01, 0, 0);
+
   SwerveDriveOdometry odometry;
   Field2d field;
+  double currentOffset = 0;
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     fleft = new NeoSteveModule(Constants.FLEFT_DRIVE_ID, Constants.FLEFT_STEER_ID, Constants.FLEFT_CANCODER_ID, Constants.FLEFT_OFFSET, Constants.CANIVORE);
@@ -32,6 +39,7 @@ public class DriveSubsystem extends SubsystemBase {
     bright = new NeoSteveModule(Constants.BRIGHT_DRIVE_ID, Constants.BRIGHT_STEER_ID, Constants.BRIGHT_CANCODER_ID, Constants.BRIGHT_OFFSET, Constants.CANIVORE);
 
     odometry = new SwerveDriveOdometry(Constants.m_kinematics, getAngle(), getSwerveModulePositions());
+
     field = new Field2d();
     SmartDashboard.putData("fiel ldl dldd vd", field);
   }
@@ -79,9 +87,32 @@ public class DriveSubsystem extends SubsystemBase {
     return Rotation2d.fromDegrees(-pigeon.getAngle());
   }
 
-  //TODO make this method use limelights when we get them installed
+  public Rotation2d getFieldDriveAngle() {
+    return Rotation2d.fromDegrees(getAngle().getDegrees() - currentOffset);
+  }
+
+  public void resetGyroFieldDrive() {
+    currentOffset = getAngle().getDegrees();
+  }
+
+  
   public void updateOdometry() {
-    odometry.update(getAngle(), getSwerveModulePositions());
+      String accurate = Limelight.getMostAccurateLimelightName();
+      SmartDashboard.putString("Most accurate lime", accurate);
+      int targetAmount = Limelight.getTargetCount(accurate);
+  
+      SmartDashboard.putNumber("realGyroValue", getAngle().getDegrees());
+      SmartDashboard.putNumber("LimelightAngle", Limelight.getPose2d(accurate).getRotation().getDegrees());
+  
+      if(targetAmount >= 2) {
+        // System.out.println("UPDATING WITH LIMELIGHT");
+        Pose2d limePose = Limelight.getPose2d(accurate);
+        updateOdometry(limePose);
+        setYaw(limePose.getRotation().getDegrees());
+        return;
+      }
+  
+      odometry.update(getAngle(), getSwerveModulePositions());
   }
 
   public void zeroGyro() {
@@ -97,6 +128,12 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void setYaw(double yaw) {
     pigeon.setYaw(yaw);
+  }
+
+  public void driveWithAngleOverride(Rotation2d angle, double xSpeed, double ySpeed) {
+    Rotation2d currentAngle = getAngle();
+    double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians());
+    drive(new ChassisSpeeds(xSpeed, ySpeed, rotSpeeds));
   }
 
   @Override

@@ -31,7 +31,7 @@ public class FieldDrive extends Command {
       x.getAsDouble(), 
       y.getAsDouble(), 
       rot.getAsDouble(), 
-      dSub.getAngle()
+      dSub.getFieldDriveAngle()
     );
 
     dSub.drive(speeds);
