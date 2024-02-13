@@ -102,6 +102,11 @@ public class ShooterSubsystem extends SubsystemBase {
   public Point2D getUltraShotParameters() {
     return ultraShot.qoboticsUltimatum();
   }
+
+  public void gotoAngle(double angle) {
+    double encoderSetpoint = (Constants.MAX_POSITION_SHOOTER * angle) / (Math.PI * 2); //TODO FIND ACTUAL MAX SHOOTER POS
+    setPosition(encoderSetpoint);
+  }
   /*Formula for going from degrees to setpoint
 
   ((theta/90) * (max-min)) + min

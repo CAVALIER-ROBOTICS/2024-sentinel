@@ -41,6 +41,7 @@ public class UltrashotCommand extends Command {
     double botAngle = shotConfig.getY();
 
     driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(botAngle), x.getAsDouble(), y.getAsDouble());
+    shooterSubsystem.gotoAngle(shooterAngle);
   }
 
   // Called once the command ends or is interrupted.
