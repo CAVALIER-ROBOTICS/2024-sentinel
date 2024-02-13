@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.commands.ReverseClimbCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
