@@ -16,16 +16,34 @@ public class ClimbSubsystem extends SubsystemBase {
 
   /** Creates a new ClimbSubsystem. */
   public ClimbSubsystem() {
-    leftClimb.setInverted(true);
-    rightClimb.setInverted(false);
+    leftClimb.setInverted(Constants.LEFT_INTAKE_DIRECTION);
+    rightClimb.setInverted(Constants.RIGHT_INTAKE_DIRECTION);
   }
 
+  public void setInverted()
+  {
+     leftClimb.setInverted(!leftClimb.getInverted());
+     rightClimb.setInverted(!rightClimb.getInverted());
+  }
+  public void setNormal()
+  {
+    leftClimb.setInverted(Constants.LEFT_INTAKE_DIRECTION);
+    rightClimb.setInverted(Constants.RIGHT_INTAKE_DIRECTION);
+  }
+
+
   
-  public void setPercentOutput(double percent) {
+  public void setLeftPercentOutput(double percent) {
     leftClimb.set(percent);
-    rightClimb.set(percent);
   } 
+
+  public void setRightPercentOutput(double percent)
+  {
+    rightClimb.set(percent);
+  }
+
 
   @Override
   public void periodic() {}
 }
+

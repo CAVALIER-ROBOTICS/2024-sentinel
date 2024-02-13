@@ -4,35 +4,37 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
+
 import frc.robot.subsystems.ClimbSubsystem;
 
-public class ClimbCommand extends Command {
-  ClimbSubsystem climbSub;
-  DoubleSupplier left;
-  DoubleSupplier right;
-  /** Creates a new ClimbCommand. */
-  public ClimbCommand(ClimbSubsystem cSub, DoubleSupplier left, DoubleSupplier right) {
-    this.climbSub = cSub;
-    this.left = left;
-    this.right = right;
-    addRequirements(cSub);
+public class ReverseClimbCommand extends Command {
+  /** Creates a new StopClimbCommand. */
+  ClimbSubsystem sub;
+  boolean isInverted;
+  
+  public ReverseClimbCommand(ClimbSubsystem sub, boolean isInverted) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.sub = sub;
+    this.isInverted = isInverted;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    climbSub.setLeftPercentOutput(left.getAsDouble());
-    climbSub.setRightPercentOutput(right.getAsDouble());
+  public void execute() 
+  {
+    if(isInverted)
+    {
+      sub.setInverted();
+    }
+    else
+    {
+      sub.setNormal();
+    }
   }
 
   // Called once the command ends or is interrupted.

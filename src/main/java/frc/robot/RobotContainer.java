@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.commands.ReverseClimbCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
@@ -68,6 +69,7 @@ public class RobotContainer {
     JoystickButton toggleIntake = new JoystickButton(driver, 1);
     JoystickButton runFlywheel = new JoystickButton(driver, 2);
     JoystickButton zeroGyro = new JoystickButton(driver, 4);
+    JoystickButton reverseClimb = new JoystickButton(driver, 0);
     SequentialCommandGroup intakeSequence = new SequentialCommandGroup(
       new IntakeStateCommand(intake, shooterSubsystem),
       new RunCommand(() -> intake.setIntakeSpin(1), intake).raceWith(new WaitCommand(.05)),
@@ -78,7 +80,8 @@ public class RobotContainer {
 
     runFlywheel.whileTrue(new RunFlywheelCommand(shooterSubsystem));
     runFlywheel.whileFalse(new StopFlywheelCommand(shooterSubsystem));
-
+    reverseClimb.onTrue(new ReverseClimbCommand(climbSubsystem,true));
+    reverseClimb.onFalse(new ReverseClimbCommand(climbSubsystem, false));
     toggleIntake.onTrue(intakeSequence);
     zeroGyro.onTrue(new InstantCommand(driveSubsystem::resetGyroFieldDrive));
   }
