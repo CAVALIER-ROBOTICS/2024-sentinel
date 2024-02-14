@@ -134,7 +134,7 @@ public class NeoSteveModule {
     }
 
     public SwerveModulePosition getSwerveModulePosition() {
-        return new SwerveModulePosition(driveEncoder.getPosition(),
+        return new SwerveModulePosition(-driveEncoder.getPosition(),
                 Rotation2d.fromRadians(Math.PI + getEncoderPosition()));
     }
 

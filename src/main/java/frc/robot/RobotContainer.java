@@ -4,14 +4,13 @@
 
 package frc.robot;
 
-import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
 import frc.robot.commands.BotStateCommands.ShooterTransferCommand;
 import frc.robot.commands.DriveCommands.FieldDrive;
+import frc.robot.commands.ShooterCommands.PrepUltrashotCommand;
 import frc.robot.commands.ShooterCommands.RunFlywheelCommand;
-import frc.robot.commands.ShooterCommands.TestShooterAngleCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -45,7 +44,9 @@ public class RobotContainer {
     () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
-    () -> driver.getRightX() * 2 * Math.PI));
+    () -> driver.getRightX() * Math.PI));
+
+    // driveSubsystem.setDefaultCommand(new PrepUltrashotCommand(shooterSubsystem, driveSubsystem, driver::getLeftY, driver::getLeftX));
     
     configureBindings();
   }
@@ -67,6 +68,7 @@ public class RobotContainer {
     JoystickButton toggleIntake = new JoystickButton(driver, 1);
     JoystickButton runFlywheel = new JoystickButton(driver, 2);
     JoystickButton zeroGyro = new JoystickButton(driver, 4);
+    JoystickButton targetTrack = new JoystickButton(driver, 3);
 
     SequentialCommandGroup intakeSequence = new SequentialCommandGroup(
       new IntakeStateCommand(intake, shooterSubsystem),
@@ -79,6 +81,7 @@ public class RobotContainer {
     runFlywheel.whileTrue(new RunFlywheelCommand(shooterSubsystem));
     toggleIntake.onTrue(intakeSequence);
     zeroGyro.onTrue(new InstantCommand(driveSubsystem::resetGyroFieldDrive));
+    targetTrack.whileTrue(new PrepUltrashotCommand(shooterSubsystem, driveSubsystem, driver::getLeftY, driver::getLeftX));
   }
 
   public DriveSubsystem getDriveSubsystem() {

@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -25,7 +24,8 @@ public class DriveSubsystem extends SubsystemBase {
   NeoSteveModule fleft, fright, bleft, bright;
 
   Pigeon2 pigeon = new Pigeon2(Constants.PIGEON, Constants.CANIVORE);
-  PIDController headingController = new PIDController(.01, 0, 0);
+  PIDController headingController = new PIDController(10, 0, 0);
+  
 
   SwerveDriveOdometry odometry;
   Field2d field;
@@ -133,8 +133,9 @@ public class DriveSubsystem extends SubsystemBase {
   public void driveWithAngleOverride(Rotation2d angle, double xSpeed, double ySpeed) {
     Rotation2d currentAngle = getAngle();
     double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians());
-    drive(new ChassisSpeeds(xSpeed, ySpeed, rotSpeeds));
+    drive(ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle));
   }
+
 
   @Override
   public void periodic() {

@@ -7,17 +7,19 @@ package frc.robot.commands.ShooterCommands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.ultrashot.Point2D;
+import frc.robot.ultrashot.AngleStates;
 
-public class UltrashotCommand extends Command {
+public class PrepUltrashotCommand extends Command {
   /** Creates a new UltrashotCommand. */
   ShooterSubsystem shooterSubsystem;
   DriveSubsystem driveSubsystem;
   DoubleSupplier x, y;
-  public UltrashotCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier x, DoubleSupplier y) {
+  public PrepUltrashotCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier x, DoubleSupplier y) {
     this.shooterSubsystem = shooterSubsystem;
     this.driveSubsystem = driveSubsystem;
     this.x = x;
@@ -35,18 +37,23 @@ public class UltrashotCommand extends Command {
   @Override
   public void execute() {
     shooterSubsystem.updateUltrashot(driveSubsystem);
-    Point2D shotConfig = shooterSubsystem.getUltraShotParameters();
+    shooterSubsystem.ultimatum();
+    // shooterSubsystem.setFlywheelSpeed(1);
 
-    double shooterAngle = shotConfig.getX();
-    double botAngle = shotConfig.getY();
+    AngleStates states = shooterSubsystem.getAngleStates();
 
-    driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(botAngle), x.getAsDouble(), y.getAsDouble());
-    shooterSubsystem.gotoAngle(shooterAngle);
+    driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta()), x.getAsDouble(), y.getAsDouble());
+    shooterSubsystem.gotoAngle(states.getPhi());
+    SmartDashboard.putNumber("theta", states.getTheta());
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    shooterSubsystem.setFlywheelSpeed(0);
+    shooterSubsystem.setAngleSpeed(0);
+  }
+  
 
   // Returns true when the command should end.
   @Override

@@ -10,16 +10,14 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.ultrashot.Point2D;
+import frc.robot.ultrashot.AngleStates;
 import frc.robot.ultrashot.UltraShot;
-import frc.robot.ultrashot.UltrashotConstants;
+import frc.robot.ultrashot.UltraShotConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
   CANSparkMax top = new CANSparkMax(Constants.TOP_SHOOTER_ID, MotorType.kBrushless);
@@ -50,7 +48,20 @@ public class ShooterSubsystem extends SubsystemBase {
 
     rpmEncoder = top.getEncoder();
 
-    ultraShot.setTargetPos(UltrashotConstants.speaker); //TODO make this dynamic based on our alliance
+    ultraShot.configure(
+      UltraShotConstants.robot,
+      UltraShotConstants.axis,
+      UltraShotConstants.velocity,
+      UltraShotConstants.target,
+      UltraShotConstants.states,
+      UltraShotConstants.shooterLength,
+      UltraShotConstants.shooterSpeed,
+      UltraShotConstants.localGravity,
+      UltraShotConstants.airDrag,
+      UltraShotConstants.settleTime
+    );
+
+    enc.reset();
   }
 
   public void setFlywheelSpeed(double speed) {
@@ -74,7 +85,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setPosition(double position) {
     double setpoint = angleController.calculate(getAbsolutePosition(), position);
-    setAngleSpeed(-setpoint);
+    setAngleSpeed(setpoint);
   }
 
   public boolean atSetpoint() {
@@ -89,24 +100,35 @@ public class ShooterSubsystem extends SubsystemBase {
     return rpmEncoder.getVelocity();
   }
 
-  public void updateUltrashot(ChassisSpeeds botVelocity, Pose2d pose) {
-    ultraShot.setRobotPos(pose);
-    ultraShot.setRobotVelocity(botVelocity);
-  }
+  // public void updateUltrashot(ChassisSpeeds botVelocity, Pose2d pose) {
+  //   ultraShot.setRobotPos(pose);
+  //   ultraShot.setRobotVelocity(botVelocity);
+  // }
 
   public void updateUltrashot(DriveSubsystem driveSubsystem) {
-    ultraShot.setRobotPos(driveSubsystem.getOdometry());
-    ultraShot.setRobotVelocity(driveSubsystem.getChassisSpeeds());
-  }
-
-  public Point2D getUltraShotParameters() {
-    return ultraShot.qoboticsUltimatum();
+    ultraShot.update(driveSubsystem.getOdometry(), driveSubsystem.getChassisSpeeds());
   }
 
   public void gotoAngle(double angle) {
-    double encoderSetpoint = (Constants.MAX_POSITION_SHOOTER * angle) / (Math.PI * 2); //TODO FIND ACTUAL MAX SHOOTER POS
+    double encoderSetpoint = (((Constants.MAX_POSITION_SHOOTER - Constants.MIN_POSITITON_SHOOTER) * angle) / (Math.PI)) + Constants.MIN_POSITITON_SHOOTER ; //TODO FIND ACTUAL MAX SHOOTER POS
+    // double encoderSetpoint = getAbsolutePosition();
+    // double encoderSetpoint = ((Constants.MIN_POSITITON_SHOOTER*2*Math.PI) + angle);
+    SmartDashboard.putNumber("Desired encoder rot", encoderSetpoint);
+    SmartDashboard.putNumber("Current encoder rot", getAbsolutePosition());
     setPosition(encoderSetpoint);
   }
+
+  public void track() {
+    ultraShot.track();
+  }
+  
+  public void ultimatum() {
+    ultraShot.ultimatum();;
+  }
+  public AngleStates getAngleStates() {
+    return ultraShot.getAngleStates();
+  }
+
   /*Formula for going from degrees to setpoint
 
   ((theta/90) * (max-min)) + min

@@ -19,8 +19,8 @@ import edu.wpi.first.wpilibj.I2C;
 public final class Constants {
 
   public static final int SPEED_SHOOTER = 1;
-  public static final int MAX_POSITION_SHOOTER = 1; //FIXME
-  public static final int MIN_POSITITON_SHOOTER = 0; //FIXME
+  public static final double MAX_POSITION_SHOOTER = 0.826466220661656; //FIXME
+  public static final double MIN_POSITITON_SHOOTER = 0.073193926829848; //FIXME
 
   public static final int LEFT_INTAKE_ID = 16;
   public static final int RIGHT_INTAKE_ID = 17;
@@ -68,7 +68,7 @@ public final class Constants {
   public static final int SHOOTER_LIMIT_SWITCH_ID = 2;
 
   public static final I2C.Port COLOR_PORT = I2C.Port.kOnboard;
-  public static final int MINIMUM_PROXIMITY_TRIGGER = 10;
+  public static final int MINIMUM_PROXIMITY_TRIGGER = 9;
 
   public static final double NOMINAL_VOLTAGE = 12.2;
   

@@ -5,175 +5,270 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class UltraShot {
 
-    private Point3D robot, robotVelocity, target;
+    private Point3D robot, axis, velocity, target; // Note that the axis should have 0 y-component and the velocity should have 0 z-component
+    private AngleStates states;
+    private double shooterLength, shooterSpeed, localGravity, airDrag, settleTime;
 
     public UltraShot() {
         this.robot = new Point3D();
-        this.robotVelocity = new Point3D();
+        this.axis = new Point3D();
+        this.velocity = new Point3D();
         this.target = new Point3D();
+        this.states = new AngleStates();
+        this.shooterLength = 0.0;
+        this.shooterSpeed = 0.0;
+        this.localGravity = 0.0;
+        this.airDrag = 0.0;
+        this.settleTime = 0.0;
     }
 
-    public Point3D getRobotPos() {
+    // Get Methods
+
+    public Point3D getRobot() {
         return this.robot;
     }
 
-    public Point3D getRobotVelocity() {
-        return this.robotVelocity;
+    public Point3D getAxis() {
+        return this.axis;
     }
 
-    public Point3D getTargetPos() {
+    public Point3D getVelocity() {
+        return this.velocity;
+    }
+
+    public Point3D getTarget() {
         return this.target;
     }
 
-    public void setRobotPos(Point3D robot) {
+    public AngleStates getAngleStates() {
+        return this.states;
+    }
+
+    public double getShooterLength() {
+        return this.shooterLength;
+    }
+
+    public double getShooterVelocity() {
+        return this.shooterSpeed;
+    }
+
+    public double getLocalGravity() {
+        return this.localGravity;
+    }
+
+    public double getAirDrag() {
+        return this.airDrag;
+    }
+
+    public double getTheta() {
+        return this.states.getTheta();
+    }
+
+    public double getOmega() {
+        return this.states.getOmega();
+    }
+
+    public double getPhi() {
+        return this.states.getPhi();
+    }
+
+    public double getPsi() {
+        return this.states.getPsi();
+    }
+
+    public double getProcessTime() {
+        return this.settleTime;
+    }
+
+    // Set Methods
+
+    public void setRobot(Point3D robot) {
         this.robot = robot;
     }
 
-    public void setRobotPos(Pose2d pose) {
-        Point3D point = new Point3D(pose.getX(), pose.getY(), 0);
-        setRobotPos(point);
+    public void setAxis(Point3D axis) {
+        this.axis = axis;
     }
 
-    public void setRobotVelocity(Point3D robotVelocity) {
-        this.robotVelocity = robotVelocity;
+    public void setVelocity(Point3D velocity) {
+        this.velocity = velocity;
     }
 
-    public void setRobotVelocity(ChassisSpeeds speeds) {
-        Point3D point = new Point3D(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, 0);
-        setRobotVelocity(point);
-    }
-
-    public void setTargetPos(Point3D target) {
+    public void setTarget(Point3D target) {
         this.target = target;
     }
 
-    public Point2D qoboticsUltimatum() {
-        double l = UltrashotConstants.shooterLength;
-        double thetaS = Point3D.difference(robot, target).getAngle();
-        double thetaV = robotVelocity.getAngle();
-        double phiGuess = parabolicAngles(robot, target);
-        double phiGuess2 = parabolicAngles(robotVelocity, robot);
-        double thetaGuess = robotVelocity.getHypot() * Math.sin(thetaS - thetaV);
-
-        Point2D initialGuess = new Point2D(0.9 * phiGuess, 0.08 * thetaGuess);
-
-        Point2D angles = slingshot(initialGuess);
-
-        angles.setY(angles.getY() + thetaS);
-
-        return angles;
+    public void setAngleStates(AngleStates states) {
+        this.states = states;
     }
 
-    private double parabolicAngles(Point3D robotPos, Point3D speakerPos) {
-        Point3D difference = Point3D.difference(robotPos, speakerPos);
-        double d = Math.hypot(difference.getX(), difference.getY()) - UltrashotConstants.shooterAxisInRobotSpace.getX();
-        double h = difference.getZ() - UltrashotConstants.shooterAxisInRobotSpace.getZ();
-        double g = UltrashotConstants.localGravity;
-        double v = UltrashotConstants.shooterVelocity;
-        double v2 = v*v;
-        double shooterAngle = Math.atan((v2 - Math.sqrt(v2 * v2 - g*(g*d*d + 2*h*v2))) / (g * d));
-        return shooterAngle;
+    public void setShooterLength(double shooterLength) {
+        this.shooterLength = shooterLength;
     }
 
-    private double T(double x, double y, boolean isType2) {
-        Point3D s = target;
-        Point3D r = robot;
-        Point3D rv = robotVelocity;
-        double l = UltrashotConstants.shooterLength;
-        double v0 = UltrashotConstants.shooterVelocity;
-        double cosX = Math.cos(x);
-        double sinX = Math.sin(x);
-        double thetaS = Point3D.difference(r, s).getAngle();
-        double thetaV = rv.getAngle();
-        Point3D a0 = UltrashotConstants.shooterAxisInRobotSpace;
-        Point3D arm = new Point3D(l*cosX, 0, l*sinX);
-        Point3D f = toRobotSpace(Point3D.add(a0, arm), thetaS + y);
-        Point3D k = Point3D.difference(f, s);
-        double thetaK = k.getAngle();
-        double hv = rv.getHypot();
-        if (!isType2) {
-            return hv*Math.sin(thetaK - thetaV) - v0*cosX*Math.sin(thetaS + y - thetaK);
+    public void setShooterSpeed(double shooterSpeed) {
+        this.shooterSpeed = shooterSpeed;
+    }
+
+    public void setLocalGravity(double localGravity) {
+        this.localGravity = localGravity;
+    }
+
+    public void setAirDrag(double airDrag) {
+        this.airDrag = airDrag;
+    }
+
+    public void setSettleTime(double settleTime) {
+        this.settleTime = settleTime;
+    }
+
+    public void configure(Point3D robot, Point3D axis, Point3D velocity, Point3D target, AngleStates states, double shooterLength, double shooterSpeed, double localGravity, double airDrag, double settleTime) {
+        setRobot(robot);
+        setAxis(axis);
+        setVelocity(velocity);
+        setTarget(target);
+        setAngleStates(states);
+        setShooterLength(shooterLength);
+        setShooterSpeed(shooterSpeed);
+        setLocalGravity(localGravity);
+        setAirDrag(airDrag);
+        setSettleTime(settleTime);
+    }
+
+    public void update(Point3D robot, Point3D velocity, Point3D target) {
+        setRobot(robot);
+        setVelocity(velocity);
+        setTarget(target);
+    }
+
+    public void update(Pose2d pose, ChassisSpeeds velocity) {
+        Point3D pointPose = new Point3D(pose.getX(), pose.getY(), 0);
+        Point3D pointVelocity = new Point3D(velocity.vxMetersPerSecond, velocity.vyMetersPerSecond, 0);
+
+        update(pointPose, pointVelocity, UltraShotConstants.target);
+    }
+    // ultimatum() returns the true values of theta and phi
+    // omega and psi are zero since it is impractical to shoot while changing the angles
+    // use this when you want to shoot
+
+    public void ultimatum() {
+        Point3D prediction = Point3D.add(robot, new Point3D(velocity.getX()*settleTime, velocity.getY()*settleTime, velocity.getZ()*settleTime));
+        double thetaS = Point3D.difference(prediction, target).getAngle();
+        double thetaV = velocity.getAngle();
+        parabolicAngle(prediction, target, true);
+        parabolicAngle(prediction, target, false);
+        states.setTheta(velocity.getHypot() * Math.sin(thetaS - thetaV) * 0.08);
+        
+        slingShot();
+
+        states.setTheta(states.getTheta() + thetaS);
+    }
+
+    // track() returns approximate values of theta, omega, phi, and psi so that a control loop has less error to deal with when ultimatum() is called
+    // use this when you want to shoot SOON
+
+    public void track() {
+        Point3D prediction = Point3D.add(robot, new Point3D(velocity.getX()*settleTime, velocity.getY()*settleTime, velocity.getZ()*settleTime));
+        double thetaS = Point3D.difference(prediction, target).getAngle();
+        double thetaV = velocity.getAngle();
+        parabolicAngle(prediction, target, true);
+        parabolicAngle(prediction, target, false);
+        states.setTheta(velocity.getHypot() * Math.sin(thetaS - thetaV) * 0.08 + thetaS);
+    }
+
+    private void parabolicAngle(Point3D robot, Point3D target, boolean isFirst) {
+        double g = localGravity;
+        if (isFirst) {
+            double d = Point3D.difference(robot, target).getHypot() - axis.getX();
+            double h = target.getZ() - robot.getZ() - axis.getZ();
+            states.setPhi( Math.atan((Math.pow(shooterSpeed, 2) - Math.sqrt(Math.pow(shooterSpeed, 4) - g*(g*d*d + 2*h*Math.pow(shooterSpeed, 2)))) / (g * d)));
         }
         else {
-            double g = UltrashotConstants.localGravity;
-            double b = UltrashotConstants.airDrag;
-            double term = (k.getHypot()) / (v0*cosX*Math.cos(thetaK - thetaS - y) + hv*Math.cos(thetaK - thetaV));
-            return (v0*sinX + g/b)*term + (g/(b*b))*Math.log(1 - b*term) - s.getZ() + a0.getZ() + l*sinX;
+            double d = Point3D.difference(robot, target).getHypot() - axis.getX() - shooterLength*Math.cos(states.getPhi());
+            double h = target.getZ() - robot.getZ() - axis.getZ() - shooterLength*Math.sin(states.getPhi());
+            states.setPhi( Math.atan((Math.pow(shooterSpeed, 2) - Math.sqrt(Math.pow(shooterSpeed, 4) - g*(g*d*d + 2*h*Math.pow(shooterSpeed, 2)))) / (g * d)));
         }
     }
 
-    private Point2D slingshot(Point2D p) {
-        Point2D nt = nt(p);
-        Point2D nt2 = nt2(p);
+    private void slingShot() {
+        AngleStates projection1 = projection1(states);
+        AngleStates projection2 = projection2(states);
 
-        Point2D result = new Point2D(sx(p, nt, nt2), sy(p, nt, nt2));
+        double theta0 = states.getTheta();
+        double theta1 = projection1.getTheta();
+        double theta2 = projection2.getTheta();
+        double phi0 = states.getPhi();
+        double phi1 = projection1.getPhi();
+        double phi2 = projection2.getPhi();
 
-        return result;
+        double thetaSlope1 = (theta1-theta0) / (phi1-phi0);
+        double thetaSlope2 = (theta2-theta0) / (phi2-phi0);
+
+        double phiSlope1 = (phi1-phi0) / (theta1-theta0);
+        double phiSlope2 = (phi2-phi0) / (theta2-theta0);
+
+        double thetaSlingShot = (theta2*thetaSlope2 - theta1*thetaSlope1 + phi2 - phi1) / (thetaSlope2 - thetaSlope1);
+        double phiSlingShot = (phi2*phiSlope2 - phi1*phiSlope1 + theta2 - theta1) / (phiSlope2 - phiSlope1);
+
+        states.setAll(thetaSlingShot, 0.0, phiSlingShot, 0.0);
     }
 
-    private double sx(Point2D p0, Point2D pa, Point2D pb) {
-        double x0 = p0.getX();
-        double xa = pa.getX();
-        double xb = pb.getX();
-        double y0 = p0.getY();
-        double ya = pa.getY();
-        double yb = pb.getY();
-        double aSlope = (xa-x0) / (ya-y0);
-        double bSlope = (xb-x0) / (yb-y0);
+    private AngleStates projection1(AngleStates states) {
+        double theta = states.getTheta();
+        double phi = states.getPhi();
+        double tValue = T(theta, phi, false);
+        double dTheta = 1000 * (T(theta + 0.001, phi, false) - tValue);
+        double dPhi = 1000 * (T(theta, phi + 0.001, false) - tValue);
+        double n0 = tValue / (dTheta * dTheta + dPhi * dPhi);
+        double nTheta = theta - dTheta * n0;
+        double nPhi = phi - dPhi * n0;
 
-        return (xb*bSlope - xa*aSlope + yb - ya) / (bSlope - aSlope);
+        return new AngleStates(nTheta, 0.0, nPhi, 0.0);
     }
 
-    private double sy(Point2D p0, Point2D pa, Point2D pb) {
-        double x0 = p0.getX();
-        double xa = pa.getX();
-        double xb = pb.getX();
-        double y0 = p0.getY();
-        double ya = pa.getY();
-        double yb = pb.getY();
-        double aSlope = (ya-y0) / (xa-x0);
-        double bSlope = (yb-y0) / (xb-x0);
+    private AngleStates projection2(AngleStates states) {
+        double theta = states.getTheta();
+        double phi = states.getPhi();
+        double tValue = T(theta, phi, true);
+        double dTheta = 1000 * (T(theta + 0.001, phi, true) - tValue);
+        double dPhi = 1000 * (T(theta, phi + 0.001, true) - tValue);
+        double n0 = tValue / (dTheta * dTheta + dPhi * dPhi);
+        double nTheta = theta - dTheta * n0;
+        double nPhi = phi - dPhi * n0;
 
-        return (yb*bSlope - ya*aSlope + xb - xa) / (bSlope - aSlope);
+        return new AngleStates(nTheta, 0.0, nPhi, 0.0);
     }
 
-    private Point2D nt(Point2D p) {
-        double x = p.getX();
-        double y = p.getY();
-        double f = T(x, y, false);
-        double dx = 1000*(T(x+0.001, y, false)-f);
-        double dy = 1000*(T(x, y+0.001, false)-f);
-        double nt0 = f / (dx*dx + dy*dy);
-        double ntx = x - dx*nt0;
-        double nty = y - dy*nt0;
-
-        Point2D result = new Point2D(ntx, nty);
-
-        return result;
+    private double T(double theta, double phi, boolean isType2) {
+        Point3D prediction = Point3D.add(robot, new Point3D(velocity.getX()*settleTime, velocity.getY()*settleTime, velocity.getZ()*settleTime));
+        double cosPhi = Math.cos(phi);
+        double sinPhi = Math.sin(phi);
+        double thetaS = Point3D.difference(prediction, target).getAngle();
+        double thetaV = velocity.getAngle();
+        double hypotV = velocity.getHypot();
+        Point3D freedom = toRobotSpace(Point3D.add(axis, new Point3D(shooterLength*cosPhi, 0, shooterLength*sinPhi)), thetaS + theta);
+        Point3D k = Point3D.difference(freedom, target);
+        double thetaK = k.getAngle();
+        if (!isType2) {
+            return hypotV*Math.sin(thetaK - thetaV) - shooterSpeed*cosPhi*Math.sin(thetaS + theta - thetaK);
+        }
+        else {
+            double g = localGravity;
+            double b = airDrag;
+            double term = (k.getHypot()) / (shooterSpeed*cosPhi*Math.cos(thetaK - thetaS - theta) + hypotV*Math.cos(thetaK - thetaV));
+            double value = (shooterSpeed*sinPhi + g/b)*term + (g/(b*b))*Math.log(1 - b*term) - target.getZ() + axis.getZ() + shooterLength*sinPhi;
+            return value;
+        }
     }
 
-    private Point2D nt2(Point2D p) {
-        double x = p.getX();
-        double y = p.getY();
-        double f = T(x, y, true);
-        double dx = 1000*(T(x+0.001, y, true)-f);
-        double dy = 1000*(T(x, y+0.001, true)-f);
-        double nt0 = f / (dx*dx + dy*dy);
-        double ntx = x - dx*nt0;
-        double nty = y - dy*nt0;
-
-        Point2D result = new Point2D(ntx, nty);
-
-        return result;
-    }
-
-    private Point3D toRobotSpace(Point3D point, double robotAngle) {
+    private Point3D toRobotSpace(Point3D point, double theta) {
+        Point3D prediction = Point3D.add(robot, new Point3D(velocity.getX()*settleTime, velocity.getY()*settleTime, velocity.getZ()*settleTime));
         Point3D change = new Point3D(
-            point.getX()*Math.cos(robotAngle) - point.getY()*Math.sin(robotAngle),
-            point.getY()*Math.cos(robotAngle) + point.getX()*Math.sin(robotAngle),
+            point.getX()*Math.cos(theta) - point.getY()*Math.sin(theta),
+            point.getY()*Math.cos(theta) + point.getX()*Math.sin(theta),
             point.getZ()
         );
-        return Point3D.add(change, robot);
+        return Point3D.add(change, prediction);
     }
 
 }

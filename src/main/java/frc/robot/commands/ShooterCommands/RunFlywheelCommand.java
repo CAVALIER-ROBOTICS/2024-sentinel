@@ -26,9 +26,8 @@ public class RunFlywheelCommand extends Command {
   @Override
   public void execute() {
     sub.setFlywheelSpeed(.8);
-    sub.setPosition(Constants.SHOOTER_BASIC_SHOT_POSITION);
 
-    if(sub.getRPM() > 3500 && (sub.getAbsolutePosition() <= .93 & sub.getAbsolutePosition() >= .91)) {
+    if(sub.getRPM() > 3500) {
       sub.setKickerSpeed(-.8);
     } else {
       sub.setKickerSpeed(0);
