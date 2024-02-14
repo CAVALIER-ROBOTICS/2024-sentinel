@@ -110,7 +110,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void gotoAngle(double angle) {
-    double encoderSetpoint = (((Constants.MAX_POSITION_SHOOTER - Constants.MIN_POSITITON_SHOOTER) * angle) / (Math.PI)) + Constants.MIN_POSITITON_SHOOTER ; //TODO FIND ACTUAL MAX SHOOTER POS
+    double encoderSetpoint = (((Constants.MAX_POSITION_SHOOTER - Constants.MIN_POSITITON_SHOOTER) * angle) / (Math.PI / 2)) + Constants.MIN_POSITITON_SHOOTER ; //TODO FIND ACTUAL MAX SHOOTER POS
     // double encoderSetpoint = getAbsolutePosition();
     // double encoderSetpoint = ((Constants.MIN_POSITITON_SHOOTER*2*Math.PI) + angle);
     SmartDashboard.putNumber("Desired encoder rot", encoderSetpoint);
