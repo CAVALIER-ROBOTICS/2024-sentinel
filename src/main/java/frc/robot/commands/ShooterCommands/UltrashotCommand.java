@@ -7,24 +7,23 @@ package frc.robot.commands.ShooterCommands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.ultrashot.AngleStates;
 
-public class PrepUltrashotCommand extends Command {
+public class UltrashotCommand extends Command {
   /** Creates a new UltrashotCommand. */
   ShooterSubsystem shooterSubsystem;
   DriveSubsystem driveSubsystem;
-  DoubleSupplier x, y;
-  public PrepUltrashotCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier x, DoubleSupplier y) {
+  DoubleSupplier x, y, k;
+  public UltrashotCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier x, DoubleSupplier y, DoubleSupplier k) {
     this.shooterSubsystem = shooterSubsystem;
     this.driveSubsystem = driveSubsystem;
     this.x = x;
     this.y = y;
-    
+    this.k = k;
     addRequirements(shooterSubsystem, driveSubsystem);
   }
 
@@ -38,12 +37,13 @@ public class PrepUltrashotCommand extends Command {
   public void execute() {
     shooterSubsystem.updateUltrashot(driveSubsystem);
     shooterSubsystem.ultimatum();
-    // shooterSubsystem.setFlywheelSpeed(1);
+    shooterSubsystem.setFlywheelSpeed(.6);
 
     AngleStates states = shooterSubsystem.getAngleStates();
 
     driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta()), x.getAsDouble(), y.getAsDouble());
     shooterSubsystem.gotoAngle(states.getPhi());
+    shooterSubsystem.setKickerSpeed(-k.getAsDouble());
     SmartDashboard.putNumber("theta", states.getTheta());
   }
 
@@ -52,6 +52,7 @@ public class PrepUltrashotCommand extends Command {
   public void end(boolean interrupted) {
     shooterSubsystem.setFlywheelSpeed(0);
     shooterSubsystem.setAngleSpeed(0);
+    shooterSubsystem.setKickerSpeed(0);
   }
   
 

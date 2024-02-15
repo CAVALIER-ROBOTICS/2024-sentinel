@@ -6,7 +6,6 @@ package frc.robot.commands.ShooterCommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class RunFlywheelCommand extends Command {
@@ -25,9 +24,9 @@ public class RunFlywheelCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    sub.setFlywheelSpeed(.8);
+    sub.setFlywheelSpeed(.6);
 
-    if(sub.getRPM() > 3500) {
+    if(sub.getRPM() > 4500) {
       sub.setKickerSpeed(-.8);
     } else {
       sub.setKickerSpeed(0);

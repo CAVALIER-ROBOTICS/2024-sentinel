@@ -9,7 +9,7 @@ import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
 import frc.robot.commands.BotStateCommands.ShooterTransferCommand;
 import frc.robot.commands.DriveCommands.FieldDrive;
-import frc.robot.commands.ShooterCommands.PrepUltrashotCommand;
+import frc.robot.commands.ShooterCommands.UltrashotCommand;
 import frc.robot.commands.ShooterCommands.RunFlywheelCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -81,7 +81,14 @@ public class RobotContainer {
     runFlywheel.whileTrue(new RunFlywheelCommand(shooterSubsystem));
     toggleIntake.onTrue(intakeSequence);
     zeroGyro.onTrue(new InstantCommand(driveSubsystem::resetGyroFieldDrive));
-    targetTrack.whileTrue(new PrepUltrashotCommand(shooterSubsystem, driveSubsystem, driver::getLeftY, driver::getLeftX));
+    targetTrack.whileTrue(new UltrashotCommand(shooterSubsystem, driveSubsystem, 
+      () -> Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
+      * directionIsZero(driver.getLeftX(), driver.getLeftY()),
+
+      () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
+      * directionIsZero(driver.getLeftX(), driver.getLeftY()),
+
+      operator::getRightTriggerAxis));
   }
 
   public DriveSubsystem getDriveSubsystem() {
