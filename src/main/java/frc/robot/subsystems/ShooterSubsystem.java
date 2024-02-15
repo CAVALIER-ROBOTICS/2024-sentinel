@@ -76,6 +76,7 @@ public class ShooterSubsystem extends SubsystemBase {
     if(speed == 0) {
       top.set(0);
       bottom.set(0);
+      return;
     }
     top.set(speed + 0.075);
     bottom.set(-(speed - 0.075));
@@ -92,7 +93,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double getRPM() {
-    return (rpmEncoderTop.getVelocity() + rpmEncoderBottom.getVelocity());
+    return (Math.abs(rpmEncoderTop.getVelocity()) + Math.abs(rpmEncoderBottom.getVelocity()) / 2);
   }
 
   public double getAbsolutePosition() {

@@ -22,7 +22,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   DriveSubsystem driveSubsystem;
 
-  String pathName = "autobuilder";
+  String pathName = "test";
 
   @Override
   public void robotInit() {

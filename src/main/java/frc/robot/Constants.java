@@ -34,7 +34,7 @@ public final class Constants {
   public static final int RIGHT_CLIMB = 25;
 
   public static final double RETRACTED_POS = 0.773558944588974;
-  public static final double EXTENDED_POS = .077075026926876;
+  public static final double EXTENDED_POS = .087075026926876;
   public static final double INTAKE_LINEUP_POSITION = Constants.RETRACTED_POS;
   public static final double SHOOTER_LINEUP_POSITION = 0.179110983981191;
   public static final double SHOOTER_BASIC_SHOT_POSITION = 0.92; 
@@ -77,7 +77,7 @@ public final class Constants {
   public static final double NOMINAL_VOLTAGE = 12.2;
   
   public static final String CANIVORE = "OTHERCANIVORE";
-  public static final double BOT_LENGTH = .5;
+  public static final double BOT_LENGTH = .6858;
 
   private static double L = Constants.BOT_LENGTH;
   private static double W = Constants.BOT_LENGTH;
