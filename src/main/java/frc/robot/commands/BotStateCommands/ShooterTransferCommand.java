@@ -4,6 +4,7 @@
 
 package frc.robot.commands.BotStateCommands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -22,7 +23,7 @@ public class ShooterTransferCommand extends Command {
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {SmartDashboard.putBoolean("hasNote", false);}
 
   @Override
   public void execute() {

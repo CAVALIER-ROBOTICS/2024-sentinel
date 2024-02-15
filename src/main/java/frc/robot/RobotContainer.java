@@ -4,13 +4,13 @@
 
 package frc.robot;
 
+import frc.robot.commands.BotStateCommands.FinishCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
 import frc.robot.commands.BotStateCommands.ShooterTransferCommand;
 import frc.robot.commands.DriveCommands.FieldDrive;
 import frc.robot.commands.ShooterCommands.UltrashotCommand;
-import frc.robot.commands.ShooterCommands.RunFlywheelCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -66,7 +66,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     JoystickButton toggleIntake = new JoystickButton(driver, 1);
-    JoystickButton runFlywheel = new JoystickButton(driver, 2);
+    // JoystickButton runFlywheel = new JoystickButton(driver, 2);
     JoystickButton zeroGyro = new JoystickButton(driver, 4);
     JoystickButton targetTrack = new JoystickButton(driver, 3);
 
@@ -75,10 +75,10 @@ public class RobotContainer {
       new RunCommand(() -> intake.setIntakeSpin(1), intake).raceWith(new WaitCommand(.05)),
       new ShooterLineupCommand(intake, shooterSubsystem).raceWith(new WaitCommand(1)),
       new ShooterTransferCommand(intake, shooterSubsystem),
-      new SendbackCommand(shooterSubsystem)
+      new SendbackCommand(shooterSubsystem),
+      new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.025))
     );
 
-    runFlywheel.whileTrue(new RunFlywheelCommand(shooterSubsystem));
     toggleIntake.onTrue(intakeSequence);
     zeroGyro.onTrue(new InstantCommand(driveSubsystem::resetGyroFieldDrive));
     targetTrack.whileTrue(new UltrashotCommand(shooterSubsystem, driveSubsystem, 
@@ -88,7 +88,7 @@ public class RobotContainer {
       () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
       * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
-      operator::getRightTriggerAxis));
+      driver::getLeftTriggerAxis));
   }
 
   public DriveSubsystem getDriveSubsystem() {

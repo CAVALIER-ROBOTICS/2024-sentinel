@@ -4,6 +4,7 @@
 
 package frc.robot.commands.BotStateCommands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -20,7 +21,7 @@ public class IntakeStateCommand extends Command {
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {SmartDashboard.putBoolean("hasNote", false);}
 
   @Override
   public void execute() {
@@ -34,6 +35,7 @@ public class IntakeStateCommand extends Command {
     intakeSubsystem.setIntakeSpin(0);
     intakeSubsystem.setAnglePercentOutput(0);
     shooterSubsystem.setAngleSpeed(0);
+    SmartDashboard.putBoolean("hasNote", true);
   }
 
   @Override

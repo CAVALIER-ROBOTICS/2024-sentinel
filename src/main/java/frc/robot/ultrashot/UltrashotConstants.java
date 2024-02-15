@@ -10,9 +10,9 @@ public class UltraShotConstants {
     public static AngleStates states = new AngleStates();
 
     public static double shooterLength = 0.4303; // m
-    public static double shooterSpeed = rpmToMetersPerSecond(4000); // m/s
+    public static double shooterSpeed = 11; // m/s
     public static double localGravity = 9.79327; // m/s^2
-    public static double airDrag = 0.247; // unitless
+    public static double airDrag = 0.2; // unitless (was .247)
     public static double settleTime = 0.1; // s
 
     public static double rpmToMetersPerSecond(double rpm) {

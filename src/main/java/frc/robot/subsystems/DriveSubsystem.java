@@ -105,13 +105,17 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("LimelightAngle", Limelight.getPose2d(accurate).getRotation().getDegrees());
   
       if(targetAmount >= 2) {
+        SmartDashboard.putBoolean("UsingLimelight", true);
         // System.out.println("UPDATING WITH LIMELIGHT");
         Pose2d limePose = Limelight.getPose2d(accurate);
-        updateOdometry(limePose);
-        setYaw(limePose.getRotation().getDegrees());
-        return;
+        if(!(limePose.getX() == 0 && limePose.getY() == 0)) {
+          updateOdometry(limePose);
+          setYaw(limePose.getRotation().getDegrees());
+          return;
+        }
       }
   
+      SmartDashboard.putBoolean("UsingLimelight", false);
       odometry.update(getAngle(), getSwerveModulePositions());
   }
 

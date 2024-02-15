@@ -46,8 +46,8 @@ public class ShooterSubsystem extends SubsystemBase {
     bottom.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
     left.setIdleMode(IdleMode.kBrake);
     right.setIdleMode(IdleMode.kBrake);
-    top.setIdleMode(IdleMode.kCoast);
-    bottom.setIdleMode(IdleMode.kCoast);
+    top.setIdleMode(IdleMode.kBrake);
+    bottom.setIdleMode(IdleMode.kBrake);
 
     rpmEncoderTop = top.getEncoder();
     rpmEncoderBottom = bottom.getEncoder();
@@ -73,8 +73,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
   }
   public void setFlywheelSpeed(double speed) {
-    top.set(speed);
-    bottom.set(-(speed));
+    if(speed == 0) {
+      top.set(0);
+      bottom.set(0);
+    }
+    top.set(speed + 0.075);
+    bottom.set(-(speed - 0.075));
   }
 
   public void setAngleSpeed(double speed) {
