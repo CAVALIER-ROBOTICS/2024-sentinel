@@ -17,13 +17,14 @@ public class UltrashotCommand extends Command {
   /** Creates a new UltrashotCommand. */
   ShooterSubsystem shooterSubsystem;
   DriveSubsystem driveSubsystem;
-  DoubleSupplier x, y, k;
-  public UltrashotCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier x, DoubleSupplier y, DoubleSupplier k) {
+  DoubleSupplier x, y, k, f;
+  public UltrashotCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier x, DoubleSupplier y, DoubleSupplier k, DoubleSupplier f) {
     this.shooterSubsystem = shooterSubsystem;
     this.driveSubsystem = driveSubsystem;
     this.x = x;
     this.y = y;
     this.k = k;
+    this.f = f;
     addRequirements(shooterSubsystem, driveSubsystem);
   }
 
@@ -37,7 +38,7 @@ public class UltrashotCommand extends Command {
   public void execute() {
     shooterSubsystem.updateUltrashot(driveSubsystem);
     shooterSubsystem.ultimatum();
-    shooterSubsystem.setFlywheelSpeed(.6);
+    shooterSubsystem.setFlywheelSpeed( (int) (f.getAsDouble() + .5) * .6);
 
     AngleStates states = shooterSubsystem.getAngleStates();
 

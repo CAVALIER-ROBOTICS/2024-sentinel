@@ -65,10 +65,11 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    JoystickButton toggleIntake = new JoystickButton(driver, 1);
+    PathLoader.configureAutoBuilder(driveSubsystem);
+    JoystickButton toggleIntake = new JoystickButton(driver, 5);
     // JoystickButton runFlywheel = new JoystickButton(driver, 2);
     JoystickButton zeroGyro = new JoystickButton(driver, 4);
-    JoystickButton targetTrack = new JoystickButton(driver, 3);
+    JoystickButton targetTrack = new JoystickButton(driver, 2);
 
     SequentialCommandGroup intakeSequence = new SequentialCommandGroup(
       new IntakeStateCommand(intake, shooterSubsystem),
@@ -76,19 +77,21 @@ public class RobotContainer {
       new ShooterLineupCommand(intake, shooterSubsystem).raceWith(new WaitCommand(1)),
       new ShooterTransferCommand(intake, shooterSubsystem),
       new SendbackCommand(shooterSubsystem),
-      new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.025))
+      new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
     );
 
     toggleIntake.onTrue(intakeSequence);
     zeroGyro.onTrue(new InstantCommand(driveSubsystem::resetGyroFieldDrive));
-    targetTrack.whileTrue(new UltrashotCommand(shooterSubsystem, driveSubsystem, 
+
+    targetTrack.toggleOnTrue(new UltrashotCommand(shooterSubsystem, driveSubsystem, 
       () -> Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
       * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
       () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
       * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
-      driver::getLeftTriggerAxis));
+      operator::getLeftTriggerAxis,
+      operator::getRightTriggerAxis));
   }
 
   public DriveSubsystem getDriveSubsystem() {
