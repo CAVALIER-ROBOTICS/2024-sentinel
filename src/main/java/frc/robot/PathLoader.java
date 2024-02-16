@@ -58,5 +58,7 @@ public class PathLoader {
 
     public static Command loadPath(String name) {
         return new PathPlannerAuto(name);
+        // PathPlannerPath path = PathPlannerPath.fromPathFile(name);
+        // return AutoBuilder.followPath(path);
     }
 }
