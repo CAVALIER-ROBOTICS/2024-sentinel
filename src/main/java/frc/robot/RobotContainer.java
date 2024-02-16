@@ -10,6 +10,7 @@ import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
 import frc.robot.commands.BotStateCommands.ShooterTransferCommand;
 import frc.robot.commands.DriveCommands.FieldDrive;
+import frc.robot.commands.ShooterCommands.AmpScoringCommand;
 import frc.robot.commands.ShooterCommands.UltrashotCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -70,18 +71,20 @@ public class RobotContainer {
     // JoystickButton runFlywheel = new JoystickButton(driver, 2);
     JoystickButton zeroGyro = new JoystickButton(driver, 4);
     JoystickButton targetTrack = new JoystickButton(driver, 2);
+    JoystickButton ampMode = new JoystickButton(driver, 3);
 
     SequentialCommandGroup intakeSequence = new SequentialCommandGroup(
       new IntakeStateCommand(intake, shooterSubsystem),
       new RunCommand(() -> intake.setIntakeSpin(1), intake).raceWith(new WaitCommand(.05)),
       new ShooterLineupCommand(intake, shooterSubsystem).raceWith(new WaitCommand(1)),
       new ShooterTransferCommand(intake, shooterSubsystem),
-      new SendbackCommand(shooterSubsystem),
-      new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
+      new SendbackCommand(shooterSubsystem)
+      // new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
     );
 
     toggleIntake.onTrue(intakeSequence);
     zeroGyro.onTrue(new InstantCommand(driveSubsystem::resetGyroFieldDrive));
+    ampMode.toggleOnTrue(new AmpScoringCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
 
     targetTrack.toggleOnTrue(new UltrashotCommand(shooterSubsystem, driveSubsystem, 
       () -> Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)

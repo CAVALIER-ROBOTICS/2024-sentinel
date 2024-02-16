@@ -39,6 +39,7 @@ public final class Constants {
   public static final double SHOOTER_LINEUP_POSITION = 0.179110983981191;
   public static final double SHOOTER_BASIC_SHOT_POSITION = 0.92; 
   public static final double MOVE_SPEED = 0.1;
+  public static final double MAX_FLYWHEEL_PERCENT_OUTPUT = .6;
 
   public static final double FLEFT_OFFSET = -2.876213977285577;
   public static final double FRIGHT_OFFSET = -2.311709047343661;

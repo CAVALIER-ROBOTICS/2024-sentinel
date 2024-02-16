@@ -29,7 +29,7 @@ public class ShooterSubsystem extends SubsystemBase {
   DigitalInput limit = new DigitalInput(Constants.SHOOTER_LIMIT_SWITCH_ID);
 
   DutyCycleEncoder enc = new DutyCycleEncoder(1);
-  PIDController angleController = new PIDController(0.5, 0.00, 0.0);
+  PIDController angleController = new PIDController(0.5, 0, 0);
 
   RelativeEncoder rpmEncoderTop, rpmEncoderBottom;
   UltraShot ultraShot = new UltraShot();
@@ -80,6 +80,12 @@ public class ShooterSubsystem extends SubsystemBase {
     }
     top.set(speed + 0.075);
     bottom.set(-(speed - 0.075));
+  }
+
+  public void stopAll() {
+    setAngleSpeed(0);
+    setFlywheelSpeed(0);
+    setKickerSpeed(0);
   }
 
   public void setAngleSpeed(double speed) {

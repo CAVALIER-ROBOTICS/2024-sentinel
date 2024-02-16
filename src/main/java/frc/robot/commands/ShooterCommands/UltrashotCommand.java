@@ -51,9 +51,7 @@ public class UltrashotCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooterSubsystem.setFlywheelSpeed(0);
-    shooterSubsystem.setAngleSpeed(0);
-    shooterSubsystem.setKickerSpeed(0);
+    shooterSubsystem.stopAll();
   }
   
 
