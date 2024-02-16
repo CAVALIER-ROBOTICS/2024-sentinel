@@ -39,7 +39,7 @@ public class PathLoader {
 
         HolonomicPathFollowerConfig hpfc = new HolonomicPathFollowerConfig(
             new PIDConstants(.05, 0, 0),
-            new PIDConstants(.05, 0, 0),
+            new PIDConstants(.1, 0, 0),
             4.2,
             Constants.BOT_LENGTH / 2,
             new ReplanningConfig(),

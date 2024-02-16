@@ -4,25 +4,29 @@
 
 package frc.robot;
 
-import frc.robot.commands.BotStateCommands.FinishCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
 import frc.robot.commands.BotStateCommands.ShooterTransferCommand;
 import frc.robot.commands.DriveCommands.FieldDrive;
 import frc.robot.commands.ShooterCommands.AmpScoringCommand;
+import frc.robot.commands.ShooterCommands.ForceSendbackCommand;
 import frc.robot.commands.ShooterCommands.UltrashotCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
@@ -33,8 +37,18 @@ public class RobotContainer {
   ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   IntakeSubsystem intake = new IntakeSubsystem();
   ClimbSubsystem climb = new ClimbSubsystem();
-  
+
+  public void registerNamedCommands() {
+    NamedCommands.registerCommand("test", new InstantCommand(
+      () -> SmartDashboard.putBoolean("Named Command Called", true)
+    ));
+  } 
+
   public RobotContainer() {
+    // registerNamedCommands();
+    PathLoader.configureAutoBuilder(driveSubsystem);
+    SmartDashboard.putBoolean("Named Command Called", false);
+
     driveSubsystem.setDefaultCommand(new FieldDrive(
 
     driveSubsystem,
@@ -48,7 +62,7 @@ public class RobotContainer {
     () -> driver.getRightX() * Math.PI));
 
     // driveSubsystem.setDefaultCommand(new PrepUltrashotCommand(shooterSubsystem, driveSubsystem, driver::getLeftY, driver::getLeftX));
-    
+    shooterSubsystem.setDefaultCommand(new ForceSendbackCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
     configureBindings();
   }
 
@@ -66,7 +80,6 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    PathLoader.configureAutoBuilder(driveSubsystem);
     JoystickButton toggleIntake = new JoystickButton(driver, 5);
     // JoystickButton runFlywheel = new JoystickButton(driver, 2);
     JoystickButton zeroGyro = new JoystickButton(driver, 4);
@@ -75,8 +88,8 @@ public class RobotContainer {
 
     SequentialCommandGroup intakeSequence = new SequentialCommandGroup(
       new IntakeStateCommand(intake, shooterSubsystem),
-      new RunCommand(() -> intake.setIntakeSpin(1), intake).raceWith(new WaitCommand(.05)),
-      new ShooterLineupCommand(intake, shooterSubsystem).raceWith(new WaitCommand(1)),
+      new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
+      new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
       new ShooterTransferCommand(intake, shooterSubsystem),
       new SendbackCommand(shooterSubsystem)
       // new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
