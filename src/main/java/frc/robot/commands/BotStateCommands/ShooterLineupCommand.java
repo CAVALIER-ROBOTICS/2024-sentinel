@@ -27,8 +27,8 @@ public class ShooterLineupCommand extends Command {
 
   @Override
   public void execute() {
-    intakeSubsystem.setPosition(Constants.RETRACTED_POS);
-    shooterSub.setPosition(Constants.SHOOTER_LINEUP_POSITION);
+    intakeSubsystem.setPosition(Constants.IntakeConstants.RETRACTED_POS);
+    shooterSub.setPosition(Constants.ShooterConstants.SHOOTER_LINEUP_POSITION);
 
     SmartDashboard.putBoolean("AtSetpoint", shooterSub.atSetpoint());
   }

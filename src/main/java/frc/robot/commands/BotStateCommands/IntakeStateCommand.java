@@ -25,8 +25,8 @@ public class IntakeStateCommand extends Command {
 
   @Override
   public void execute() {
-    intakeSubsystem.setPosition(Constants.EXTENDED_POS);
-    shooterSubsystem.setPosition(Constants.SHOOTER_LINEUP_POSITION);
+    intakeSubsystem.setPosition(Constants.IntakeConstants.EXTENDED_POS);
+    shooterSubsystem.setPosition(Constants.IntakeConstants.RETRACTED_POS);
     intakeSubsystem.setIntakeSpin(1);
   }
 
@@ -41,6 +41,6 @@ public class IntakeStateCommand extends Command {
   @Override
   public boolean isFinished() {
     //We have a note in the intake, now move it to the shooter.
-    return intakeSubsystem.getProximity() <= Constants.MINIMUM_PROXIMITY_TRIGGER;
+    return intakeSubsystem.getProximity() <= Constants.IntakeConstants.MINIMUM_PROXIMITY_TRIGGER;
   }
 }
