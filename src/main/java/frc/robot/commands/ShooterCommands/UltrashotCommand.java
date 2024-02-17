@@ -30,7 +30,10 @@ public class UltrashotCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    driveSubsystem.resetHeadingPID();
+    
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
 
@@ -41,8 +44,8 @@ public class UltrashotCommand extends Command {
     shooterSubsystem.setFlywheelSpeed( (int) (f.getAsDouble() + .5) * .6);
 
     AngleStates states = shooterSubsystem.getAngleStates();
-
     driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta()), x.getAsDouble(), y.getAsDouble());
+  
     shooterSubsystem.gotoAngle(states.getPhi());
     shooterSubsystem.setKickerSpeed(-k.getAsDouble());
     SmartDashboard.putNumber("theta", states.getTheta());

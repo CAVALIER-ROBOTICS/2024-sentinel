@@ -90,6 +90,8 @@ public final class Constants {
     new Translation2d(-L/2, -W/2)
   );
 
-
+  public static final String P_thetaSmartdashboard = "ThetaP";
+  public static final String I_thetaSmartdashboard = "ThetaI";
+  public static final String D_thetaSmartdashboard = "ThetaD";
 
 }
