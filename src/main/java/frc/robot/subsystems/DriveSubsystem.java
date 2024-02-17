@@ -148,7 +148,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("FRIGHT", fright.getEncoderPosition());
     SmartDashboard.putNumber("BLEFT", bleft.getEncoderPosition());
     SmartDashboard.putNumber("BRIGHT", bright.getEncoderPosition());
-    headingController.setP(SmartDashboard.getNumber("Bot_theta_P", 0));
+    // headingController.setP(SmartDashboard.getNumber("Bot_theta_P", 0));
 
     updateOdometry();
     field.setRobotPose(odometry.getPoseMeters());
