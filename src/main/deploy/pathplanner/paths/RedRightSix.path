@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 10.06015667969183,
-        "y": 5.73850577223907
+        "x": 9.986724879110136,
+        "y": 5.747684747311781
       },
       "isLocked": false,
       "linkedName": "RedRightShooterPosition"
@@ -20,8 +20,8 @@
         "y": 4.123006159441842
       },
       "prevControl": {
-        "x": 9.215690973002369,
-        "y": 4.921576990767744
+        "x": 9.325838673874907,
+        "y": 4.857324165258764
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,7 +29,19 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.1,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 0.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 360.0
+      }
+    }
+  ],
   "eventMarkers": [
     {
       "name": "Intake",
