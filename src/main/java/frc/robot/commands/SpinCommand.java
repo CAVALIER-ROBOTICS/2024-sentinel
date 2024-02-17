@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class SpinCommand extends Command {
@@ -40,6 +40,6 @@ public class SpinCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return intakeSub.getIsUp() || intakeSub.getProximity() > Constants.MINIMUM_PROXIMITY_TRIGGER;
+    return intakeSub.getIsUp() || intakeSub.getProximity() > IntakeConstants.MINIMUM_PROXIMITY_TRIGGER;
   }
 }

@@ -13,12 +13,12 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.ultrashot.AngleStates;
 
-public class UltrashotCommand extends Command {
+public class UltraShotAutonCommand extends Command {
   /** Creates a new UltrashotCommand. */
   ShooterSubsystem shooterSubsystem;
   DriveSubsystem driveSubsystem;
   DoubleSupplier x, y, k, f;
-  public UltrashotCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier x, DoubleSupplier y, DoubleSupplier k, DoubleSupplier f) {
+  public UltraShotAutonCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier x, DoubleSupplier y, DoubleSupplier k, DoubleSupplier f) {
     this.shooterSubsystem = shooterSubsystem;
     this.driveSubsystem = driveSubsystem;
     this.x = x;
@@ -30,10 +30,7 @@ public class UltrashotCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    driveSubsystem.resetHeadingPID();
-    
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
 
@@ -44,8 +41,8 @@ public class UltrashotCommand extends Command {
     shooterSubsystem.setFlywheelSpeed( (int) (f.getAsDouble() + .5) * .6);
 
     AngleStates states = shooterSubsystem.getAngleStates();
+
     driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta()), x.getAsDouble(), y.getAsDouble());
-  
     shooterSubsystem.gotoAngle(states.getPhi());
     shooterSubsystem.setKickerSpeed(-k.getAsDouble());
     SmartDashboard.putNumber("theta", states.getTheta());
