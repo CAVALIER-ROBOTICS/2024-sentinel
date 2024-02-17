@@ -25,7 +25,7 @@ public class DriveSubsystem extends SubsystemBase {
   NeoSteveModule fleft, fright, bleft, bright;
 
   Pigeon2 pigeon = new Pigeon2(Constants.PIGEON_ID, Constants.CANIVORE);
-  PIDController headingController = new PIDController(5, 0, .1);
+  PIDController headingController = new PIDController(4.26, .2, .1);
   
 
   SwerveDriveOdometry odometry;
