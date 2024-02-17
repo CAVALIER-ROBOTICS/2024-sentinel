@@ -161,7 +161,7 @@ public class UltraShot {
         
         slingShot();
 
-        states.setTheta(states.getTheta() + thetaS);
+        states.setTheta(states.getTheta() + thetaS + Math.PI);
     }
 
     // track() returns approximate values of theta, omega, phi, and psi so that a control loop has less error to deal with when ultimatum() is called

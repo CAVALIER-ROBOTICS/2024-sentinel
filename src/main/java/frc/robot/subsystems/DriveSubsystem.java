@@ -39,7 +39,7 @@ public class DriveSubsystem extends SubsystemBase {
     bright = new NeoSteveModule(Constants.BRIGHT_DRIVE_ID, Constants.BRIGHT_STEER_ID, Constants.BRIGHT_CANCODER_ID, Constants.BRIGHT_OFFSET, Constants.CANIVORE);
 
     odometry = new SwerveDriveOdometry(Constants.m_kinematics, getAngle(), getSwerveModulePositions());
-
+    headingController.enableContinuousInput(0, 2*Math.PI);
     field = new Field2d();
     SmartDashboard.putData("fiel ldl dldd vd", field);
   }
@@ -147,6 +147,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("FRIGHT", fright.getEncoderPosition());
     SmartDashboard.putNumber("BLEFT", bleft.getEncoderPosition());
     SmartDashboard.putNumber("BRIGHT", bright.getEncoderPosition());
+    headingController.setP(SmartDashboard.getNumber("Bot_theta_P", 0));
 
     updateOdometry();
     field.setRobotPose(odometry.getPoseMeters());

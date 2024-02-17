@@ -48,6 +48,7 @@ public class RobotContainer {
     // registerNamedCommands();
     PathLoader.configureAutoBuilder(driveSubsystem);
     SmartDashboard.putBoolean("Named Command Called", false);
+    SmartDashboard.putNumber("Bot_theta_P", 0);
 
     driveSubsystem.setDefaultCommand(new FieldDrive(
 
