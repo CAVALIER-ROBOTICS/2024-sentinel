@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.Constants.SwerveConstants;
 
 /** Add your docs here. */
 public class PathLoader {
@@ -41,7 +42,7 @@ public class PathLoader {
             new PIDConstants(.05, 0, 0),
             new PIDConstants(.1, 0, 0),
             4.2,
-            Constants.BOT_LENGTH / 2,
+            SwerveConstants.BOT_LENGTH / 2,
             new ReplanningConfig(),
             0.02
         );
