@@ -39,9 +39,8 @@ public class RobotContainer {
 
   public RobotContainer() {
     PathLoader.configureAutoBuilder(driveSubsystem);
-    SmartDashboard.putNumber(Constants.P_thetaSmartdashboard, 0);
-    SmartDashboard.putNumber(Constants.I_thetaSmartdashboard, 0);
-    SmartDashboard.putNumber(Constants.D_thetaSmartdashboard, 0);
+    SmartDashboard.putNumber(Constants.ShooterAngleAmpSD, 0);
+    SmartDashboard.putNumber(Constants.FlywheelSpeedAmpSD, 0);
 
     driveSubsystem.setDefaultCommand(new FieldDrive(
 

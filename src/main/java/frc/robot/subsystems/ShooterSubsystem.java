@@ -83,6 +83,16 @@ public class ShooterSubsystem extends SubsystemBase {
     bottom.set(-(speed - 0.075));
   }
 
+   public void setFlywheelSpeed(double speed, double difference) {
+    if(speed == 0) {
+      top.set(0);
+      bottom.set(0);
+      return;
+    }
+    top.set(speed + difference);
+    bottom.set(-(speed - difference));
+  }
+  
   public void stopAll() {
     setAngleSpeed(0);
     setFlywheelSpeed(0);
@@ -99,8 +109,8 @@ public class ShooterSubsystem extends SubsystemBase {
     kicker.set(speed);
   }
 
-  public double getRPM() {
-    return (Math.abs(rpmEncoderTop.getVelocity()) + Math.abs(rpmEncoderBottom.getVelocity()) / 2);
+  public double[] getRPM() {
+    return new double[] {rpmEncoderTop.getVelocity(), rpmEncoderBottom.getVelocity()};
   }
 
   public double getAbsolutePosition() {
@@ -170,7 +180,8 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("AbsoluteShooterPosition", getAbsolutePosition());
     SmartDashboard.putNumber("CalculatedAbsoluteShooterPosition", getAbsolutePosition());
-    SmartDashboard.putNumber("FlywheelRPM", getRPM());
+    SmartDashboard.putNumber("FlywheelRPMTop", getRPM()[0]);
+    SmartDashboard.putNumber("FlywheelRPMBottom", getRPM()[1]);
     SmartDashboard.putNumber("LeftCurrentDraw", left.getOutputCurrent());
     SmartDashboard.putNumber("RightCurrentDraw", right.getOutputCurrent());
     // This method will be called once per scheduler run

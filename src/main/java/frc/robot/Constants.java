@@ -105,6 +105,8 @@ public final class Constants {
   public static final int TOP_SHOOTER_ID = 15;
 
   public static final double NOMINAL_VOLTAGE = 12.2;
+
+  public static final double MAX_DISTANCE_TO_APRILTAG = 5.5;
   
   public static final String CANIVORE = "OTHERCANIVORE";
   public static final double BOT_LENGTH = .6858;
@@ -122,5 +124,9 @@ public final class Constants {
   public static final String P_thetaSmartdashboard = "ThetaP";
   public static final String I_thetaSmartdashboard = "ThetaI";
   public static final String D_thetaSmartdashboard = "ThetaD";
+
+  public static final String ShooterAngleAmpSD = "AmpSetpointAngle";
+  public static final String FlywheelSpeedAmpSD = "FlywheelSetpointAngle";
+
 
 }

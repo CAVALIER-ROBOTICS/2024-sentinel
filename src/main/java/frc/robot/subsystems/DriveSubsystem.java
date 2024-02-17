@@ -25,7 +25,7 @@ public class DriveSubsystem extends SubsystemBase {
   NeoSteveModule fleft, fright, bleft, bright;
 
   Pigeon2 pigeon = new Pigeon2(Constants.PIGEON_ID, Constants.CANIVORE);
-  PIDController headingController = new PIDController(4.26, .2, .1);
+  PIDController headingController = new PIDController(4.26, 0.0, .1);
   
 
   SwerveDriveOdometry odometry;
@@ -59,6 +59,7 @@ public class DriveSubsystem extends SubsystemBase {
   public double clamp(double x, double min, double max) {
     return (x > max) ? max: (x < min) ? min: x;
   }
+
 
   public void drive(ChassisSpeeds speeds) {
     SwerveModuleState[] states = SwerveConstants.m_kinematics.toSwerveModuleStates(speeds);
@@ -112,9 +113,10 @@ public class DriveSubsystem extends SubsystemBase {
   
       SmartDashboard.putNumber("realGyroValue", getAngle().getDegrees());
       SmartDashboard.putNumber("LimelightAngle", Limelight.getPose2d(accurate).getRotation().getDegrees());
-  
-      if(targetAmount >= 2) {
+      
+      if(targetAmount >= 2 && Limelight.getAverageDistanceToAvailableTarget(accurate) <= Constants.MAX_DISTANCE_TO_APRILTAG) {
         SmartDashboard.putBoolean("UsingLimelight", true);
+        SmartDashboard.putNumber("AverageTargetDistance", Limelight.getAverageDistanceToAvailableTarget(accurate));
         // System.out.println("UPDATING WITH LIMELIGHT");
         Pose2d limePose = Limelight.getPose2d(accurate);
         if(!(limePose.getX() == 0 && limePose.getY() == 0)) {
@@ -150,8 +152,7 @@ public class DriveSubsystem extends SubsystemBase {
     rotSpeeds = clamp(rotSpeeds, -1, 1);
     
     ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle);
-    SmartDashboard.putNumber("DesiredXVelocity", fieldRelative.vxMetersPerSecond);
-    SmartDashboard.putNumber("DesiredYVelocity", fieldRelative.vyMetersPerSecond);
+    SmartDashboard.putNumber("OmegaRadsHeading", rotSpeeds);
 
     drive(fieldRelative);
   }
