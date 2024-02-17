@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
+  
   XboxController driver = new XboxController(0);
   XboxController operator = new XboxController(1);
 
@@ -36,8 +37,17 @@ public class RobotContainer {
   IntakeSubsystem intake = new IntakeSubsystem();
   ClimbSubsystem climb = new ClimbSubsystem();
 
-
   public RobotContainer() {
+  
+    NamedCommands.registerCommand("Intake", new SequentialCommandGroup(
+      new IntakeStateCommand(intake, shooterSubsystem),
+      new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
+      new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
+      new ShooterTransferCommand(intake, shooterSubsystem),
+      new SendbackCommand(shooterSubsystem)
+      // new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
+    ));
+    // registerNamedCommands();
     PathLoader.configureAutoBuilder(driveSubsystem);
     SmartDashboard.putNumber(Constants.P_thetaSmartdashboard, 0);
     SmartDashboard.putNumber(Constants.I_thetaSmartdashboard, 0);
