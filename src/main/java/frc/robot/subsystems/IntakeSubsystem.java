@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new Intake. */
@@ -56,7 +57,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public boolean getIsUp() {
-    return Math.abs(Constants.RETRACTED_POS - getAbsolutePosition()) < .1;
+    return Math.abs(IntakeConstants.RETRACTED_POS - getAbsolutePosition()) < .1;
   }
 
   public void setAnglePercentOutput(double point) {
