@@ -16,9 +16,14 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.vision.Limelight;
+
+import java.util.Optional;
 
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -49,6 +54,7 @@ public class RobotContainer {
     ));
     // registerNamedCommands();
     PathLoader.configureAutoBuilder(driveSubsystem);
+    PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
     SmartDashboard.putNumber(Constants.P_thetaSmartdashboard, 0);
     SmartDashboard.putNumber(Constants.I_thetaSmartdashboard, 0);
     SmartDashboard.putNumber(Constants.D_thetaSmartdashboard, 0);
@@ -68,6 +74,10 @@ public class RobotContainer {
     // driveSubsystem.setDefaultCommand(new PrepUltrashotCommand(shooterSubsystem, driveSubsystem, driver::getLeftY, driver::getLeftX));
     shooterSubsystem.setDefaultCommand(new ForceSendbackCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
     configureBindings();
+  }
+
+  public Optional<Rotation2d> getRotationTargetOverride(){
+    return shooterSubsystem.getRotationOverride();
   }
 
   public int lol(boolean b) {
