@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.94,
+        "y": 2.43
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 10.225378231000636,
+        "y": 3.232645577388825
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 12.611911749905632,
+        "y": 4.737997489313514
+      },
+      "prevControl": {
+        "x": 11.271781389289751,
+        "y": 3.884352807551342
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "RedLeftShooterPosition"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 1.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 360.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -163.81079374297306,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 179.5455315275336,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

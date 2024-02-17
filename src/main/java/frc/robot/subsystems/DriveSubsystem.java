@@ -17,14 +17,15 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.CycloidLibrary.NeoSteveModule;
 import frc.robot.vision.Limelight;
 
 public class DriveSubsystem extends SubsystemBase {
   NeoSteveModule fleft, fright, bleft, bright;
 
-  Pigeon2 pigeon = new Pigeon2(Constants.PIGEON, Constants.CANIVORE);
-  PIDController headingController = new PIDController(4.26, .2, .1);
+  Pigeon2 pigeon = new Pigeon2(Constants.PIGEON_ID, Constants.CANIVORE);
+  PIDController headingController = new PIDController(5, 0, .1);
   
 
   SwerveDriveOdometry odometry;
@@ -33,12 +34,12 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
-    fleft = new NeoSteveModule(Constants.FLEFT_DRIVE_ID, Constants.FLEFT_STEER_ID, Constants.FLEFT_CANCODER_ID, Constants.FLEFT_OFFSET, Constants.CANIVORE);
-    fright = new NeoSteveModule(Constants.FRIGHT_DRIVE_ID, Constants.FRIGHT_STEER_ID, Constants.FRIGHT_CANCODER_ID, Constants.FRIGHT_OFFSET, Constants.CANIVORE);
-    bleft = new NeoSteveModule(Constants.BLEFT_DRIVE_ID, Constants.BLEFT_STEER_ID, Constants.BLEFT_CANCODER_ID, Constants.BLEFT_OFFSET, Constants.CANIVORE);
-    bright = new NeoSteveModule(Constants.BRIGHT_DRIVE_ID, Constants.BRIGHT_STEER_ID, Constants.BRIGHT_CANCODER_ID, Constants.BRIGHT_OFFSET, Constants.CANIVORE);
+    fleft = new NeoSteveModule(Constants.FLEFT_DRIVE_ID, Constants.FLEFT_STEER_ID, Constants.FLEFT_CANCODER_ID, SwerveConstants.FLEFT_OFFSET, Constants.CANIVORE);
+    fright = new NeoSteveModule(Constants.FRIGHT_DRIVE_ID, Constants.FRIGHT_STEER_ID, Constants.FRIGHT_CANCODER_ID, SwerveConstants.FRIGHT_OFFSET, Constants.CANIVORE);
+    bleft = new NeoSteveModule(Constants.BLEFT_DRIVE_ID, Constants.BLEFT_STEER_ID, Constants.BLEFT_CANCODER_ID, SwerveConstants.BLEFT_OFFSET, Constants.CANIVORE);
+    bright = new NeoSteveModule(Constants.BRIGHT_DRIVE_ID, Constants.BRIGHT_STEER_ID, Constants.BRIGHT_CANCODER_ID, SwerveConstants.BRIGHT_OFFSET, Constants.CANIVORE);
 
-    odometry = new SwerveDriveOdometry(Constants.m_kinematics, getAngle(), getSwerveModulePositions());
+    odometry = new SwerveDriveOdometry(SwerveConstants.m_kinematics, getAngle(), getSwerveModulePositions());
     headingController.enableContinuousInput(0, 2*Math.PI);
     field = new Field2d();
     SmartDashboard.putData("fiel ldl dldd vd", field);
@@ -60,7 +61,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void drive(ChassisSpeeds speeds) {
-    SwerveModuleState[] states = Constants.m_kinematics.toSwerveModuleStates(speeds);
+    SwerveModuleState[] states = SwerveConstants.m_kinematics.toSwerveModuleStates(speeds);
     setModuleStates(states);
   }
 
@@ -88,7 +89,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public ChassisSpeeds getChassisSpeeds() {
     SwerveModuleState[] currentStates = getSwerveModuleStates();
-    return Constants.m_kinematics.toChassisSpeeds(currentStates);
+    return SwerveConstants.m_kinematics.toChassisSpeeds(currentStates);
   }
 
   public Rotation2d getAngle() {
