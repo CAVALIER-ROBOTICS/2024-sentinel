@@ -3,45 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 11.161633688414996,
-        "y": 7.161246908507248
+        "x": 10.36306285709131,
+        "y": 6.243349401238204
       },
       "prevControl": null,
       "nextControl": {
-        "x": 11.009392813321112,
-        "y": 7.1612469085071595
+        "x": 10.06015667969183,
+        "y": 5.73850577223907
       },
       "isLocked": false,
       "linkedName": "RedRightShooterPosition"
     },
     {
       "anchor": {
-        "x": 10.202544570568305,
-        "y": 5.7851532536159755
+        "x": 8.720026319075947,
+        "y": 4.123006159441842
       },
       "prevControl": {
-        "x": 10.555821333618251,
-        "y": 6.353497102110742
-      },
-      "nextControl": {
-        "x": 9.786800258533434,
-        "y": 5.116312992932593
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 9.050469421693562,
-        "y": 4.095469234223708
-      },
-      "prevControl": {
-        "x": 9.509418175329136,
-        "y": 4.719639539168091
+        "x": 9.215690973002369,
+        "y": 4.921576990767744
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "IntakePosThree"
     }
   ],
   "rotationTargets": [],
@@ -49,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "Intake",
-      "waypointRelativePos": 1.65,
+      "waypointRelativePos": 0.85,
       "command": {
         "type": "sequential",
         "data": {
@@ -59,8 +43,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 1.5,
+    "maxVelocity": 4.2,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 360.0
   },
@@ -70,7 +54,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "RedRight",
   "previewStartingState": {
     "rotation": 179.66982446281062,
     "velocity": 0
