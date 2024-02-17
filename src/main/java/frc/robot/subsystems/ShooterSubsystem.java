@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.ultrashot.AngleStates;
 import frc.robot.ultrashot.UltraShot;
 import frc.robot.ultrashot.UltraShotConstants;
@@ -26,7 +27,7 @@ public class ShooterSubsystem extends SubsystemBase {
   CANSparkMax right = new CANSparkMax(Constants.RIGHT_SHOOTER_PIVOT_ID, MotorType.kBrushless);
   CANSparkMax kicker = new CANSparkMax(Constants.KICKER_ID, MotorType.kBrushless);
 
-  DigitalInput limit = new DigitalInput(Constants.SHOOTER_LIMIT_SWITCH_ID);
+  DigitalInput limit = new DigitalInput(ShooterConstants.SHOOTER_LIMIT_SWITCH_ID);
 
   DutyCycleEncoder enc = new DutyCycleEncoder(1);
   PIDController angleController = new PIDController(0.5, 0, 0);
