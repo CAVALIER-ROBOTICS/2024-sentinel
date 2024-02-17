@@ -6,10 +6,14 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+
+import java.util.Optional;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -186,5 +190,9 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("RightCurrentDraw", right.getOutputCurrent());
     // This method will be called once per scheduler run
     configUltrashot();
+  }
+
+  public Optional<Rotation2d> getRotationOverride() {
+    return Optional.of(Rotation2d.fromRadians(ultraShot.getTheta()));
   }
 }

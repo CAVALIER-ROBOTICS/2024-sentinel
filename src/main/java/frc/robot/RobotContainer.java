@@ -16,9 +16,14 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.vision.Limelight;
+
+import java.util.Optional;
 
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
+  
   XboxController driver = new XboxController(0);
   XboxController operator = new XboxController(1);
 
@@ -36,11 +42,21 @@ public class RobotContainer {
   IntakeSubsystem intake = new IntakeSubsystem();
   ClimbSubsystem climb = new ClimbSubsystem();
 
-
   public RobotContainer() {
+  
+    NamedCommands.registerCommand("Intake", new SequentialCommandGroup(
+      new IntakeStateCommand(intake, shooterSubsystem),
+      new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
+      new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
+      new ShooterTransferCommand(intake, shooterSubsystem),
+      new SendbackCommand(shooterSubsystem)
+      // new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
+    ));
+    // registerNamedCommands();
     PathLoader.configureAutoBuilder(driveSubsystem);
-    SmartDashboard.putNumber(Constants.ShooterAngleAmpSD, 0);
-    SmartDashboard.putNumber(Constants.FlywheelSpeedAmpSD, 0);
+    SmartDashboard.putNumber(Constants.P_thetaSmartdashboard, 0);
+    SmartDashboard.putNumber(Constants.I_thetaSmartdashboard, 0);
+    SmartDashboard.putNumber(Constants.D_thetaSmartdashboard, 0);
 
     driveSubsystem.setDefaultCommand(new FieldDrive(
 
@@ -57,6 +73,10 @@ public class RobotContainer {
     // driveSubsystem.setDefaultCommand(new PrepUltrashotCommand(shooterSubsystem, driveSubsystem, driver::getLeftY, driver::getLeftX));
     shooterSubsystem.setDefaultCommand(new ForceSendbackCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
     configureBindings();
+  }
+
+  public Optional<Rotation2d> getRotationTargetOverride(){
+    return shooterSubsystem.getRotationOverride();
   }
 
   public int lol(boolean b) {

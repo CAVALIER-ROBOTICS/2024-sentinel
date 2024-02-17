@@ -6,7 +6,8 @@ package frc.robot.commands.BotStateCommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -27,8 +28,8 @@ public class ShooterLineupCommand extends Command {
 
   @Override
   public void execute() {
-    intakeSubsystem.setPosition(Constants.IntakeConstants.RETRACTED_POS);
-    shooterSub.setPosition(Constants.ShooterConstants.SHOOTER_LINEUP_POSITION);
+    intakeSubsystem.setPosition(IntakeConstants.RETRACTED_POS);
+    shooterSub.setPosition(ShooterConstants.SHOOTER_LINEUP_POSITION);
 
     SmartDashboard.putBoolean("AtSetpoint", shooterSub.atSetpoint());
   }
