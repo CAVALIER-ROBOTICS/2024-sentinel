@@ -107,5 +107,20 @@ public final class Constants {
   public static final double NOMINAL_VOLTAGE = 12.2;
   
   public static final String CANIVORE = "OTHERCANIVORE";
+  public static final double BOT_LENGTH = .6858;
+
+  private static double L = Constants.BOT_LENGTH;
+  private static double W = Constants.BOT_LENGTH;
+
+  public static final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
+    new Translation2d(L/2, W/2),
+    new Translation2d(L/2, -W/2),
+    new Translation2d(-L/2, W/2),
+    new Translation2d(-L/2, -W/2)
+  );
+
+  public static final String P_thetaSmartdashboard = "ThetaP";
+  public static final String I_thetaSmartdashboard = "ThetaI";
+  public static final String D_thetaSmartdashboard = "ThetaD";
 
 }

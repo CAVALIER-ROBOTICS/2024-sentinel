@@ -36,17 +36,12 @@ public class RobotContainer {
   IntakeSubsystem intake = new IntakeSubsystem();
   ClimbSubsystem climb = new ClimbSubsystem();
 
-  public void registerNamedCommands() {
-    NamedCommands.registerCommand("test", new InstantCommand(
-      () -> SmartDashboard.putBoolean("Named Command Called", true)
-    ));
-  } 
 
   public RobotContainer() {
-    // registerNamedCommands();
     PathLoader.configureAutoBuilder(driveSubsystem);
-    SmartDashboard.putBoolean("Named Command Called", false);
-    SmartDashboard.putNumber("Bot_theta_P", 0);
+    SmartDashboard.putNumber(Constants.P_thetaSmartdashboard, 0);
+    SmartDashboard.putNumber(Constants.I_thetaSmartdashboard, 0);
+    SmartDashboard.putNumber(Constants.D_thetaSmartdashboard, 0);
 
     driveSubsystem.setDefaultCommand(new FieldDrive(
 
@@ -99,11 +94,11 @@ public class RobotContainer {
     ampMode.toggleOnTrue(new AmpScoringCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
 
     targetTrack.toggleOnTrue(new UltrashotCommand(shooterSubsystem, driveSubsystem, 
-      () -> Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
-      * directionIsZero(driver.getLeftX(), driver.getLeftY()),
+    () -> -Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
+        * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
-      () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
-      * directionIsZero(driver.getLeftX(), driver.getLeftY()),
+    () -> -Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
+        * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
       operator::getLeftTriggerAxis,
       operator::getRightTriggerAxis));

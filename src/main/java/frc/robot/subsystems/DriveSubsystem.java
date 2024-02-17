@@ -25,7 +25,7 @@ public class DriveSubsystem extends SubsystemBase {
   NeoSteveModule fleft, fright, bleft, bright;
 
   Pigeon2 pigeon = new Pigeon2(Constants.PIGEON_ID, Constants.CANIVORE);
-  PIDController headingController = new PIDController(5, 0, .1);
+  PIDController headingController = new PIDController(4.26, .2, .1);
   
 
   SwerveDriveOdometry odometry;
@@ -50,6 +50,14 @@ public class DriveSubsystem extends SubsystemBase {
     fright.setModuleState(states[1]);
     bleft.setModuleState(states[2]);
     bright.setModuleState(states[3]);
+  }
+
+  public void resetHeadingPID() {
+    headingController.reset();
+  }
+
+  public double clamp(double x, double min, double max) {
+    return (x > max) ? max: (x < min) ? min: x;
   }
 
   public void drive(ChassisSpeeds speeds) {
@@ -137,10 +145,29 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void driveWithAngleOverride(Rotation2d angle, double xSpeed, double ySpeed) {
     Rotation2d currentAngle = getAngle();
+    pushMeasurementAndSetpoint(angle.getRadians());
     double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians());
-    drive(ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle));
+    rotSpeeds = clamp(rotSpeeds, -1, 1);
+    
+    ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle);
+    SmartDashboard.putNumber("DesiredXVelocity", fieldRelative.vxMetersPerSecond);
+    SmartDashboard.putNumber("DesiredYVelocity", fieldRelative.vyMetersPerSecond);
+
+    drive(fieldRelative);
   }
 
+  public void pushMeasurementAndSetpoint(double setpoint) {
+    SmartDashboard.putNumber("CurrentTheta", getAngle().getRadians());
+    SmartDashboard.putNumber("SetpointTheta", setpoint);
+    SmartDashboard.putNumber("ThetaError", getAngle().getRadians() - setpoint);
+  }
+
+  public void updateShooter() {
+     headingController.setP(SmartDashboard.getNumber(Constants.P_thetaSmartdashboard, 0));
+     headingController.setI(SmartDashboard.getNumber(Constants.I_thetaSmartdashboard, 0));
+     headingController.setD(SmartDashboard.getNumber(Constants.D_thetaSmartdashboard, 0));
+
+  }
 
   @Override
   public void periodic() {
@@ -148,7 +175,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("FRIGHT", fright.getEncoderPosition());
     SmartDashboard.putNumber("BLEFT", bleft.getEncoderPosition());
     SmartDashboard.putNumber("BRIGHT", bright.getEncoderPosition());
-    // headingController.setP(SmartDashboard.getNumber("Bot_theta_P", 0));
+    headingController.setP(SmartDashboard.getNumber("Bot_theta_P", 0));
 
     updateOdometry();
     field.setRobotPose(odometry.getPoseMeters());
