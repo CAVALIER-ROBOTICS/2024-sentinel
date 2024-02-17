@@ -4,12 +4,28 @@
 
 package frc.robot.commands.ShooterCommands;
 
+import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.ultrashot.AngleStates;
 
 public class UltraShotAutonCommand extends Command {
-  /** Creates a new UltraShotAutonCommand. */
-  public UltraShotAutonCommand() {
-    // Use addRequirements() here to declare subsystem dependencies.
+  /** Creates a new UltrashotCommand. */
+  ShooterSubsystem shooterSubsystem;
+  DriveSubsystem driveSubsystem;
+  DoubleSupplier x, y, k, f;
+  public UltraShotAutonCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier x, DoubleSupplier y, DoubleSupplier k, DoubleSupplier f) {
+    this.shooterSubsystem = shooterSubsystem;
+    this.driveSubsystem = driveSubsystem;
+    this.x = x;
+    this.y = y;
+    this.k = k;
+    this.f = f;
+    addRequirements(shooterSubsystem, driveSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -17,12 +33,27 @@ public class UltraShotAutonCommand extends Command {
   public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
+
   @Override
-  public void execute() {}
+  public void execute() {
+    shooterSubsystem.updateUltrashot(driveSubsystem);
+    shooterSubsystem.ultimatum();
+    shooterSubsystem.setFlywheelSpeed( (int) (f.getAsDouble() + .5) * .6);
+
+    AngleStates states = shooterSubsystem.getAngleStates();
+
+    driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta()), x.getAsDouble(), y.getAsDouble());
+    shooterSubsystem.gotoAngle(states.getPhi());
+    shooterSubsystem.setKickerSpeed(-k.getAsDouble());
+    SmartDashboard.putNumber("theta", states.getTheta());
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    shooterSubsystem.stopAll();
+  }
+  
 
   // Returns true when the command should end.
   @Override
