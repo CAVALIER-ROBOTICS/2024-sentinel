@@ -117,6 +117,11 @@ public class ShooterSubsystem extends SubsystemBase {
     return new double[] {rpmEncoderTop.getVelocity(), rpmEncoderBottom.getVelocity()};
   }
 
+  public double getAverageRPM() {
+    double[] rpms = getRPM();
+    return (rpms[0] + rpms[1]) / 2;
+  }
+
   public double getAbsolutePosition() {
     return ((1-((enc.getAbsolutePosition()-0.09)))%1) *2*Math.PI;
   }
