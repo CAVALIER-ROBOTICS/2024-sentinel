@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.commands.AutonCommands.StartThetaOverrideCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
@@ -145,7 +146,7 @@ public class RobotContainer {
 
     SequentialCommandGroup Starting = new SequentialCommandGroup(
        intake(),
-        //new UltrashotCommand(shooterSubsystem, getDriveSubsystem(), 
+        new StartThetaOverrideCommand(shooterSubsystem), 
         PathLoader.loadPath("RedRightDynStarting")
     );
 }
