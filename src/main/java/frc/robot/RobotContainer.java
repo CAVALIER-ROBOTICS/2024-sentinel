@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import frc.robot.commands.AutonCommands.AngleShooterAndKickCommand;
+import frc.robot.commands.AutonCommands.AngleShooterAndSpinupCommand;
+import frc.robot.commands.AutonCommands.StartThetaOverrideCommand;
+import frc.robot.commands.AutonCommands.StopThetaOverrideCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
@@ -40,16 +44,12 @@ public class RobotContainer {
   IntakeSubsystem intake = new IntakeSubsystem();
   ClimbSubsystem climb = new ClimbSubsystem();
 
+  public void registerCommands() {
+    NamedCommands.registerCommand("Intake", getIntakeCommands());
+  }
+
   public RobotContainer() {
-  
-    NamedCommands.registerCommand("Intake", new SequentialCommandGroup(
-      new IntakeStateCommand(intake, shooterSubsystem),
-      new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
-      new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
-      new ShooterTransferCommand(intake, shooterSubsystem),
-      new SendbackCommand(shooterSubsystem)
-      // new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
-    ));
+    registerCommands();
     // registerNamedCommands();
     PathLoader.configureAutoBuilder(driveSubsystem);
     SmartDashboard.putNumber(Constants.P_thetaSmartdashboard, 0);
@@ -139,5 +139,14 @@ public class RobotContainer {
 
   public Command getPathCommand(String path) {
     return PathLoader.loadPath(path);
+  }
+
+  public Command getShotCommand() {
+    return new SequentialCommandGroup(
+      new StartThetaOverrideCommand(shooterSubsystem),
+      new AngleShooterAndSpinupCommand(shooterSubsystem),
+      new AngleShooterAndKickCommand(shooterSubsystem).withTimeout(1),
+      new StopThetaOverrideCommand()
+    );
   }
 }

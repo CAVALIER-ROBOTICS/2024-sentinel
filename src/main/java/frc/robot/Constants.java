@@ -19,18 +19,17 @@ import edu.wpi.first.wpilibj.I2C;
 public final class Constants {
 
   public final class ShooterConstants {
-
     public static final int SHOOTER_LIMIT_SWITCH_ID = 2;
 
     public static final int SPEED_SHOOTER = 1;
-    public static final double MAX_FLYWHEEL_PERCENT_OUTPUT = .6;
+    public static final double MAX_FLYWHEEL_PERCENT_OUTPUT = .8;
+    public static final double MAX_RPM_FLYWHEEL = 5300;
     public static final double MAX_POSITION_SHOOTER = 0.;
     public static final double MIN_POSITITON_SHOOTER = 0.117;
     public static final double SHOOTER_LINEUP_POSITION = 0.179110983981191;
     public static final double SHOOTER_HORIZONTAL = 0.084918577122964;
     public static final double SHOOTER_45_DEGREE = 0.966143724153593; 
     public static final double SHOOTER_VERTICAL = 0.830549720763743;
-
   }
 
   public final class IntakeConstants {
@@ -113,6 +112,7 @@ public final class Constants {
 
   private static double L = Constants.BOT_LENGTH;
   private static double W = Constants.BOT_LENGTH;
+
 
   public static final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     new Translation2d(L/2, W/2),
