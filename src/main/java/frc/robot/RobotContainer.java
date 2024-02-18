@@ -110,7 +110,7 @@ public class RobotContainer {
     JoystickButton targetTrack = new JoystickButton(driver, 2);
     JoystickButton ampMode = new JoystickButton(driver, 3);
 
-    toggleIntake.onTrue(getIntakeCommands());
+    toggleIntake.onTrue(intake());
     
     zeroGyro.onTrue(new InstantCommand(driveSubsystem::resetGyroFieldDrive));
     ampMode.toggleOnTrue(new AmpScoringCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
