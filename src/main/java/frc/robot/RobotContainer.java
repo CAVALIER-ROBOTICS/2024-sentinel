@@ -48,6 +48,7 @@ public class RobotContainer {
 
   public void registerCommands() {
     NamedCommands.registerCommand("Intake", intake());
+    NamedCommands.registerCommand("Shoot", getShotCommand());
   }
 
   public RobotContainer() {
@@ -134,12 +135,15 @@ public class RobotContainer {
     return PathLoader.loadPath(path);
   }
 
- public void RedRight() {
-    SequentialCommandGroup Starting = new SequentialCommandGroup(
-       intake(),
-        new StartThetaOverrideCommand(shooterSubsystem), 
-        PathLoader.loadPath("RedRightDynStarting")
+ public Command RedRight() {
+    return new SequentialCommandGroup(
+        getShotCommand(),
+        intake(), 
+        PathLoader.loadPath("RedRightDynStarting"),
+        RedRightNext("zoneOne")
     );
+
+    
 }
 
 public SequentialCommandGroup intake() {
@@ -159,5 +163,35 @@ public SequentialCommandGroup intake() {
       new AngleShooterAndKickCommand(shooterSubsystem).withTimeout(1),
       new StopThetaOverrideCommand()
     );
+  }
+
+  public Command RedRightNext(String zone) {
+
+    if (checkBoundingBox(zone)) {
+      return new SequentialCommandGroup(
+        intake(),
+        PathLoader.loadPath("RedRightDynNoteOne"),
+        getShotCommand()
+      );
+    }
+
+    if (checkBoundingBox(zone)) {
+      return new SequentialCommandGroup(
+        intake()
+      );
+    }
+
+    if (checkBoundingBox(zone)) {
+       return new SequentialCommandGroup(
+        intake()
+      );     
+    }
+
+    return new SequentialCommandGroup();
+  }
+
+  public boolean checkBoundingBox(String zone) {
+
+    return true;
   }
 }

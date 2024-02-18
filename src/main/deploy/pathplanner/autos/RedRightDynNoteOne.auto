@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 10.730221859999771,
+      "y": 6.674761229655645
+    },
+    "rotation": -178.53119928561424
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RedRightDynNoteOnePickup"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RedRightDynNoteOneShoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
