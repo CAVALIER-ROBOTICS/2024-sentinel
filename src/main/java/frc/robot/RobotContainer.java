@@ -16,8 +16,6 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.vision.Limelight;
-
 import java.util.Optional;
 
 import com.pathplanner.lib.auto.NamedCommands;
@@ -70,7 +68,6 @@ public class RobotContainer {
 
     () -> driver.getRightX() * Math.PI));
 
-    // driveSubsystem.setDefaultCommand(new PrepUltrashotCommand(shooterSubsystem, driveSubsystem, driver::getLeftY, driver::getLeftX));
     shooterSubsystem.setDefaultCommand(new ForceSendbackCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
     configureBindings();
   }
@@ -92,6 +89,27 @@ public class RobotContainer {
     }
   }
 
+  public Command getIntakeCommands() {
+    return new SequentialCommandGroup(
+            new IntakeStateCommand(intake, shooterSubsystem),
+            new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
+            new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
+            new ShooterTransferCommand(intake, shooterSubsystem),
+            new SendbackCommand(shooterSubsystem));
+  }
+
+  public Command startThetaOverrideCommand() {
+    return new InstantCommand(() -> PPHolonomicDriveController.setRotationTargetOverride(
+      () -> Optional.of(Rotation2d.fromRadians(shooterSubsystem.getAngleStates().getTheta()))
+    ));
+  }
+
+  public Command endThetaOverrideCommand() {
+  return new InstantCommand(() -> PPHolonomicDriveController.setRotationTargetOverride(
+      () -> Optional.empty())
+    );
+  }
+
   private void configureBindings() {
     JoystickButton toggleIntake = new JoystickButton(driver, 5);
     // JoystickButton runFlywheel = new JoystickButton(driver, 2);
@@ -99,16 +117,8 @@ public class RobotContainer {
     JoystickButton targetTrack = new JoystickButton(driver, 2);
     JoystickButton ampMode = new JoystickButton(driver, 3);
 
-    SequentialCommandGroup intakeSequence = new SequentialCommandGroup(
-      new IntakeStateCommand(intake, shooterSubsystem),
-      new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
-      new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
-      new ShooterTransferCommand(intake, shooterSubsystem),
-      new SendbackCommand(shooterSubsystem)
-      // new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
-    );
-
-    toggleIntake.onTrue(intakeSequence);
+    toggleIntake.onTrue(getIntakeCommands());
+    
     zeroGyro.onTrue(new InstantCommand(driveSubsystem::resetGyroFieldDrive));
     ampMode.toggleOnTrue(new AmpScoringCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
 
