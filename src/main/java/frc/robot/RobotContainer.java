@@ -4,10 +4,12 @@
 
 package frc.robot;
 
+
 import frc.robot.commands.AutonCommands.AngleShooterAndKickCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndSpinupCommand;
 import frc.robot.commands.AutonCommands.StartThetaOverrideCommand;
 import frc.robot.commands.AutonCommands.StopThetaOverrideCommand;
+
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
@@ -45,7 +47,7 @@ public class RobotContainer {
   ClimbSubsystem climb = new ClimbSubsystem();
 
   public void registerCommands() {
-    NamedCommands.registerCommand("Intake", getIntakeCommands());
+    NamedCommands.registerCommand("Intake", intake());
   }
 
   public RobotContainer() {
@@ -88,16 +90,7 @@ public class RobotContainer {
       return 1.0;
     }
   }
-
-  public Command getIntakeCommands() {
-    return new SequentialCommandGroup(
-            new IntakeStateCommand(intake, shooterSubsystem),
-            new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
-            new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
-            new ShooterTransferCommand(intake, shooterSubsystem),
-            new SendbackCommand(shooterSubsystem));
-  }
-
+  
   public Command startThetaOverrideCommand() {
     return new InstantCommand(() -> PPHolonomicDriveController.setRotationTargetOverride(
       () -> Optional.of(Rotation2d.fromRadians(shooterSubsystem.getAngleStates().getTheta()))
@@ -141,6 +134,24 @@ public class RobotContainer {
     return PathLoader.loadPath(path);
   }
 
+ public void RedRight() {
+    SequentialCommandGroup Starting = new SequentialCommandGroup(
+       intake(),
+        new StartThetaOverrideCommand(shooterSubsystem), 
+        PathLoader.loadPath("RedRightDynStarting")
+    );
+}
+
+public SequentialCommandGroup intake() {
+    return new SequentialCommandGroup(
+      new IntakeStateCommand(intake, shooterSubsystem),
+      new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
+      new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
+      new ShooterTransferCommand(intake, shooterSubsystem),
+      new SendbackCommand(shooterSubsystem)
+      // new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
+    );
+}
   public Command getShotCommand() {
     return new SequentialCommandGroup(
       new StartThetaOverrideCommand(shooterSubsystem),
