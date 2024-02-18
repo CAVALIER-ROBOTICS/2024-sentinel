@@ -130,4 +130,25 @@ public class RobotContainer {
   public Command getPathCommand(String path) {
     return PathLoader.loadPath(path);
   }
+
+  public void RedRight() {
+
+    SequentialCommandGroup Starting = new SequentialCommandGroup(
+       intake(),
+        //new UltrashotCommand(shooterSubsystem, getDriveSubsystem(), 
+        PathLoader.loadPath("RedRightDynStarting")
+    );
+}
+
+public SequentialCommandGroup intake() {
+
+    return new SequentialCommandGroup(
+      new IntakeStateCommand(intake, shooterSubsystem),
+      new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
+      new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
+      new ShooterTransferCommand(intake, shooterSubsystem),
+      new SendbackCommand(shooterSubsystem)
+      // new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
+    );
+}
 }
