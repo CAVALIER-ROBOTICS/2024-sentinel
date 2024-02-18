@@ -46,6 +46,8 @@ public class RobotContainer {
   IntakeSubsystem intake = new IntakeSubsystem();
   ClimbSubsystem climb = new ClimbSubsystem();
 
+  static String pathName = "";
+
   public void registerCommands() {
     NamedCommands.registerCommand("Intake", intake());
     NamedCommands.registerCommand("Shoot", getShotCommand());
@@ -135,17 +137,6 @@ public class RobotContainer {
     return PathLoader.loadPath(path);
   }
 
- public Command RedRight() {
-    return new SequentialCommandGroup(
-        getShotCommand(),
-        intake(), 
-        PathLoader.loadPath("RedRightDynStarting"),
-        RedRightNext("zoneOne")
-    );
-
-    
-}
-
 public SequentialCommandGroup intake() {
     return new SequentialCommandGroup(
       new IntakeStateCommand(intake, shooterSubsystem),
@@ -155,7 +146,8 @@ public SequentialCommandGroup intake() {
       new SendbackCommand(shooterSubsystem)
       // new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
     );
-}
+  }
+
   public Command getShotCommand() {
     return new SequentialCommandGroup(
       new StartThetaOverrideCommand(shooterSubsystem),
@@ -163,35 +155,5 @@ public SequentialCommandGroup intake() {
       new AngleShooterAndKickCommand(shooterSubsystem).withTimeout(1),
       new StopThetaOverrideCommand()
     );
-  }
-
-  public Command RedRightNext(String zone) {
-
-    if (checkBoundingBox(zone)) {
-      return new SequentialCommandGroup(
-        intake(),
-        PathLoader.loadPath("RedRightDynNoteOne"),
-        getShotCommand()
-      );
-    }
-
-    if (checkBoundingBox(zone)) {
-      return new SequentialCommandGroup(
-        intake()
-      );
-    }
-
-    if (checkBoundingBox(zone)) {
-       return new SequentialCommandGroup(
-        intake()
-      );     
-    }
-
-    return new SequentialCommandGroup();
-  }
-
-  public boolean checkBoundingBox(String zone) {
-
-    return true;
   }
 }

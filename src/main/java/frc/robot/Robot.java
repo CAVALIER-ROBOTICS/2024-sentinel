@@ -21,13 +21,15 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   DriveSubsystem driveSubsystem;
+  private Auton auto;
 
-  String pathName = "RedRightDynStarting";
+  //String pathName = "RedRightDynStarting";
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     driveSubsystem = m_robotContainer.getDriveSubsystem();
+    auto = new Auton();
   }
 
   @Override
@@ -43,8 +45,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.RedRight();
-    Pose2d initial = PathPlannerAuto.getStaringPoseFromAutoFile(pathName);
+    // Change the method for different auton
+    m_autonomousCommand = auto.RedRight();
+    Pose2d initial = PathPlannerAuto.getStaringPoseFromAutoFile(auto.getPathName());
     driveSubsystem.updateOdometry(initial);
     driveSubsystem.setYaw(initial.getRotation().getDegrees());
 
