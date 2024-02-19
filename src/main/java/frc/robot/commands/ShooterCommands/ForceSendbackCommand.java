@@ -15,6 +15,8 @@ public class ForceSendbackCommand extends Command {
   DoubleSupplier k, f;
   public ForceSendbackCommand(ShooterSubsystem shooterSubsystem, DoubleSupplier k, DoubleSupplier f) {
     this.shooterSubsystem = shooterSubsystem;
+    this.k = k;
+    this.f = f;
     addRequirements(shooterSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }

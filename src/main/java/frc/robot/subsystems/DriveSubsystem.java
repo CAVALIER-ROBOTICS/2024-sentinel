@@ -47,7 +47,7 @@ public class DriveSubsystem extends SubsystemBase {
     odometry = new SwerveDriveOdometry(SwerveConstants.m_kinematics, getAngle(), getSwerveModulePositions());
     estimator = new SwerveDrivePoseEstimator(SwerveConstants.m_kinematics, getAngle(), getSwerveModulePositions(), new Pose2d());
 
-    headingController.enableContinuousInput(0, 2*Math.PI);
+    headingController.enableContinuousInput(0, 2 * Math.PI);
     odometryField = new Field2d();
     poseEstimatorField = new Field2d();
 
@@ -138,14 +138,17 @@ public class DriveSubsystem extends SubsystemBase {
     Pose2d[] estimates = Limelight.getPoses();
     double[] latencies = Limelight.getLatencies();
 
+    estimator.update(getAngle(), getSwerveModulePositions());
     for(int i = 0; i < estimates.length; i++) {
       Pose2d pose = estimates[i];
       double latencySeconds = latencies[i] / 1000;
 
+      if(pose.getX() == 0 && pose.getY() == 0) {
+        continue;
+      }
+
       estimator.addVisionMeasurement(pose, latencySeconds);
     }
-
-    estimator.update(getAngle(), getSwerveModulePositions());
   }
 
   public void zeroGyro() {
