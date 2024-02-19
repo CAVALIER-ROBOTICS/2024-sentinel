@@ -14,9 +14,9 @@ public class Auton {
   pathName = "RedRightDynStarting";
     return new SequentialCommandGroup(
         robo.getShotCommand(),
-        robo.intake(), 
-        PathLoader.loadPath("RedRightDynStarting"),
-        RedRightNext("zoneOne")
+        //robo.intake(), 
+        PathLoader.loadPath("RedRightDynStarting")
+        //RedRightNext("zoneOne")
     );
 }
 
@@ -24,7 +24,7 @@ public Command RedRightNext(String zone) {
 
     if (checkBoundingBox(zone)) {
       return new SequentialCommandGroup(
-        robo.intake(),
+        //robo.intake(),
         PathLoader.loadPath("RedRightDynNoteOne"),
         robo.getShotCommand()
       );
@@ -32,13 +32,13 @@ public Command RedRightNext(String zone) {
 
     if (checkBoundingBox(zone)) {
       return new SequentialCommandGroup(
-        robo.intake()
+        //robo.intake()
       );
     }
 
     if (checkBoundingBox(zone)) {
        return new SequentialCommandGroup(
-        robo.intake()
+        //robo.intake()
       );     
     }
 

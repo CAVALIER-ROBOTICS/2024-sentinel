@@ -44,13 +44,13 @@ public class RobotContainer {
 
   DriveSubsystem driveSubsystem = new DriveSubsystem();
   ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
-  IntakeSubsystem intake = new IntakeSubsystem();
+  //IntakeSubsystem intake = new IntakeSubsystem();
   ClimbSubsystem climb = new ClimbSubsystem();
 
   static String pathName = "";
 
   public void registerCommands() {
-    NamedCommands.registerCommand("Intake", intake());
+    //NamedCommands.registerCommand("Intake", intake());
     NamedCommands.registerCommand("Shoot", getShotCommand());
   }
 
@@ -114,7 +114,7 @@ public class RobotContainer {
     JoystickButton targetTrack = new JoystickButton(driver, 2);
     JoystickButton ampMode = new JoystickButton(driver, 3);
 
-    toggleIntake.onTrue(intake());
+    //toggleIntake.onTrue(intake());
     
     zeroGyro.onTrue(new InstantCommand(driveSubsystem::resetGyroFieldDrive));
     ampMode.toggleOnTrue(new AmpScoringCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
@@ -138,16 +138,16 @@ public class RobotContainer {
     return PathLoader.loadPath(path);
   }
 
-public SequentialCommandGroup intake() {
-    return new SequentialCommandGroup(
-      new IntakeStateCommand(intake, shooterSubsystem),
-      new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
-      new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
-      new ShooterTransferCommand(intake, shooterSubsystem),
-      new SendbackCommand(shooterSubsystem)
-      // new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
-    );
-  }
+// public SequentialCommandGroup intake() {
+//     return new SequentialCommandGroup(
+//       new IntakeStateCommand(intake, shooterSubsystem),
+//       new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
+//       new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
+//       new ShooterTransferCommand(intake, shooterSubsystem),
+//       new SendbackCommand(shooterSubsystem)
+//       // new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
+//     );
+//   }
 
   public Command getShotCommand() {
     return new SequentialCommandGroup(
