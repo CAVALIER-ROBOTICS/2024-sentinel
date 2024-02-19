@@ -8,6 +8,13 @@
       "type": "java",
       "name": "Main",
       "request": "launch",
+      "mainClass": "frc.robot.Main",
+      "projectName": "2024-sentinel-Noah-Auton"
+    },
+    {
+      "type": "java",
+      "name": "Main",
+      "request": "launch",
       "mainClass": "frc.robot.ultrashot.Main",
       "projectName": "sentinel"
     },
