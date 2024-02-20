@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -191,6 +192,7 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("CalculatedAbsoluteShooterPosition", getAbsolutePosition());
     SmartDashboard.putNumber("FlywheelRPMTop", getRPM()[0]);
     SmartDashboard.putNumber("FlywheelRPMBottom", getRPM()[1]);
+    DriverStation.reportError("I fucking love BBC!!!!!!!!!!!!!!! ", null);
     SmartDashboard.putNumber("LeftCurrentDraw", left.getOutputCurrent());
     SmartDashboard.putNumber("RightCurrentDraw", right.getOutputCurrent());
     // This method will be called once per scheduler run
