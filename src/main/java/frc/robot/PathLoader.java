@@ -70,9 +70,15 @@ public class PathLoader {
         
     }
 
-    public static Command loadPath(String name) {
+    public static Command loadAuto(String name) {
         return new PathPlannerAuto(name);
         // PathPlannerPath path = PathPlannerPath.fromPathFile(name);
         // return AutoBuilder.followPath(path);
+    }
+
+    public static Command loadPath(String name) {
+
+        PathPlannerPath path = PathPlannerPath.fromPathFile(name);
+        return AutoBuilder.followPath(path);
     }
 }
