@@ -14,31 +14,31 @@ public class Auton {
   pathName = "RedRightDynStarting";
     return new SequentialCommandGroup(
         robo.getShotCommand(),
-        //robo.intake(), 
-        PathLoader.loadPath("RedRightDynStarting")
-        //RedRightNext("zoneOne")
+        robo.intake(), 
+        PathLoader.loadPath("RedTopDynStarting"),
+        RedRightNext()
     );
 }
 
-public Command RedRightNext(String zone) {
+public Command RedRightNext() {
 
-    if (checkBoundingBox(zone)) {
+    if (checkBoundingBox("zoneOne") ) {
       return new SequentialCommandGroup(
-        //robo.intake(),
+        robo.intake(),
         PathLoader.loadPath("RedRightDynNoteOne"),
         robo.getShotCommand()
       );
     }
 
-    if (checkBoundingBox(zone)) {
+    if (checkBoundingBox("zoneTwo")) {
       return new SequentialCommandGroup(
-        //robo.intake()
+        robo.intake()
       );
     }
 
-    if (checkBoundingBox(zone)) {
+    if (checkBoundingBox("zoneThree")) {
        return new SequentialCommandGroup(
-        //robo.intake()
+        robo.intake()
       );     
     }
 

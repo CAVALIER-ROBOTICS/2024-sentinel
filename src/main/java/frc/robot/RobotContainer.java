@@ -9,7 +9,7 @@ import frc.robot.commands.AutonCommands.AngleShooterAndKickCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndSpinupCommand;
 import frc.robot.commands.AutonCommands.StartThetaOverrideCommand;
 import frc.robot.commands.AutonCommands.StopThetaOverrideCommand;
-
+import frc.robot.commands.BotStateCommands.FinishCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
@@ -44,13 +45,13 @@ public class RobotContainer {
 
   DriveSubsystem driveSubsystem = new DriveSubsystem();
   ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
-  //IntakeSubsystem intake = new IntakeSubsystem();
+  IntakeSubsystem intake = new IntakeSubsystem();
   ClimbSubsystem climb = new ClimbSubsystem();
 
   static String pathName = "";
 
   public void registerCommands() {
-    //NamedCommands.registerCommand("Intake", intake());
+    NamedCommands.registerCommand("Intake", intake());
     NamedCommands.registerCommand("Shoot", getShotCommand());
   }
 
@@ -138,16 +139,16 @@ public class RobotContainer {
     return PathLoader.loadPath(path);
   }
 
-// public SequentialCommandGroup intake() {
-//     return new SequentialCommandGroup(
-//       new IntakeStateCommand(intake, shooterSubsystem),
-//       new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
-//       new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
-//       new ShooterTransferCommand(intake, shooterSubsystem),
-//       new SendbackCommand(shooterSubsystem)
-//       // new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
-//     );
-//   }
+ public SequentialCommandGroup intake() {
+     return new SequentialCommandGroup(
+       new IntakeStateCommand(intake, shooterSubsystem),
+       new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
+       new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
+       new ShooterTransferCommand(intake, shooterSubsystem),
+       //new SendbackCommand(shooterSubsystem),
+       new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
+     );
+   }
 
   public Command getShotCommand() {
     return new SequentialCommandGroup(
