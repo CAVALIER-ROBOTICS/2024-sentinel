@@ -6,9 +6,9 @@ package frc.robot.commands.AutonCommands.AutonPaths;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class RedTop extends Command {
-  /** Creates a new RedTop. */
-  public RedTop() {
+public class BlueBottomCommand extends Command {
+  /** Creates a new BlueBottom. */
+  public BlueBottomCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

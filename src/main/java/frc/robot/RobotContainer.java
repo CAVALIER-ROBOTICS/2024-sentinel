@@ -4,11 +4,16 @@
 
 package frc.robot;
 
-
+import frc.robot.commands.AutonCommands.*;
 import frc.robot.commands.AutonCommands.AngleShooterAndKickCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndSpinupCommand;
 import frc.robot.commands.AutonCommands.StartThetaOverrideCommand;
 import frc.robot.commands.AutonCommands.StopThetaOverrideCommand;
+import frc.robot.commands.AutonCommands.AutonPaths.BlueBottomCommand;
+import frc.robot.commands.AutonCommands.AutonPaths.BlueMiddleCommand;
+import frc.robot.commands.AutonCommands.AutonPaths.BlueTopCommand;
+import frc.robot.commands.AutonCommands.AutonPaths.RedBottomCommand;
+import frc.robot.commands.AutonCommands.AutonPaths.RedTopCommand;
 import frc.robot.commands.BotStateCommands.FinishCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.SendbackCommand;
@@ -158,4 +163,6 @@ public class RobotContainer {
       new StopThetaOverrideCommand()
     );
   }
+
+
 }
