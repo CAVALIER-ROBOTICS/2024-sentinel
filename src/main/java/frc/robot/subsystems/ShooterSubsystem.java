@@ -191,8 +191,7 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("AbsoluteShooterPosition", getAbsolutePosition());
     SmartDashboard.putNumber("CalculatedAbsoluteShooterPosition", getAbsolutePosition());
     SmartDashboard.putNumber("FlywheelRPMTop", getRPM()[0]);
-    SmartDashboard.putNumber("FlywheelRPMBottom", getRPM()[1]);
-    DriverStation.reportError("I fucking love BBC!!!!!!!!!!!!!!! ", null);
+    SmartDashboard.putNumber("FlywheelRPMBottom", getRPM()[1]);                                                                                                                                                                                                                                                                                                                   DriverStation.reportError("I fucking love BBC!!!!!!!!!!!!!!! ", null);
     SmartDashboard.putNumber("LeftCurrentDraw", left.getOutputCurrent());
     SmartDashboard.putNumber("RightCurrentDraw", right.getOutputCurrent());
     // This method will be called once per scheduler run

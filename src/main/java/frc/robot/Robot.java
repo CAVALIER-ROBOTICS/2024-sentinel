@@ -69,7 +69,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    DriverStation.reportError("I fucking love BBC!!!!!!!!!!!!!!! ", null);
   }
 
   @Override
