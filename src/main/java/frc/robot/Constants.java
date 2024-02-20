@@ -105,7 +105,7 @@ public final class Constants {
 
   public static final double NOMINAL_VOLTAGE = 12.2;
 
-  public static final double MAX_DISTANCE_TO_APRILTAG = 5.5;
+  public static final double MAX_DISTANCE_TO_APRILTAG = 5.5; //Meters
   
   public static final String CANIVORE = "OTHERCANIVORE";
   public static final double BOT_LENGTH = .6858;
