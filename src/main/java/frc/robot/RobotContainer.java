@@ -5,9 +5,7 @@
 package frc.robot;
 
 
-import frc.robot.commands.AutonCommands.StartThetaOverrideCommand;
-import frc.robot.commands.AutonCommands.StopThetaOverrideCommand;
-
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
@@ -22,12 +20,10 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import java.util.Optional;
 
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -40,7 +36,7 @@ public class RobotContainer {
 
   DriveSubsystem driveSubsystem = new DriveSubsystem();
   ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
-  // IntakeSubsystem intake = new IntakeSubsystem();
+  IntakeSubsystem intake = new IntakeSubsystem();
   ClimbSubsystem climb = new ClimbSubsystem();
 
   // public void registerCommands() {
@@ -63,6 +59,7 @@ public class RobotContainer {
     () -> driver.getRightX() * Math.PI));
 
     shooterSubsystem.setDefaultCommand(new ForceSendbackCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
+    climb.setDefaultCommand(new ClimbCommand(climb, operator::getLeftY, operator::getRightY));
     configureBindings();
   }
 
@@ -102,7 +99,7 @@ public class RobotContainer {
     JoystickButton targetTrack = new JoystickButton(driver, 2);
     JoystickButton ampMode = new JoystickButton(driver, 3);
 
-    // toggleIntake.onTrue(intake());
+    toggleIntake.onTrue(intake());
     
     zeroGyro.onTrue(new InstantCommand(driveSubsystem::resetGyroFieldDrive));
     ampMode.toggleOnTrue(new AmpScoringCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
@@ -134,16 +131,16 @@ public class RobotContainer {
 //     );
 // }
 
-// public SequentialCommandGroup intake() {
-//     return new SequentialCommandGroup(
-//       new IntakeStateCommand(intake, shooterSubsystem),
-//       new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
-//       new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
-//       new ShooterTransferCommand(intake, shooterSubsystem),
-//       new SendbackCommand(shooterSubsystem)
-//       // new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
-//     );
-// }
+  public SequentialCommandGroup intake() {
+      return new SequentialCommandGroup(
+        new IntakeStateCommand(intake, shooterSubsystem),
+        new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
+        new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
+        new ShooterTransferCommand(intake, shooterSubsystem),
+        new SendbackCommand(shooterSubsystem)
+        // new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
+      );
+  }
   // public Command getShotCommand() {
   //   return new SequentialCommandGroup(
   //     new StartThetaOverrideCommand(shooterSubsystem),

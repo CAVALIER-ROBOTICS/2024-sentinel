@@ -31,8 +31,8 @@ public class ClimbCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climbSub.setLeft(left.getAsDouble());
-    climbSub.setRight(right.getAsDouble());
+    climbSub.setLeft(left.getAsDouble() / 2);
+    climbSub.setRight(right.getAsDouble() / 2);
   }
 
   // Called once the command ends or is interrupted.
