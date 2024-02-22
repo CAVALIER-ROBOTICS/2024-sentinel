@@ -23,8 +23,8 @@ public class SendbackCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    sub.setKickerSpeed(1);
-    sub.setFlywheelSpeed(-1);
+    sub.setKickerSpeed(0.4);
+    sub.setFlywheelSpeed(-0.1);
   }
 
   // Called once the command ends or is interrupted.
@@ -37,6 +37,6 @@ public class SendbackCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return sub.hasNoteInShooter();
+    return !sub.hasNoteInShooter();
   }
 }
