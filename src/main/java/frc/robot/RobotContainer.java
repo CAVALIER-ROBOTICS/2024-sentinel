@@ -5,8 +5,6 @@
 package frc.robot;
 
 
-import frc.robot.commands.AutonCommands.AngleShooterAndKickCommand;
-import frc.robot.commands.AutonCommands.AngleShooterAndSpinupCommand;
 import frc.robot.commands.AutonCommands.StartThetaOverrideCommand;
 import frc.robot.commands.AutonCommands.StopThetaOverrideCommand;
 
@@ -37,26 +35,20 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
-  
   XboxController driver = new XboxController(0);
   XboxController operator = new XboxController(1);
 
   DriveSubsystem driveSubsystem = new DriveSubsystem();
   ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
-  IntakeSubsystem intake = new IntakeSubsystem();
+  // IntakeSubsystem intake = new IntakeSubsystem();
   ClimbSubsystem climb = new ClimbSubsystem();
 
-  public void registerCommands() {
-    NamedCommands.registerCommand("Intake", intake());
-  }
+  // public void registerCommands() {
+  //   NamedCommands.registerCommand("Intake", intake());
+  // }
 
   public RobotContainer() {
-    registerCommands();
-    // registerNamedCommands();
     PathLoader.configureAutoBuilder(driveSubsystem);
-    SmartDashboard.putNumber(Constants.P_thetaSmartdashboard, 0);
-    SmartDashboard.putNumber(Constants.I_thetaSmartdashboard, 0);
-    SmartDashboard.putNumber(Constants.D_thetaSmartdashboard, 0);
 
     driveSubsystem.setDefaultCommand(new FieldDrive(
 
@@ -110,7 +102,7 @@ public class RobotContainer {
     JoystickButton targetTrack = new JoystickButton(driver, 2);
     JoystickButton ampMode = new JoystickButton(driver, 3);
 
-    toggleIntake.onTrue(intake());
+    // toggleIntake.onTrue(intake());
     
     zeroGyro.onTrue(new InstantCommand(driveSubsystem::resetGyroFieldDrive));
     ampMode.toggleOnTrue(new AmpScoringCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
@@ -134,30 +126,30 @@ public class RobotContainer {
     return PathLoader.loadPath(path);
   }
 
- public void RedRight() {
-    SequentialCommandGroup Starting = new SequentialCommandGroup(
-       intake(),
-        new StartThetaOverrideCommand(shooterSubsystem), 
-        PathLoader.loadPath("RedRightDynStarting")
-    );
-}
+//  public void RedRight() {
+//     SequentialCommandGroup Starting = new SequentialCommandGroup(
+//        intake(),
+//         new StartThetaOverrideCommand(shooterSubsystem), 
+//         PathLoader.loadPath("RedRightDynStarting")
+//     );
+// }
 
-public SequentialCommandGroup intake() {
-    return new SequentialCommandGroup(
-      new IntakeStateCommand(intake, shooterSubsystem),
-      new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
-      new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
-      new ShooterTransferCommand(intake, shooterSubsystem),
-      new SendbackCommand(shooterSubsystem)
-      // new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
-    );
-}
-  public Command getShotCommand() {
-    return new SequentialCommandGroup(
-      new StartThetaOverrideCommand(shooterSubsystem),
-      new AngleShooterAndSpinupCommand(shooterSubsystem),
-      new AngleShooterAndKickCommand(shooterSubsystem).withTimeout(1),
-      new StopThetaOverrideCommand()
-    );
-  }
+// public SequentialCommandGroup intake() {
+//     return new SequentialCommandGroup(
+//       new IntakeStateCommand(intake, shooterSubsystem),
+//       new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
+//       new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
+//       new ShooterTransferCommand(intake, shooterSubsystem),
+//       new SendbackCommand(shooterSubsystem)
+//       // new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
+//     );
+// }
+  // public Command getShotCommand() {
+  //   return new SequentialCommandGroup(
+  //     new StartThetaOverrideCommand(shooterSubsystem),
+  //     new AngleShooterAndSpinupCommand(shooterSubsystem),
+  //     new AngleShooterAndKickCommand(shooterSubsystem).withTimeout(1),
+  //     new StopThetaOverrideCommand()
+  //   );
+  // }
 }
