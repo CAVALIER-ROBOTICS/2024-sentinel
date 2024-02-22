@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -25,11 +26,15 @@ public class DriveSubsystem extends SubsystemBase {
   NeoSteveModule fleft, fright, bleft, bright;
 
   Pigeon2 pigeon = new Pigeon2(Constants.PIGEON_ID, Constants.CANIVORE);
-  PIDController headingController = new PIDController(4.26, .2, .1);
+  PIDController headingController = new PIDController(4.26, 0.0, .1);
   
 
   SwerveDriveOdometry odometry;
-  Field2d field;
+  SwerveDrivePoseEstimator estimator;
+
+  Field2d odometryField;
+  Field2d poseEstimatorField;
+
   double currentOffset = 0;
 
   /** Creates a new DriveSubsystem. */
@@ -40,9 +45,14 @@ public class DriveSubsystem extends SubsystemBase {
     bright = new NeoSteveModule(Constants.BRIGHT_DRIVE_ID, Constants.BRIGHT_STEER_ID, Constants.BRIGHT_CANCODER_ID, SwerveConstants.BRIGHT_OFFSET, Constants.CANIVORE);
 
     odometry = new SwerveDriveOdometry(SwerveConstants.m_kinematics, getAngle(), getSwerveModulePositions());
+    estimator = new SwerveDrivePoseEstimator(SwerveConstants.m_kinematics, getAngle(), getSwerveModulePositions(), new Pose2d());
+
     headingController.enableContinuousInput(0, 2*Math.PI);
-    field = new Field2d();
-    SmartDashboard.putData("fiel ldl dldd vd", field);
+    odometryField = new Field2d();
+    poseEstimatorField = new Field2d();
+
+    SmartDashboard.putData("OdometryField", odometryField);
+    SmartDashboard.putData("PoseEstimatorField", poseEstimatorField);
   }
 
   public void setModuleStates(SwerveModuleState[] states) {
@@ -59,6 +69,7 @@ public class DriveSubsystem extends SubsystemBase {
   public double clamp(double x, double min, double max) {
     return (x > max) ? max: (x < min) ? min: x;
   }
+
 
   public void drive(ChassisSpeeds speeds) {
     SwerveModuleState[] states = SwerveConstants.m_kinematics.toSwerveModuleStates(speeds);
@@ -107,15 +118,10 @@ public class DriveSubsystem extends SubsystemBase {
   
   public void updateOdometry() {
       String accurate = Limelight.getMostAccurateLimelightName();
-      SmartDashboard.putString("Most accurate lime", accurate);
       int targetAmount = Limelight.getTargetCount(accurate);
-  
-      SmartDashboard.putNumber("realGyroValue", getAngle().getDegrees());
-      SmartDashboard.putNumber("LimelightAngle", Limelight.getPose2d(accurate).getRotation().getDegrees());
-  
-      if(targetAmount >= 2) {
+      
+      if(targetAmount >= 2 && Limelight.getAverageDistanceToAvailableTarget(accurate) <= Constants.MAX_DISTANCE_TO_APRILTAG) {
         SmartDashboard.putBoolean("UsingLimelight", true);
-        // System.out.println("UPDATING WITH LIMELIGHT");
         Pose2d limePose = Limelight.getPose2d(accurate);
         if(!(limePose.getX() == 0 && limePose.getY() == 0)) {
           updateOdometry(limePose);
@@ -126,6 +132,20 @@ public class DriveSubsystem extends SubsystemBase {
   
       SmartDashboard.putBoolean("UsingLimelight", false);
       odometry.update(getAngle(), getSwerveModulePositions());
+  }
+
+  public void updatePoseEstimator() {
+    Pose2d[] estimates = Limelight.getPoses();
+    double[] latencies = Limelight.getLatencies();
+
+    for(int i = 0; i < estimates.length; i++) {
+      Pose2d pose = estimates[i];
+      double latencySeconds = latencies[i] / 1000;
+
+      estimator.addVisionMeasurement(pose, latencySeconds);
+    }
+
+    estimator.update(getAngle(), getSwerveModulePositions());
   }
 
   public void zeroGyro() {
@@ -150,8 +170,7 @@ public class DriveSubsystem extends SubsystemBase {
     rotSpeeds = clamp(rotSpeeds, -1, 1);
     
     ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle);
-    SmartDashboard.putNumber("DesiredXVelocity", fieldRelative.vxMetersPerSecond);
-    SmartDashboard.putNumber("DesiredYVelocity", fieldRelative.vyMetersPerSecond);
+    SmartDashboard.putNumber("OmegaRadsHeading", rotSpeeds);
 
     drive(fieldRelative);
   }
@@ -166,7 +185,6 @@ public class DriveSubsystem extends SubsystemBase {
      headingController.setP(SmartDashboard.getNumber(Constants.P_thetaSmartdashboard, 0));
      headingController.setI(SmartDashboard.getNumber(Constants.I_thetaSmartdashboard, 0));
      headingController.setD(SmartDashboard.getNumber(Constants.D_thetaSmartdashboard, 0));
-
   }
 
   @Override
@@ -178,6 +196,9 @@ public class DriveSubsystem extends SubsystemBase {
     headingController.setP(SmartDashboard.getNumber("Bot_theta_P", 0));
 
     updateOdometry();
-    field.setRobotPose(odometry.getPoseMeters());
+    updatePoseEstimator();
+
+    odometryField.setRobotPose(odometry.getPoseMeters());
+    poseEstimatorField.setRobotPose(estimator.getEstimatedPosition());
   }
 }

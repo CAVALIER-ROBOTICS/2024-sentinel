@@ -19,18 +19,17 @@ import edu.wpi.first.wpilibj.I2C;
 public final class Constants {
 
   public final class ShooterConstants {
-
     public static final int SHOOTER_LIMIT_SWITCH_ID = 2;
 
     public static final int SPEED_SHOOTER = 1;
-    public static final double MAX_FLYWHEEL_PERCENT_OUTPUT = .6;
+    public static final double MAX_FLYWHEEL_PERCENT_OUTPUT = .8;
+    public static final double MAX_RPM_FLYWHEEL = 5300;
     public static final double MAX_POSITION_SHOOTER = 0.;
     public static final double MIN_POSITITON_SHOOTER = 0.117;
     public static final double SHOOTER_LINEUP_POSITION = 0.179110983981191;
     public static final double SHOOTER_HORIZONTAL = 0.084918577122964;
     public static final double SHOOTER_45_DEGREE = 0.966143724153593; 
     public static final double SHOOTER_VERTICAL = 0.830549720763743;
-
   }
 
   public final class IntakeConstants {
@@ -105,12 +104,15 @@ public final class Constants {
   public static final int TOP_SHOOTER_ID = 15;
 
   public static final double NOMINAL_VOLTAGE = 12.2;
+
+  public static final double MAX_DISTANCE_TO_APRILTAG = 5.5; //Meters
   
   public static final String CANIVORE = "OTHERCANIVORE";
   public static final double BOT_LENGTH = .6858;
 
   private static double L = Constants.BOT_LENGTH;
   private static double W = Constants.BOT_LENGTH;
+
 
   public static final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     new Translation2d(L/2, W/2),
@@ -122,5 +124,9 @@ public final class Constants {
   public static final String P_thetaSmartdashboard = "ThetaP";
   public static final String I_thetaSmartdashboard = "ThetaI";
   public static final String D_thetaSmartdashboard = "ThetaD";
+
+  public static final String ShooterAngleAmpSD = "AmpSetpointAngle";
+  public static final String FlywheelSpeedAmpSD = "FlywheelSetpointAngle";
+
 
 }

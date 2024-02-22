@@ -9,6 +9,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.ultrashot.AngleStates;
@@ -32,7 +33,6 @@ public class UltrashotCommand extends Command {
   @Override
   public void initialize() {
     driveSubsystem.resetHeadingPID();
-    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,7 +41,7 @@ public class UltrashotCommand extends Command {
   public void execute() {
     shooterSubsystem.updateUltrashot(driveSubsystem);
     shooterSubsystem.ultimatum();
-    shooterSubsystem.setFlywheelSpeed( (int) (f.getAsDouble() + .5) * .6);
+    shooterSubsystem.setFlywheelSpeed((int) (f.getAsDouble() + .5) * Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
 
     AngleStates states = shooterSubsystem.getAngleStates();
     driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta()), x.getAsDouble(), y.getAsDouble());

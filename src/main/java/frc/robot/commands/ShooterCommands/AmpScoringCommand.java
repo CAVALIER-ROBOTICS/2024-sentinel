@@ -6,13 +6,17 @@ package frc.robot.commands.ShooterCommands;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class AmpScoringCommand extends Command {
   /** Creates a new AmpScoringCommand. */
   ShooterSubsystem shooterSubsystem;
   DoubleSupplier flywheel, kicker;
+  double angle = 1;
+  double speed = .175;
 
   public AmpScoringCommand(ShooterSubsystem shooterSubsystem, DoubleSupplier flywheel, DoubleSupplier kicker) {
     this.shooterSubsystem = shooterSubsystem;
@@ -30,9 +34,12 @@ public class AmpScoringCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooterSubsystem.gotoAngle(Math.PI/2.75); //lmao
+    // angle = SmartDashboard.getNumber(Constants.ShooterAngleAmpSD, 0);
+    // speed = SmartDashboard.getNumber(Constants.FlywheelSpeedAmpSD, 0);
+
+    shooterSubsystem.gotoAngle(angle); //lmao
     shooterSubsystem.setKickerSpeed(-kicker.getAsDouble());
-    shooterSubsystem.setFlywheelSpeed((int) (flywheel.getAsDouble() + .5) * .25);
+    shooterSubsystem.setFlywheelSpeed((int) (flywheel.getAsDouble() + .5) * speed, -.1);
   }
 
   // Called once the command ends or is interrupted.

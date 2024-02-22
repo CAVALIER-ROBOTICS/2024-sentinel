@@ -3,37 +3,43 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 10.36306285709131,
-        "y": 6.243349401238204
+        "x": 10.730221859999771,
+        "y": 6.674761229655645
       },
       "prevControl": null,
       "nextControl": {
-        "x": 9.986724879110136,
-        "y": 5.747684747311781
+        "x": 10.216199255927926,
+        "y": 6.922593556618857
       },
       "isLocked": false,
-      "linkedName": "RedRightShooterPosition"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.720026319075947,
-        "y": 4.123006159441842
+        "x": 8.921963770675601,
+        "y": 7.4457951357634125
       },
       "prevControl": {
-        "x": 9.325838673874907,
-        "y": 4.857324165258764
+        "x": 9.546134075619984,
+        "y": 7.197962808800202
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "IntakePosThree"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -178.8982938847937,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.1,
+      "minWaypointRelativePos": 0.7,
+      "maxWaypointRelativePos": 0.75,
       "constraints": {
         "maxVelocity": 2.0,
         "maxAcceleration": 0.5,
@@ -44,12 +50,19 @@
   ],
   "eventMarkers": [
     {
-      "name": "Intake",
-      "waypointRelativePos": 0.85,
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.75,
       "command": {
         "type": "sequential",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Shoot"
+              }
+            }
+          ]
         }
       }
     }
@@ -62,13 +75,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -178.78112476486865,
+    "rotation": -178.78112476486876,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "RedRightStatic",
+  "folder": "RedRightDynamic",
   "previewStartingState": {
-    "rotation": 179.66982446281062,
+    "rotation": -179.09061955080085,
     "velocity": 0
   },
   "useDefaultConstraints": true

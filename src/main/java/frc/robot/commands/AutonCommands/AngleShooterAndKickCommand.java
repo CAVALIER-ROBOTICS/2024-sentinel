@@ -2,18 +2,17 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.ShooterCommands;
-
-import java.util.function.DoubleSupplier;
+package frc.robot.commands.AutonCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.ultrashot.AngleStates;
 
-public class ForceSendbackCommand extends Command {
-  /** Creates a new ForceSendbackCommand. */
+public class AngleShooterAndKickCommand extends Command {
+  /** Creates a new AngleShooterAndShootCommand. */
   ShooterSubsystem shooterSubsystem;
-  DoubleSupplier k, f;
-  public ForceSendbackCommand(ShooterSubsystem shooterSubsystem, DoubleSupplier k, DoubleSupplier f) {
+  public AngleShooterAndKickCommand(ShooterSubsystem shooterSubsystem) {
     this.shooterSubsystem = shooterSubsystem;
     addRequirements(shooterSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -26,8 +25,11 @@ public class ForceSendbackCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooterSubsystem.setFlywheelSpeed(-f.getAsDouble());
-    shooterSubsystem.setKickerSpeed(k.getAsDouble());
+    AngleStates states = shooterSubsystem.getAngleStates();
+
+    shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
+    shooterSubsystem.gotoAngle(states.getPhi());
+    shooterSubsystem.setKickerSpeed(-1);
   }
 
   // Called once the command ends or is interrupted.
