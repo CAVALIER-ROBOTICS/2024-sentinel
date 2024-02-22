@@ -137,8 +137,7 @@ public class RobotContainer {
         new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
         new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
         new ShooterTransferCommand(intake, shooterSubsystem),
-        new SendbackCommand(shooterSubsystem)
-        // new FinishCommand(shooterSubsystem).raceWith(new WaitCommand(.02))
+        new SendbackCommand(shooterSubsystem).withTimeout(.1)
       );
   }
   // public Command getShotCommand() {

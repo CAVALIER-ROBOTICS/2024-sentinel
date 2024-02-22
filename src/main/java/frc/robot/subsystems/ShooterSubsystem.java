@@ -51,8 +51,8 @@ public class ShooterSubsystem extends SubsystemBase {
     bottom.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
     left.setIdleMode(IdleMode.kBrake);
     right.setIdleMode(IdleMode.kBrake);
-    top.setIdleMode(IdleMode.kBrake);
-    bottom.setIdleMode(IdleMode.kBrake);
+    top.setIdleMode(IdleMode.kCoast);
+    bottom.setIdleMode(IdleMode.kCoast);
 
     rpmEncoderTop = top.getEncoder();
     rpmEncoderBottom = bottom.getEncoder();
