@@ -30,7 +30,7 @@ public class IntakeSubsystem extends SubsystemBase {
     PIDController controller = new PIDController(1.5, 0.0001, 0.05);
     // PIDController upController= new PIDController(1.75, .0001, .05);
     // ArmFeedforward feedforward = new ArmFeedforward(1.95, .01);
-    DutyCycleEncoder enc = new DutyCycleEncoder(0);
+    DutyCycleEncoder enc = new DutyCycleEncoder(3);
 
     Rev2mDistanceSensor distanceSensor = new Rev2mDistanceSensor(Port.kOnboard);
     double currentGoalPos = getAbsolutePosition();
