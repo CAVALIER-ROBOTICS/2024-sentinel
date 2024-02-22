@@ -19,17 +19,17 @@ import edu.wpi.first.wpilibj.I2C;
 public final class Constants {
 
   public final class ShooterConstants {
-    public static final int SHOOTER_LIMIT_SWITCH_ID = 2;
+    public static final int SHOOTER_LIMIT_SWITCH_ID = 1;
 
     public static final int SPEED_SHOOTER = 1;
     public static final double MAX_FLYWHEEL_PERCENT_OUTPUT = .8;
     public static final double MAX_RPM_FLYWHEEL = 5300;
-    public static final double MAX_POSITION_SHOOTER = 0.;
-    public static final double MIN_POSITITON_SHOOTER = 0.117;
-    public static final double SHOOTER_LINEUP_POSITION = 0.179110983981191;
-    public static final double SHOOTER_HORIZONTAL = 0.084918577122964;
-    public static final double SHOOTER_45_DEGREE = 0.966143724153593; 
-    public static final double SHOOTER_VERTICAL = 0.830549720763743;
+    public static final double MAX_POSITION_SHOOTER = 0.169686904242173;
+    public static final double MIN_POSITITON_SHOOTER = 0.418373110459328;
+    public static final double SHOOTER_LINEUP_POSITION = 0.404135560103389;
+    public static final double SHOOTER_HORIZONTAL = 0.418373110459328;
+    public static final double SHOOTER_45_DEGREE = 0.291827032295676; 
+    public static final double SHOOTER_VERTICAL = 0.169686904242173;
   }
 
   public final class IntakeConstants {
@@ -37,8 +37,8 @@ public final class Constants {
     public static final I2C.Port INTAKE_SENSOR_PORT = I2C.Port.kOnboard;
     public static final int MINIMUM_PROXIMITY_TRIGGER = 9;
 
-    public static final double RETRACTED_POS = 0.773558944588974;
-    public static final double EXTENDED_POS = .087075026926876;
+    public static final double RETRACTED_POS = 0.77851161951279;
+    public static final double EXTENDED_POS = 0.079076751851919;
     public static final double INTAKE_LINEUP_POSITION = RETRACTED_POS;
 
   }
