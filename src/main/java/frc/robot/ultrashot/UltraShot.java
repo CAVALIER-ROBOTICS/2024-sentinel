@@ -7,7 +7,7 @@ public class UltraShot {
 
     private Point3D robot, axis, velocity, target; // Note that the axis should have 0 y-component and the velocity should have 0 z-component
     private AngleStates states;
-    private double shooterLength, shooterSpeed, localGravity, airDrag, settleTime;
+    private double shooterLength, shooterSpeed, localGravity, airDrag, settleTime, omegaStepTime;
 
     public UltraShot() {
         this.robot = new Point3D();
@@ -20,6 +20,7 @@ public class UltraShot {
         this.localGravity = 0.0;
         this.airDrag = 0.0;
         this.settleTime = 0.0;
+        this.omegaStepTime = 0.0;
     }
 
     // Get Methods
@@ -76,8 +77,12 @@ public class UltraShot {
         return this.states.getPsi();
     }
 
-    public double getProcessTime() {
+    public double getSettleTime() {
         return this.settleTime;
+    }
+
+    public double getOmegaStepTime() {
+        return this.omegaStepTime;
     }
 
     // Set Methods
@@ -122,7 +127,11 @@ public class UltraShot {
         this.settleTime = settleTime;
     }
 
-    public void configure(Point3D robot, Point3D axis, Point3D velocity, Point3D target, AngleStates states, double shooterLength, double shooterSpeed, double localGravity, double airDrag, double settleTime) {
+    public void setOmegaStepTime(double omegaStepTime) {
+        this.omegaStepTime = omegaStepTime;
+    }
+
+    public void configure(Point3D robot, Point3D axis, Point3D velocity, Point3D target, AngleStates states, double shooterLength, double shooterSpeed, double localGravity, double airDrag, double settleTime, double omegaStepTime) {
         setRobot(robot);
         setAxis(axis);
         setVelocity(velocity);
@@ -133,6 +142,7 @@ public class UltraShot {
         setLocalGravity(localGravity);
         setAirDrag(airDrag);
         setSettleTime(settleTime);
+        setOmegaStepTime(omegaStepTime);
     }
 
     public void update(Point3D robot, Point3D velocity, Point3D target) {
@@ -141,12 +151,10 @@ public class UltraShot {
         setTarget(target);
     }
 
-    public void update(Pose2d pose, ChassisSpeeds velocity) {
-        Point3D pointPose = new Point3D(pose.getX(), pose.getY(), 0);
-        Point3D pointVelocity = new Point3D(velocity.vxMetersPerSecond, velocity.vyMetersPerSecond, 0);
-
-        update(pointPose, pointVelocity, UltraShotConstants.target);
+    public void update(Pose2d robot, ChassisSpeeds velocity, Point3D target) {
+        update(new Point3D(robot.getX(), robot.getY(), 0), new Point3D(velocity.vxMetersPerSecond, velocity.vyMetersPerSecond, 0), target);
     }
+
     // ultimatum() returns the true values of theta and phi
     // omega and psi are zero since it is impractical to shoot while changing the angles
     // use this when you want to shoot
@@ -161,7 +169,8 @@ public class UltraShot {
         
         slingShot();
 
-        states.setTheta(states.getTheta() + thetaS + Math.PI);
+        states.setTheta(states.getTheta() + thetaS);
+        states.setOmega((Point3D.difference(Point3D.add(robot, Point3D.scalar(velocity, omegaStepTime)), target).getAngle() - Point3D.difference(robot, target).getAngle()) / (omegaStepTime));
     }
 
     // track() returns approximate values of theta, omega, phi, and psi so that a control loop has less error to deal with when ultimatum() is called
@@ -178,16 +187,16 @@ public class UltraShot {
 
     private void parabolicAngle(Point3D robot, Point3D target, boolean isFirst) {
         double g = localGravity;
+        double d, h;
         if (isFirst) {
-            double d = Point3D.difference(robot, target).getHypot() - axis.getX();
-            double h = target.getZ() - robot.getZ() - axis.getZ();
-            states.setPhi( Math.atan((Math.pow(shooterSpeed, 2) - Math.sqrt(Math.pow(shooterSpeed, 4) - g*(g*d*d + 2*h*Math.pow(shooterSpeed, 2)))) / (g * d)));
+            d = Point3D.difference(robot, target).getHypot() - axis.getX();
+            h = target.getZ() - robot.getZ() - axis.getZ();
         }
         else {
-            double d = Point3D.difference(robot, target).getHypot() - axis.getX() - shooterLength*Math.cos(states.getPhi());
-            double h = target.getZ() - robot.getZ() - axis.getZ() - shooterLength*Math.sin(states.getPhi());
-            states.setPhi( Math.atan((Math.pow(shooterSpeed, 2) - Math.sqrt(Math.pow(shooterSpeed, 4) - g*(g*d*d + 2*h*Math.pow(shooterSpeed, 2)))) / (g * d)));
+            d = Point3D.difference(robot, target).getHypot() - axis.getX() - shooterLength*Math.cos(states.getPhi());
+            h = target.getZ() - robot.getZ() - axis.getZ() - shooterLength*Math.sin(states.getPhi());
         }
+        states.setPhi( Math.atan((Math.pow(shooterSpeed, 2) - Math.sqrt(Math.pow(shooterSpeed, 4) - g*(g*d*d + 2*h*Math.pow(shooterSpeed, 2)))) / (g * d)));
     }
 
     private void slingShot() {

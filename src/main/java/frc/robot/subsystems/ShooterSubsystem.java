@@ -73,7 +73,8 @@ public class ShooterSubsystem extends SubsystemBase {
       UltraShotConstants.shooterSpeed,
       UltraShotConstants.localGravity,
       UltraShotConstants.airDrag,
-      UltraShotConstants.settleTime
+      UltraShotConstants.settleTime,
+      UltraShotConstants.omegaStepTime
     );
 
   }
@@ -146,7 +147,7 @@ public class ShooterSubsystem extends SubsystemBase {
   // }
 
   public void updateUltrashot(DriveSubsystem driveSubsystem) {
-    ultraShot.update(driveSubsystem.getOdometry(), driveSubsystem.getChassisSpeeds());
+    ultraShot.update(driveSubsystem.getOdometry(), driveSubsystem.getChassisSpeeds(), UltraShotConstants.target);
   }
 
   public void gotoAngle(double angle) {
