@@ -33,7 +33,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   DigitalInput limit = new DigitalInput(ShooterConstants.SHOOTER_LIMIT_SWITCH_ID);
 
-  DutyCycleEncoder enc = new DutyCycleEncoder(1);
+  DutyCycleEncoder enc = new DutyCycleEncoder(2);
   PIDController angleController = new PIDController(0.5, 0, 0);
 
   RelativeEncoder rpmEncoderTop, rpmEncoderBottom;
@@ -123,7 +123,8 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double getAbsolutePosition() {
-    return ((1-((enc.getAbsolutePosition()-0.09)))%1) *2*Math.PI;
+    // return enc.getAbsolutePosition(); // Uncomment to find actual values
+    return (Constants.ShooterConstants.SHOOTER_HORIZONTAL - (enc.getAbsolutePosition())) *2*Math.PI;
   }
 
   public void setPosition(double position) {
@@ -136,7 +137,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public boolean hasNoteInShooter() {
-    return limit.get();
+    return !limit.get();
   }
 
   // public void updateUltrashot(ChassisSpeeds botVelocity, Pose2d pose) {
@@ -188,11 +189,11 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("AbsoluteShooterPosition", getAbsolutePosition());
-    SmartDashboard.putNumber("CalculatedAbsoluteShooterPosition", getAbsolutePosition());
     SmartDashboard.putNumber("FlywheelRPMTop", getRPM()[0]);
     SmartDashboard.putNumber("FlywheelRPMBottom", getRPM()[1]);
     SmartDashboard.putNumber("LeftCurrentDraw", left.getOutputCurrent());
     SmartDashboard.putNumber("RightCurrentDraw", right.getOutputCurrent());
+    SmartDashboard.putBoolean("HasNote", hasNoteInShooter());
     // This method will be called once per scheduler run
     configUltrashot();
   }
