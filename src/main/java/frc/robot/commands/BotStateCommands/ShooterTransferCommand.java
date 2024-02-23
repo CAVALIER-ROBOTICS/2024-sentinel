@@ -29,7 +29,7 @@ public class ShooterTransferCommand extends Command {
   @Override
   public void execute() {
     intakeSubsystem.setIntakeSpin(1);
-    shooterSubsystem.setKickerSpeed(-.5);
+    shooterSubsystem.setKickerSpeed(-0.9);
     shooterSubsystem.setPosition(ShooterConstants.SHOOTER_LINEUP_POSITION);
     intakeSubsystem.setPosition(IntakeConstants.RETRACTED_POS);
   }

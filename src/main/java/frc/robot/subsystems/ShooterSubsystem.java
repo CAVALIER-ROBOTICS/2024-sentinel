@@ -44,15 +44,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
     angleController.enableContinuousInput(0,2*Math.PI);
 
-    // enc.setPositionOffset(0.08);
-    // enc.setDistancePerRotation(2*Math.PI);
-
     top.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
     bottom.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
     left.setIdleMode(IdleMode.kBrake);
     right.setIdleMode(IdleMode.kBrake);
     top.setIdleMode(IdleMode.kCoast);
     bottom.setIdleMode(IdleMode.kCoast);
+    kicker.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
 
     rpmEncoderTop = top.getEncoder();
     rpmEncoderBottom = bottom.getEncoder();

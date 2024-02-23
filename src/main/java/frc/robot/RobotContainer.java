@@ -8,6 +8,7 @@ package frc.robot;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.SendbackCommand;
+import frc.robot.commands.BotStateCommands.ShooterFinishCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
 import frc.robot.commands.BotStateCommands.ShooterTransferCommand;
 import frc.robot.commands.DriveCommands.FieldDrive;
@@ -137,7 +138,9 @@ public class RobotContainer {
         new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
         new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
         new ShooterTransferCommand(intake, shooterSubsystem),
-        new SendbackCommand(shooterSubsystem).withTimeout(.1)
+        new ShooterFinishCommand(shooterSubsystem),
+        new SendbackCommand(shooterSubsystem).withTimeout(.05)
+        
       );
   }
   // public Command getShotCommand() {
