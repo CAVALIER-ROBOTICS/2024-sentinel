@@ -26,7 +26,7 @@ public class DriveSubsystem extends SubsystemBase {
   NeoSteveModule fleft, fright, bleft, bright;
 
   Pigeon2 pigeon = new Pigeon2(Constants.PIGEON_ID, Constants.CANIVORE);
-  PIDController headingController = new PIDController(4.26, 0.0, .1);
+  PIDController headingController = new PIDController(4.26, 0.0, 0.1);
   
 
   SwerveDriveOdometry odometry;
@@ -168,12 +168,13 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void driveWithAngleOverride(Rotation2d angle, double xSpeed, double ySpeed) {
     Rotation2d currentAngle = getAngle();
-    pushMeasurementAndSetpoint(angle.getRadians());
+    pushMeasurementAndSetpoint(angle.getRadians()); // Pushes values to SmartDashboard
     double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians());
-    // rotSpeeds = clamp(rotSpeeds, -1, 1);
-    
-    ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle);
+    // double rotSpeeds = headingController.calculate(1, 2);
+    rotSpeeds = clamp(rotSpeeds, -2, 2);
     SmartDashboard.putNumber("OmegaRadsHeading", rotSpeeds);
+
+    ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle);
 
     drive(fieldRelative);
   }
@@ -196,7 +197,6 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("FRIGHT", fright.getEncoderPosition());
     SmartDashboard.putNumber("BLEFT", bleft.getEncoderPosition());
     SmartDashboard.putNumber("BRIGHT", bright.getEncoderPosition());
-    headingController.setP(SmartDashboard.getNumber("Bot_theta_P", 0));
 
     updateOdometry();
     updatePoseEstimator();
