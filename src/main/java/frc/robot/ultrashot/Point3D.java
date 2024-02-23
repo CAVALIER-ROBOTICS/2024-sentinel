@@ -46,9 +46,17 @@ public class Point3D {
         return difference;
     }
 
+    public static Point3D subtract(Point3D point1, Point3D point2) {
+        return new Point3D(point1.getX() - point2.getX(), point1.getY() - point2.getY(), point1.getZ() - point2.getZ());
+    }
+
     public static Point3D add(Point3D point1, Point3D point2) {
         Point3D sum = new Point3D(point1.getX() + point2.getX(), point1.getY() + point2.getY(), point1.getZ() + point2.getZ());
         return sum;
+    }
+
+    public static Point3D scalar(Point3D point, double scalar) {
+        return new Point3D(scalar * point.getX(), scalar * point.getY(), scalar * point.getZ());
     }
 
     public double getAngle() {

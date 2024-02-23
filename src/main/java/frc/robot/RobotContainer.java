@@ -6,6 +6,12 @@ package frc.robot;
 
 
 import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.AutonCommands.AngleShooterAndKickCommand;
+import frc.robot.commands.AutonCommands.AngleShooterAndSpinupCommand;
+import frc.robot.commands.AutonCommands.UltrashotAndSpinupCommand;
+import frc.robot.commands.AutonCommands.StartThetaOverrideCommand;
+import frc.robot.commands.AutonCommands.StopThetaOverrideCommand;
+import frc.robot.commands.AutonCommands.UltrashotAndKickCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterFinishCommand;
@@ -21,6 +27,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import java.util.Optional;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -40,13 +47,15 @@ public class RobotContainer {
   IntakeSubsystem intake = new IntakeSubsystem();
   ClimbSubsystem climb = new ClimbSubsystem();
 
-  // public void registerCommands() {
-  //   NamedCommands.registerCommand("Intake", intake());
-  // }
+  public void registerCommands() {
+    NamedCommands.registerCommand("Intake", intake());
+    NamedCommands.registerCommand("Shoot", getStationaryShotCommand());
+  }
 
   public RobotContainer() {
+    registerCommands();
     PathLoader.configureAutoBuilder(driveSubsystem);
-
+    
     driveSubsystem.setDefaultCommand(new FieldDrive(
 
     driveSubsystem,
@@ -121,7 +130,7 @@ public class RobotContainer {
   }
 
   public Command getPathCommand(String path) {
-    return PathLoader.loadPath(path);
+    return PathLoader.loadAuto(path);
   }
 
 //  public void RedRight() {
@@ -143,12 +152,20 @@ public class RobotContainer {
         
       );
   }
-  // public Command getShotCommand() {
-  //   return new SequentialCommandGroup(
-  //     new StartThetaOverrideCommand(shooterSubsystem),
-  //     new AngleShooterAndSpinupCommand(shooterSubsystem),
-  //     new AngleShooterAndKickCommand(shooterSubsystem).withTimeout(1),
-  //     new StopThetaOverrideCommand()
-  //   );
-  // }
+
+  public Command getShootingWhileMovingCommand() {
+    return new SequentialCommandGroup(
+      new StartThetaOverrideCommand(shooterSubsystem),
+      new AngleShooterAndSpinupCommand(shooterSubsystem),
+      new AngleShooterAndKickCommand(shooterSubsystem).withTimeout(1),
+      new StopThetaOverrideCommand()
+    );
+  }
+
+  public Command getStationaryShotCommand() {
+    return new SequentialCommandGroup(
+      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem),
+      new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(2)
+    );
+  }
 }
