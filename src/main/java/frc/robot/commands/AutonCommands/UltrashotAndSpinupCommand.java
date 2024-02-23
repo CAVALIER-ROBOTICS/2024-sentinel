@@ -44,7 +44,6 @@ public class UltrashotAndSpinupCommand extends Command {
 
     driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta()), 0, 0, states.getOmega()); // 0.1 is the heading controller D
     shooterSubsystem.gotoAngle(states.getPhi());
-    
   }
 
   // Called once the command ends or is interrupted.
