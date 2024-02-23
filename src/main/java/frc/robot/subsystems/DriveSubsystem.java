@@ -166,11 +166,11 @@ public class DriveSubsystem extends SubsystemBase {
     pigeon.setYaw(yaw);
   }
 
-  public void driveWithAngleOverride(Rotation2d angle, double xSpeed, double ySpeed) {
+  public void driveWithAngleOverride(Rotation2d angle, double xSpeed, double ySpeed, double omega) {
     Rotation2d currentAngle = getAngle();
     pushMeasurementAndSetpoint(angle.getRadians());
-    double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians());
-    rotSpeeds = clamp(rotSpeeds, -1, 1);
+    double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians()) + omega * headingController.getD();
+    rotSpeeds = clamp(rotSpeeds, -1.5, 1.5);
     
     ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle);
     SmartDashboard.putNumber("OmegaRadsHeading", rotSpeeds);

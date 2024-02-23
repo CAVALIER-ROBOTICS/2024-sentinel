@@ -44,7 +44,7 @@ public class UltrashotCommand extends Command {
     shooterSubsystem.setFlywheelSpeed((int) (f.getAsDouble() + .5) * Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
 
     AngleStates states = shooterSubsystem.getAngleStates();
-    driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta()), x.getAsDouble(), y.getAsDouble());
+    driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta()), x.getAsDouble(), y.getAsDouble(), states.getOmega()); // 0.1 is the heading controller D
   
     shooterSubsystem.gotoAngle(states.getPhi());
     shooterSubsystem.setKickerSpeed(-k.getAsDouble());
