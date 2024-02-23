@@ -32,7 +32,7 @@ public class UltrashotCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    driveSubsystem.resetHeadingPID();
+    // driveSubsystem.resetHeadingPID();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

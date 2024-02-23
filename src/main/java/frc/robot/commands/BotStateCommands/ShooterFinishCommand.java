@@ -7,10 +7,10 @@ package frc.robot.commands.BotStateCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class SendbackCommand extends Command {
+public class ShooterFinishCommand extends Command {
   /** Creates a new SendbackCommand. */
   ShooterSubsystem sub;
-  public SendbackCommand(ShooterSubsystem sub) {
+  public ShooterFinishCommand(ShooterSubsystem sub) {
     this.sub = sub;
     addRequirements(sub);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -23,7 +23,7 @@ public class SendbackCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    sub.setKickerSpeed(-0.5);
+    sub.setKickerSpeed(0.1);
     sub.setFlywheelSpeed(-0.1);
   }
 
@@ -37,6 +37,6 @@ public class SendbackCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return !sub.hasNoteInShooter();
   }
 }
