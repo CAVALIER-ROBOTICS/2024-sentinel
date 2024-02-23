@@ -44,6 +44,8 @@ public class UltrashotCommand extends Command {
 
     AngleStates states = shooterSubsystem.getAngleStates();
 
+    if(Double.isNaN(states.getTheta())) {return;}
+    
     driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta()), x.getAsDouble(), y.getAsDouble(), states.getOmega()); // 0.1 is the heading controller D
     shooterSubsystem.gotoAngle(states.getPhi());
 

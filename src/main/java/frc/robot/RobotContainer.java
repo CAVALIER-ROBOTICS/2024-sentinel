@@ -104,7 +104,6 @@ public class RobotContainer {
 
   private void configureBindings() {
     JoystickButton toggleIntake = new JoystickButton(driver, 5);
-    // JoystickButton runFlywheel = new JoystickButton(driver, 2);
     JoystickButton zeroGyro = new JoystickButton(driver, 4);
     JoystickButton targetTrack = new JoystickButton(driver, 2);
     JoystickButton ampMode = new JoystickButton(driver, 3);
