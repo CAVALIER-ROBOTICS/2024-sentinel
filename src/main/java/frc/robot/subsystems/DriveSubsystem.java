@@ -66,10 +66,9 @@ public class DriveSubsystem extends SubsystemBase {
     headingController.reset();
   }
 
-  public double clamp(double x, double min, double max) {
+  private double clamp(double x, double min, double max) {
     return (x > max) ? max: (x < min) ? min: x;
   }
-
 
   public void drive(ChassisSpeeds speeds) {
     SwerveModuleState[] states = SwerveConstants.m_kinematics.toSwerveModuleStates(speeds);
@@ -139,6 +138,7 @@ public class DriveSubsystem extends SubsystemBase {
     double[] latencies = Limelight.getLatencies();
 
     estimator.update(getAngle(), getSwerveModulePositions());
+
     for(int i = 0; i < estimates.length; i++) {
       Pose2d pose = estimates[i];
       double latencySeconds = latencies[i] / 1000;
@@ -154,12 +154,21 @@ public class DriveSubsystem extends SubsystemBase {
   public void zeroGyro() {
     pigeon.reset();
   }
+
   public void updateOdometry(Pose2d pose) {
     odometry.resetPosition(pose.getRotation(), getSwerveModulePositions(), pose);
   }
 
+  public void updatePoseEstimator(Pose2d pose) {
+    estimator.resetPosition(pose.getRotation(), getSwerveModulePositions(), pose);
+  }
+
   public Pose2d getOdometry() {
     return odometry.getPoseMeters();
+  }
+
+  public Pose2d getEstimatedPosition() {
+    return estimator.getEstimatedPosition();
   }
 
   public void setYaw(double yaw) {
@@ -168,14 +177,14 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void driveWithAngleOverride(Rotation2d angle, double xSpeed, double ySpeed, double omega) {
     Rotation2d currentAngle = getAngle();
-    pushMeasurementAndSetpoint(angle.getRadians());
+
     double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians()) + omega * headingController.getD();
     rotSpeeds = clamp(rotSpeeds, -1.5, 1.5);
     
     ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle);
-    SmartDashboard.putNumber("OmegaRadsHeading", rotSpeeds);
 
     drive(fieldRelative);
+    pushMeasurementAndSetpoint(angle.getRadians());
   }
 
   public void pushMeasurementAndSetpoint(double setpoint) {

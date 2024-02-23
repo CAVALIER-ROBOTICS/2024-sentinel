@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.ShooterCommands;
+package frc.robot.commands.AutonCommands;
 
 import java.util.function.DoubleSupplier;
 
@@ -14,18 +14,15 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.ultrashot.AngleStates;
 
-public class UltrashotCommand extends Command {
+public class UltrashotAndSpinupCommand extends Command {
   /** Creates a new UltrashotCommand. */
   ShooterSubsystem shooterSubsystem;
   DriveSubsystem driveSubsystem;
-  DoubleSupplier x, y, k, f;
-  public UltrashotCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier x, DoubleSupplier y, DoubleSupplier k, DoubleSupplier f) {
+
+  public UltrashotAndSpinupCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem) {
     this.shooterSubsystem = shooterSubsystem;
     this.driveSubsystem = driveSubsystem;
-    this.x = x;
-    this.y = y;
-    this.k = k;
-    this.f = f;
+
     addRequirements(shooterSubsystem, driveSubsystem);
   }
 
@@ -41,16 +38,13 @@ public class UltrashotCommand extends Command {
   public void execute() {
     shooterSubsystem.updateUltrashot(driveSubsystem);
     shooterSubsystem.ultimatum();
+    shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
 
     AngleStates states = shooterSubsystem.getAngleStates();
 
-    driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta()), x.getAsDouble(), y.getAsDouble(), states.getOmega()); // 0.1 is the heading controller D
+    driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta()), 0, 0, states.getOmega()); // 0.1 is the heading controller D
     shooterSubsystem.gotoAngle(states.getPhi());
-
-    shooterSubsystem.setKickerSpeed(-k.getAsDouble());
-    shooterSubsystem.setFlywheelSpeed((int) (f.getAsDouble() + .5) * Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
     
-    SmartDashboard.putNumber("theta", states.getTheta());
   }
 
   // Called once the command ends or is interrupted.
@@ -58,11 +52,10 @@ public class UltrashotCommand extends Command {
   public void end(boolean interrupted) {
     shooterSubsystem.stopAll();
   }
-  
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return shooterSubsystem.getAverageRPM() > Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT;
   }
 }

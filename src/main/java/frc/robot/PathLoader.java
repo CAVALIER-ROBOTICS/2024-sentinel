@@ -37,7 +37,11 @@ public class PathLoader {
     }
 
     public static void configureAutoBuilder(DriveSubsystem driveSub) {
-        Consumer<Pose2d> resetPose = pose -> driveSub.updateOdometry(pose);
+        Consumer<Pose2d> resetPose = pose -> {
+            driveSub.updatePoseEstimator(pose);
+            driveSub.updateOdometry(pose);
+        };
+
         Consumer<ChassisSpeeds> drivelol = speeds -> driveSub.autonDrive(speeds);
 
         HolonomicPathFollowerConfig hpfc = new HolonomicPathFollowerConfig(
@@ -50,7 +54,7 @@ public class PathLoader {
         );
         
         AutoBuilder.configureHolonomic(
-                driveSub::getOdometry,
+                driveSub::getEstimatedPosition, //TODO this uses the pose estimator now, idk how well it'll work
                 resetPose,
                 driveSub::getChassisSpeeds,
                 drivelol,
@@ -65,13 +69,14 @@ public class PathLoader {
         return path;
     }
 
-    public static void configureDynamicObstacles(Pose2d[] botObstacleCenters, Translation2d currentBotPos) {
-        
+    public static void configureDynamicObstacles(Pose2d[] botObstacleCenters, Translation2d currentBotPos) {}
+
+    public static Command loadAuto(String name) {
+        return new PathPlannerAuto(name);
     }
 
     public static Command loadPath(String name) {
-        return new PathPlannerAuto(name);
-        // PathPlannerPath path = PathPlannerPath.fromPathFile(name);
-        // return AutoBuilder.followPath(path);
+        PathPlannerPath path = PathPlannerPath.fromPathFile(name);
+        return AutoBuilder.followPath(path);
     }
 }
