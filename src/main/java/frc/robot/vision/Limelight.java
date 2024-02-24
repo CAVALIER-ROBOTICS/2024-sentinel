@@ -4,9 +4,12 @@
 
 package frc.robot.vision;
 
+import edu.wpi.first.math.estimator.KalmanFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.vision.LimelightHelpers.LimelightResults;
 import frc.robot.vision.LimelightHelpers.LimelightTarget_Fiducial;
@@ -17,11 +20,23 @@ public class Limelight {
     private static final String frontLimelight = "limelight-cavbots";
 
     public static Pose2d getPose2d(String limelightName) {
-        return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
+        if(!targetBlue()) {
+            return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
+        }
+        return LimelightHelpers.getBotPose2d_wpiRed(limelightName);
     }
 
     public static Pose2d getPose2d() {
-        return LimelightHelpers.getBotPose2d_wpiBlue(getMostAccurateLimelightName());
+        return getPose2d(getMostAccurateLimelightName());
+    }
+
+    public static boolean targetBlue() {
+        Alliance alliance = Alliance.Red;
+        try {
+            alliance = DriverStation.getAlliance().get();
+        } catch(Exception e) {}
+
+        return (alliance == Alliance.Blue); 
     }
 
     public static Pose2d[] getPoses() {

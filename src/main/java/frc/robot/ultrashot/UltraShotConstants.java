@@ -5,7 +5,7 @@ public class UltraShotConstants {
     public static Point3D robot = new Point3D(3, 3, 0);
     public static Point3D axis = new Point3D(0.0953, 0, 0.3518);
     public static Point3D velocity = new Point3D(1, 1, 0);
-    public static Point3D blueTarget = new Point3D(0.15, 5.547868, 2.06986103781);
+    public static Point3D blueTarget = new Point3D((11*0.0254), 5.547868, 2.06986103781);
     public static Point3D redTarget = new Point3D(((651.25-11)*0.0254), 5.547868, 2.06986103781);
 
     public static AngleStates states = new AngleStates();

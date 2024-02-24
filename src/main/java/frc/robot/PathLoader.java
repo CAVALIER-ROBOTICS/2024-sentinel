@@ -18,6 +18,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.Constants.SwerveConstants;
@@ -33,7 +35,12 @@ public class PathLoader {
     }
 
     public static Boolean getShouldFlipPath() {
-        return false;
+        Alliance alliance = Alliance.Red;
+        try {
+            alliance = DriverStation.getAlliance().get();
+        } catch(Exception e) {}
+
+        return (alliance == Alliance.Blue); 
     }
 
     public static void configureAutoBuilder(DriveSubsystem driveSub) {

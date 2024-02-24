@@ -37,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
@@ -110,7 +111,7 @@ public class RobotContainer {
     JoystickButton ampMode = new JoystickButton(driver, 3);
     JoystickButton retractIntake = new JoystickButton(operator, 1);
 
-    toggleIntake.onTrue(intake());
+    toggleIntake.toggleOnTrue(intake());
     
     zeroGyro.onTrue(new InstantCommand(driveSubsystem::resetGyroFieldDrive));
     ampMode.toggleOnTrue(new AmpScoringCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
@@ -144,16 +145,15 @@ public class RobotContainer {
 //     );
 // }
 
-  public SequentialCommandGroup intake() {
+  public Command intake() {
       return new SequentialCommandGroup(
         new IntakeStateCommand(intake, shooterSubsystem),
         new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
         new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(1),
         new ShooterTransferCommand(intake, shooterSubsystem),
         new ShooterFinishCommand(shooterSubsystem),
-        new SendbackCommand(shooterSubsystem).withTimeout(.05)
-        
-      );
+        new SendbackCommand(shooterSubsystem).withTimeout(.05) 
+      ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
   }
 
   public Command getShootingWhileMovingCommand() {
@@ -167,7 +167,7 @@ public class RobotContainer {
 
   public Command getStationaryShotCommand() {
     return new SequentialCommandGroup(
-      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem),
+      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(1),
       new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(2)
     );
   }

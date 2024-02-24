@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -123,6 +124,7 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("UsingLimelight", true);
         Pose2d limePose = Limelight.getPose2d(accurate);
         if(!(limePose.getX() == 0 && limePose.getY() == 0)) {
+          limePose = new Pose2d(limePose.getX(), limePose.getY(), Rotation2d.fromDegrees(limePose.getRotation().getDegrees() + 180));
           updateOdometry(limePose);
           setYaw(limePose.getRotation().getDegrees());
           return;
@@ -179,8 +181,8 @@ public class DriveSubsystem extends SubsystemBase {
     Rotation2d currentAngle = getAngle();
     pushMeasurementAndSetpoint(angle.getRadians());
     double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians());
-    rotSpeeds = clamp(rotSpeeds, -2, 2);
-    SmartDashboard.putNumber("OmegaRads", rotSpeeds);
+    rotSpeeds = clamp(rotSpeeds, -1, 1);
+    
     ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle);
 
     drive(fieldRelative);

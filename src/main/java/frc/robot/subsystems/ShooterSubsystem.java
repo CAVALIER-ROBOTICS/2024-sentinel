@@ -21,8 +21,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.ultrashot.AngleStates;
+import frc.robot.ultrashot.Point3D;
 import frc.robot.ultrashot.UltraShot;
 import frc.robot.ultrashot.UltraShotConstants;
+import frc.robot.vision.Limelight;
 
 public class ShooterSubsystem extends SubsystemBase {
   CANSparkMax top = new CANSparkMax(Constants.TOP_SHOOTER_ID, MotorType.kBrushless);
@@ -65,7 +67,7 @@ public class ShooterSubsystem extends SubsystemBase {
       UltraShotConstants.robot,
       UltraShotConstants.axis,
       UltraShotConstants.velocity,
-      ultraShot.getTarget(),
+      getTarget(),
       UltraShotConstants.states,
       UltraShotConstants.shooterLength,
       UltraShotConstants.shooterSpeed,
@@ -144,8 +146,15 @@ public class ShooterSubsystem extends SubsystemBase {
   //   ultraShot.setRobotVelocity(botVelocity);
   // }
   
+  public Point3D getTarget() {
+    if(Limelight.targetBlue()) {
+      return UltraShotConstants.blueTarget;
+    }
+    return UltraShotConstants.redTarget;
+  }
+
   public void updateUltrashot(DriveSubsystem driveSubsystem) {
-    ultraShot.update(driveSubsystem.getOdometry(), driveSubsystem.getChassisSpeeds(), ultraShot.getTarget());
+    ultraShot.update(driveSubsystem.getOdometry(), driveSubsystem.getChassisSpeeds(), getTarget());
   }
 
   private double clamp(double x, double min, double max) {
