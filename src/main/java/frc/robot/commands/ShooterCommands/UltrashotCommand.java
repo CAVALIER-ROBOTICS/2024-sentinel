@@ -32,7 +32,8 @@ public class UltrashotCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // driveSubsystem.resetHeadingPID();
+    driveSubsystem.resetHeadingPID();
+    SmartDashboard.putBoolean("Targeting", true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -45,8 +46,8 @@ public class UltrashotCommand extends Command {
     AngleStates states = shooterSubsystem.getAngleStates();
 
     if(Double.isNaN(states.getTheta())) {return;}
-    
-    driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta()), x.getAsDouble(), y.getAsDouble(), states.getOmega()); // 0.1 is the heading controller D
+
+    driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta() + Math.PI), x.getAsDouble(), y.getAsDouble(), states.getOmega()); // 0.1 is the heading controller D
     shooterSubsystem.gotoAngle(states.getPhi());
 
     shooterSubsystem.setKickerSpeed(-k.getAsDouble());
@@ -59,6 +60,7 @@ public class UltrashotCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     shooterSubsystem.stopAll();
+    SmartDashboard.putBoolean("Targeting", false);
   }
   
 

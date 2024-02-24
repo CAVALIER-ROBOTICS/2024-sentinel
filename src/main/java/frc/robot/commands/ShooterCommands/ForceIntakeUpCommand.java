@@ -4,21 +4,16 @@
 
 package frc.robot.commands.ShooterCommands;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.Constants;
+import frc.robot.subsystems.IntakeSubsystem;
 
-public class ForceSendbackCommand extends Command {
-  /** Creates a new ForceSendbackCommand. */
-  ShooterSubsystem shooterSubsystem;
-  BooleanSupplier kF, kB;
-  public ForceSendbackCommand(ShooterSubsystem shooterSubsystem, BooleanSupplier kF, BooleanSupplier kB) {
-    this.shooterSubsystem = shooterSubsystem;
-    this.kF = kF;
-    this.kB = kB;
-    addRequirements(shooterSubsystem);
+public class ForceIntakeUpCommand extends Command {
+  IntakeSubsystem intakeSubsystem;
+  /** Creates a new ForceIntakeUpCommand. */
+  public ForceIntakeUpCommand(IntakeSubsystem intakeSubsystem) {
+    this.intakeSubsystem = intakeSubsystem;
+    addRequirements(intakeSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -29,21 +24,13 @@ public class ForceSendbackCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(kF.getAsBoolean()) {
-      shooterSubsystem.setKickerSpeed(-1);
-      return;
-    }
-    if(kB.getAsBoolean()) {
-      shooterSubsystem.setKickerSpeed(1);
-      return;
-    }
-    shooterSubsystem.setKickerSpeed(0);
+    intakeSubsystem.setPosition(Constants.IntakeConstants.RETRACTED_POS);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooterSubsystem.stopAll();
+    intakeSubsystem.setAnglePercentOutput(0);
   }
 
   // Returns true when the command should end.

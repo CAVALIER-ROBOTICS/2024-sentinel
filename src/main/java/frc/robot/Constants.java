@@ -22,14 +22,14 @@ public final class Constants {
     public static final int SHOOTER_LIMIT_SWITCH_ID = 1;
 
     public static final int SPEED_SHOOTER = 1;
-    public static final double MAX_FLYWHEEL_PERCENT_OUTPUT = .8;
-    public static final double MAX_RPM_FLYWHEEL = 5300;
+    public static final double MAX_FLYWHEEL_PERCENT_OUTPUT = .7; // 1.863636363636364
+    public static final double MAX_RPM_FLYWHEEL = 3350;
     public static final double MAX_POSITION_SHOOTER = 0.169686904242173;
     public static final double MIN_POSITITON_SHOOTER = 0.418373110459328;
     public static final double SHOOTER_HORIZONTAL = 0.418373110459328;
     public static final double SHOOTER_45_DEGREE = 0.291827032295676; 
     public static final double SHOOTER_VERTICAL = 0.169686904242173;
-    public static final double SHOOTER_LINEUP_POSITION = 0.07;
+    public static final double SHOOTER_LINEUP_POSITION = 0.06;
   }
 
   public final class IntakeConstants {
@@ -105,7 +105,7 @@ public final class Constants {
 
   public static final double NOMINAL_VOLTAGE = 12.2;
 
-  public static final double MAX_DISTANCE_TO_APRILTAG = 5.5; //Meters
+  public static final double MAX_DISTANCE_TO_APRILTAG = 4.5; //Meters
   
   public static final String CANIVORE = "OTHERCANIVORE";
   public static final double BOT_LENGTH = .6858;
@@ -124,6 +124,10 @@ public final class Constants {
   public static final String P_thetaSmartdashboard = "ThetaP";
   public static final String I_thetaSmartdashboard = "ThetaI";
   public static final String D_thetaSmartdashboard = "ThetaD";
+
+  public static final String P_phiSmartdashboard = "PhiP";
+  public static final String I_phiSmartdashboard = "PhiI";
+  public static final String D_phiSmartdashboard = "PhiD";
 
   public static final String ShooterAngleAmpSD = "AmpSetpointAngle";
   public static final String FlywheelSpeedAmpSD = "FlywheelSetpointAngle";

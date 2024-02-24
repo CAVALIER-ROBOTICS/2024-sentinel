@@ -19,6 +19,7 @@ import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
 import frc.robot.commands.BotStateCommands.ShooterTransferCommand;
 import frc.robot.commands.DriveCommands.FieldDrive;
 import frc.robot.commands.ShooterCommands.AmpScoringCommand;
+import frc.robot.commands.ShooterCommands.ForceIntakeUpCommand;
 import frc.robot.commands.ShooterCommands.ForceSendbackCommand;
 import frc.robot.commands.ShooterCommands.UltrashotCommand;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -68,7 +69,7 @@ public class RobotContainer {
 
     () -> driver.getRightX() * Math.PI));
 
-    shooterSubsystem.setDefaultCommand(new ForceSendbackCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
+    shooterSubsystem.setDefaultCommand(new ForceSendbackCommand(shooterSubsystem, operator::getRightBumper, operator::getLeftBumper));
     climb.setDefaultCommand(new ClimbCommand(climb, operator::getLeftY, operator::getRightY));
     configureBindings();
   }
@@ -107,11 +108,14 @@ public class RobotContainer {
     JoystickButton zeroGyro = new JoystickButton(driver, 4);
     JoystickButton targetTrack = new JoystickButton(driver, 2);
     JoystickButton ampMode = new JoystickButton(driver, 3);
+    JoystickButton retractIntake = new JoystickButton(operator, 1);
 
     toggleIntake.onTrue(intake());
     
     zeroGyro.onTrue(new InstantCommand(driveSubsystem::resetGyroFieldDrive));
     ampMode.toggleOnTrue(new AmpScoringCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
+
+    retractIntake.whileTrue(new ForceIntakeUpCommand(intake));
 
     targetTrack.toggleOnTrue(new UltrashotCommand(shooterSubsystem, driveSubsystem, 
     () -> -Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
@@ -144,7 +148,7 @@ public class RobotContainer {
       return new SequentialCommandGroup(
         new IntakeStateCommand(intake, shooterSubsystem),
         new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
-        new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
+        new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(1),
         new ShooterTransferCommand(intake, shooterSubsystem),
         new ShooterFinishCommand(shooterSubsystem),
         new SendbackCommand(shooterSubsystem).withTimeout(.05)

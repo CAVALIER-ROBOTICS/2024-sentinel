@@ -2,6 +2,7 @@ package frc.robot.ultrashot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class UltraShot {
 
@@ -38,7 +39,10 @@ public class UltraShot {
     }
 
     public Point3D getTarget() {
-        return this.target;
+        Point3D target;
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {target = UltraShotConstants.redTarget;}
+        else {target = UltraShotConstants.blueTarget;}
+        return UltraShotConstants.redTarget;
     }
 
     public AngleStates getAngleStates() {

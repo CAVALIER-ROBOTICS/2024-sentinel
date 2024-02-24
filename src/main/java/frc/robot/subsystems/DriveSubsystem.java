@@ -180,7 +180,7 @@ public class DriveSubsystem extends SubsystemBase {
     pushMeasurementAndSetpoint(angle.getRadians());
     double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians());
     rotSpeeds = clamp(rotSpeeds, -2, 2);
-    
+    SmartDashboard.putNumber("OmegaRads", rotSpeeds);
     ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle);
 
     drive(fieldRelative);

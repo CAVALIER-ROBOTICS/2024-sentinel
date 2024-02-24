@@ -34,7 +34,7 @@ public class ShooterSubsystem extends SubsystemBase {
   DigitalInput limit = new DigitalInput(ShooterConstants.SHOOTER_LIMIT_SWITCH_ID);
 
   DutyCycleEncoder enc = new DutyCycleEncoder(2);
-  PIDController angleController = new PIDController(0.5, 0, 0);
+  PIDController angleController = new PIDController(0.8, 0.001, 0);
 
   RelativeEncoder rpmEncoderTop, rpmEncoderBottom;
   UltraShot ultraShot = new UltraShot();
@@ -65,7 +65,7 @@ public class ShooterSubsystem extends SubsystemBase {
       UltraShotConstants.robot,
       UltraShotConstants.axis,
       UltraShotConstants.velocity,
-      UltraShotConstants.target,
+      ultraShot.getTarget(),
       UltraShotConstants.states,
       UltraShotConstants.shooterLength,
       UltraShotConstants.shooterSpeed,
@@ -82,8 +82,8 @@ public class ShooterSubsystem extends SubsystemBase {
       bottom.set(0);
       return;
     }
-    top.set(speed + 0.075);
-    bottom.set(-(speed - 0.075));
+    top.set(speed);
+    bottom.set(-(speed + 0.025));
   }
 
    public void setFlywheelSpeed(double speed, double difference) {
@@ -92,8 +92,8 @@ public class ShooterSubsystem extends SubsystemBase {
       bottom.set(0);
       return;
     }
-    top.set(speed + difference);
-    bottom.set(-(speed - difference));
+    top.set(speed + difference + 0.075);
+    bottom.set(-(speed - difference + 0.075));
   }
   
   public void stopAll() {
@@ -143,12 +143,17 @@ public class ShooterSubsystem extends SubsystemBase {
   //   ultraShot.setRobotPos(pose);
   //   ultraShot.setRobotVelocity(botVelocity);
   // }
-
+  
   public void updateUltrashot(DriveSubsystem driveSubsystem) {
-    ultraShot.update(driveSubsystem.getOdometry(), driveSubsystem.getChassisSpeeds(), UltraShotConstants.target);
+    ultraShot.update(driveSubsystem.getOdometry(), driveSubsystem.getChassisSpeeds(), ultraShot.getTarget());
+  }
+
+  private double clamp(double x, double min, double max) {
+    return (x > max) ? max: (x < min) ? min: x;
   }
 
   public void gotoAngle(double angle) {
+    angle = clamp(angle, 0, (Math.PI / 2));
     SmartDashboard.putNumber("Desired encoder rot", angle);
     SmartDashboard.putNumber("Current encoder rot", getAbsolutePosition());
     setPosition(angle);
@@ -188,6 +193,7 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("AbsoluteShooterPosition", getAbsolutePosition());
+    SmartDashboard.putNumber("RequestedShooterPosistion", ultraShot.getPhi());
     SmartDashboard.putNumber("FlywheelRPMTop", getRPM()[0]);
     SmartDashboard.putNumber("FlywheelRPMBottom", getRPM()[1]);
     SmartDashboard.putNumber("LeftCurrentDraw", left.getOutputCurrent());
