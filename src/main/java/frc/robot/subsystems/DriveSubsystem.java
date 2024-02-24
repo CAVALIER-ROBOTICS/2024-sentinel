@@ -180,9 +180,9 @@ public class DriveSubsystem extends SubsystemBase {
   public void driveWithAngleOverride(Rotation2d angle, double xSpeed, double ySpeed, double omega) {
     Rotation2d currentAngle = getAngle();
     pushMeasurementAndSetpoint(angle.getRadians());
-    double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians());
+    double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians()) + headingController.getD() * omega;
     rotSpeeds = clamp(rotSpeeds, -1, 1);
-    
+    SmartDashboard.putNumber("OmegaNutsLol", omega);
     ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle);
 
     drive(fieldRelative);
