@@ -72,6 +72,18 @@ public class NeoSteveModule {
         target.burnFlash();
     }
 
+    public void invertSteer(boolean inversionState) {
+        steerMotor.setInverted(inversionState);
+    }
+
+    public void setSteerP(double p) {
+        steerController.setP(p);
+    }
+
+    public void setPercentOutput(double speed) {
+        steerMotor.set(speed);
+    }
+
     private void setupEncoder(CANcoder encoder) {
         CANcoderConfigurator configPls = encoder.getConfigurator();
         CANcoderConfiguration canCon = new CANcoderConfiguration();

@@ -45,6 +45,8 @@ public class DriveSubsystem extends SubsystemBase {
     bleft = new NeoSteveModule(Constants.BLEFT_DRIVE_ID, Constants.BLEFT_STEER_ID, Constants.BLEFT_CANCODER_ID, SwerveConstants.BLEFT_OFFSET, Constants.CANIVORE);
     bright = new NeoSteveModule(Constants.BRIGHT_DRIVE_ID, Constants.BRIGHT_STEER_ID, Constants.BRIGHT_CANCODER_ID, SwerveConstants.BRIGHT_OFFSET, Constants.CANIVORE);
 
+    bright.invertSteer(false);
+    bright.setSteerP(.1);
     odometry = new SwerveDriveOdometry(SwerveConstants.m_kinematics, getAngle(), getSwerveModulePositions());
     estimator = new SwerveDrivePoseEstimator(SwerveConstants.m_kinematics, getAngle(), getSwerveModulePositions(), new Pose2d());
 
@@ -61,6 +63,10 @@ public class DriveSubsystem extends SubsystemBase {
     fright.setModuleState(states[1]);
     bleft.setModuleState(states[2]);
     bright.setModuleState(states[3]);
+    // fleft.setPercentOutput(.5);
+    // fright.setPercentOutput(.5);
+    // bleft.setPercentOutput(.5);
+    // bright.setPercentOutput(.5);
   }
 
   public void resetHeadingPID() {

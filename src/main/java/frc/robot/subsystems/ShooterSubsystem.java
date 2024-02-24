@@ -36,7 +36,7 @@ public class ShooterSubsystem extends SubsystemBase {
   DigitalInput limit = new DigitalInput(ShooterConstants.SHOOTER_LIMIT_SWITCH_ID);
 
   DutyCycleEncoder enc = new DutyCycleEncoder(2);
-  PIDController angleController = new PIDController(1.9, 0.01, 0.01);
+  PIDController angleController = new PIDController(1.4, 0.0, 0.01);
 
   RelativeEncoder rpmEncoderTop, rpmEncoderBottom;
   UltraShot ultraShot = new UltraShot();
