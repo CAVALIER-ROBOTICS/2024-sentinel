@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 9.482350671804562,
-        "y": 6.080886447677448
+        "x": 9.500239200256427,
+        "y": 6.059769899783973
       },
       "isLocked": false,
       "linkedName": "IntakePosTwo"
     },
     {
       "anchor": {
-        "x": 10.36306285709131,
-        "y": 6.243349401238204
+        "x": 10.757758785217904,
+        "y": 6.417749927619722
       },
       "prevControl": {
-        "x": 9.977545904037425,
-        "y": 6.114843750220242
+        "x": 10.37224183216402,
+        "y": 6.28924427660176
       },
       "nextControl": null,
       "isLocked": false,
@@ -66,7 +66,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "RedRightStatic",
+  "folder": "RedTop",
   "previewStartingState": {
     "rotation": -158.1860061415931,
     "velocity": 0
