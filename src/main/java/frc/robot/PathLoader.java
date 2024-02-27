@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.vision.Limelight;
 import frc.robot.Constants.SwerveConstants;
 
 /** Add your docs here. */
@@ -35,12 +36,7 @@ public class PathLoader {
     }
 
     public static Boolean getShouldFlipPath() {
-        Alliance alliance = Alliance.Red;
-        try {
-            alliance = DriverStation.getAlliance().get();
-        } catch(Exception e) {}
-
-        return (alliance == Alliance.Blue); 
+        return Limelight.targetBlue();
     }
 
     public static void configureAutoBuilder(DriveSubsystem driveSub) {

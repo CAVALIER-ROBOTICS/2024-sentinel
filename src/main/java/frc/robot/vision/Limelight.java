@@ -20,10 +20,12 @@ public class Limelight {
     private static final String frontLimelight = "limelight-cavbots";
 
     public static Pose2d getPose2d(String limelightName) {
-        if(!targetBlue()) {
-            return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
-        }
-        return LimelightHelpers.getBotPose2d_wpiRed(limelightName);
+        // if(!targetBlue()) {
+        //     return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
+        // }
+        // return LimelightHelpers.getBotPose2d_wpiRed(limelightName);
+
+        return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
     }
 
     public static Pose2d getPose2d() {
