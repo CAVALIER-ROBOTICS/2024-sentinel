@@ -9,6 +9,7 @@ import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndKickCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndSpinupCommand;
 import frc.robot.commands.AutonCommands.UltrashotAndSpinupCommand;
+import frc.robot.commands.AutonCommands.VectorFieldCommand;
 import frc.robot.commands.AutonCommands.StartThetaOverrideCommand;
 import frc.robot.commands.AutonCommands.StopThetaOverrideCommand;
 import frc.robot.commands.AutonCommands.UltrashotAndKickCommand;
@@ -26,6 +27,9 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.vectorfields.VectorFieldConstants;
+import frc.robot.vectorfields.VectorFieldGenerator;
+
 import java.util.Optional;
 
 import com.pathplanner.lib.auto.NamedCommands;
@@ -33,6 +37,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -107,7 +112,7 @@ public class RobotContainer {
   private void configureBindings() {
     JoystickButton toggleIntake = new JoystickButton(driver, 5);
     JoystickButton zeroGyro = new JoystickButton(driver, 4);
-    JoystickButton targetTrack = new JoystickButton(driver, 2);
+    JoystickButton targetTrack = new JoystickButton(operator, 2);
     JoystickButton ampMode = new JoystickButton(driver, 3);
     JoystickButton retractIntake = new JoystickButton(operator, 1);
 
@@ -167,8 +172,18 @@ public class RobotContainer {
 
   public Command getStationaryShotCommand() {
     return new SequentialCommandGroup(
-      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(1),
+      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(2),
       new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(2)
+    );
+  }
+
+  public Command getVectorFieldCommand() {
+    VectorFieldGenerator vectorField = driveSubsystem.getVectorFieldGenerator();
+    return new VectorFieldCommand(
+      driveSubsystem,
+      () -> vectorField.getVelocity().getX(),
+      () -> vectorField.getVelocity().getY(),
+      () -> 0
     );
   }
 }

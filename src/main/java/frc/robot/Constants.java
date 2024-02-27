@@ -35,7 +35,7 @@ public final class Constants {
   public final class IntakeConstants {
 
     public static final I2C.Port INTAKE_SENSOR_PORT = I2C.Port.kOnboard;
-    public static final int MINIMUM_PROXIMITY_TRIGGER = 9;
+    public static final int MINIMUM_PROXIMITY_TRIGGER = 6;
 
     public static final double RETRACTED_POS = 0.77851161951279;
     public static final double EXTENDED_POS = 0.079076751851919;

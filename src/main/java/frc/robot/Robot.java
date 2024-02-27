@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -43,11 +44,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getPathCommand(pathName);
-    Pose2d initial = PathPlannerAuto.getStaringPoseFromAutoFile(pathName);
-    driveSubsystem.updateOdometry(initial);
-    driveSubsystem.setYaw(initial.getRotation().getDegrees());
-    driveSubsystem.updatePoseEstimator(initial);
+    // m_autonomousCommand = m_robotContainer.getPathCommand(pathName);
+    // Pose2d initial = PathPlannerAuto.getStaringPoseFromAutoFile(pathName);
+    // driveSubsystem.updateOdometry(initial);
+    // driveSubsystem.setYaw(initial.getRotation().getDegrees());
+    // driveSubsystem.updatePoseEstimator(initial);
+    // driveSubsystem.updateOdometry(new Pose2d(0.0, 0.0, new Rotation2d()));
+    // driveSubsystem.setYaw(0);
+    m_autonomousCommand = m_robotContainer.getVectorFieldCommand();
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();

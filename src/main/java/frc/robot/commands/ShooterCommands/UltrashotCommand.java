@@ -19,6 +19,7 @@ public class UltrashotCommand extends Command {
   ShooterSubsystem shooterSubsystem;
   DriveSubsystem driveSubsystem;
   DoubleSupplier x, y, k, f;
+
   public UltrashotCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier x, DoubleSupplier y, DoubleSupplier k, DoubleSupplier f) {
     this.shooterSubsystem = shooterSubsystem;
     this.driveSubsystem = driveSubsystem;

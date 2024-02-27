@@ -21,7 +21,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.CycloidLibrary.NeoSteveModule;
+import frc.robot.ultrashot.Point2D;
+import frc.robot.vectorfields.VectorFieldGenerator;
 import frc.robot.vision.Limelight;
+import frc.robot.vectorfields.*;
 
 public class DriveSubsystem extends SubsystemBase {
   NeoSteveModule fleft, fright, bleft, bright;
@@ -36,6 +39,8 @@ public class DriveSubsystem extends SubsystemBase {
   Field2d odometryField;
   Field2d poseEstimatorField;
 
+  VectorFieldGenerator vectorField;
+
   double currentOffset = 0;
 
   /** Creates a new DriveSubsystem. */
@@ -45,12 +50,22 @@ public class DriveSubsystem extends SubsystemBase {
     bleft = new NeoSteveModule(Constants.BLEFT_DRIVE_ID, Constants.BLEFT_STEER_ID, Constants.BLEFT_CANCODER_ID, SwerveConstants.BLEFT_OFFSET, Constants.CANIVORE);
     bright = new NeoSteveModule(Constants.BRIGHT_DRIVE_ID, Constants.BRIGHT_STEER_ID, Constants.BRIGHT_CANCODER_ID, SwerveConstants.BRIGHT_OFFSET, Constants.CANIVORE);
 
+    bright.invertSteer(false);
+    bright.setSteerP(.1);
     odometry = new SwerveDriveOdometry(SwerveConstants.m_kinematics, getAngle(), getSwerveModulePositions());
     estimator = new SwerveDrivePoseEstimator(SwerveConstants.m_kinematics, getAngle(), getSwerveModulePositions(), new Pose2d());
 
     headingController.enableContinuousInput(0, 2 * Math.PI);
     odometryField = new Field2d();
     poseEstimatorField = new Field2d();
+
+    vectorField = new VectorFieldGenerator();
+    vectorField.configure(
+      VectorFieldConstants.attraction,
+      VectorFieldConstants.repulsion,
+      VectorFieldConstants.node,
+      VectorFieldConstants.antiNodes
+    );
 
     SmartDashboard.putData("OdometryField", odometryField);
     SmartDashboard.putData("PoseEstimatorField", poseEstimatorField);
@@ -61,6 +76,10 @@ public class DriveSubsystem extends SubsystemBase {
     fright.setModuleState(states[1]);
     bleft.setModuleState(states[2]);
     bright.setModuleState(states[3]);
+    // fleft.setPercentOutput(.5);
+    // fright.setPercentOutput(.5);
+    // bleft.setPercentOutput(.5);
+    // bright.setPercentOutput(.5);
   }
 
   public void resetHeadingPID() {
@@ -109,6 +128,10 @@ public class DriveSubsystem extends SubsystemBase {
 
   public Rotation2d getFieldDriveAngle() {
     return Rotation2d.fromDegrees(getAngle().getDegrees() - currentOffset);
+  }
+
+  public VectorFieldGenerator getVectorFieldGenerator() {
+    return this.vectorField;
   }
 
   public void resetGyroFieldDrive() {
@@ -180,9 +203,9 @@ public class DriveSubsystem extends SubsystemBase {
   public void driveWithAngleOverride(Rotation2d angle, double xSpeed, double ySpeed, double omega) {
     Rotation2d currentAngle = getAngle();
     pushMeasurementAndSetpoint(angle.getRadians());
-    double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians());
+    double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians()) + headingController.getD() * omega;
     rotSpeeds = clamp(rotSpeeds, -1, 1);
-    
+    SmartDashboard.putNumber("OmegaNutsLol", omega);
     ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle);
 
     drive(fieldRelative);
@@ -210,6 +233,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     updateOdometry();
     updatePoseEstimator();
+    vectorField.update(new Point2D(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY()));
+
 
     odometryField.setRobotPose(odometry.getPoseMeters());
     poseEstimatorField.setRobotPose(estimator.getEstimatedPosition());

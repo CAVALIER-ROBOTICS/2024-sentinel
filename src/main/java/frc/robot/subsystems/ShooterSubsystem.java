@@ -36,7 +36,7 @@ public class ShooterSubsystem extends SubsystemBase {
   DigitalInput limit = new DigitalInput(ShooterConstants.SHOOTER_LIMIT_SWITCH_ID);
 
   DutyCycleEncoder enc = new DutyCycleEncoder(2);
-  PIDController angleController = new PIDController(0.8, 0.001, 0);
+  PIDController angleController = new PIDController(1.4, 0.0, 0.01);
 
   RelativeEncoder rpmEncoderTop, rpmEncoderBottom;
   UltraShot ultraShot = new UltraShot();
@@ -161,10 +161,15 @@ public class ShooterSubsystem extends SubsystemBase {
     return (x > max) ? max: (x < min) ? min: x;
   }
 
+  public void pushMeasurementAndSetpoint(double setpoint) {
+    SmartDashboard.putNumber("setpoint", setpoint);
+    SmartDashboard.putNumber("measurement", getAbsolutePosition());
+    SmartDashboard.putNumber("errornuts", getAbsolutePosition() - setpoint);
+  }
+
   public void gotoAngle(double angle) {
     angle = clamp(angle, 0, (Math.PI / 2));
-    SmartDashboard.putNumber("Desired encoder rot", angle);
-    SmartDashboard.putNumber("Current encoder rot", getAbsolutePosition());
+    pushMeasurementAndSetpoint(angle);
     setPosition(angle);
   }
 
@@ -199,6 +204,12 @@ public class ShooterSubsystem extends SubsystemBase {
 //     return ((theta/90) * (maxPos - minPos)) + minPos;
 //   }
 
+  public void updatePID() {
+    angleController.setP(SmartDashboard.getNumber(Constants.P_phiSmartdashboard, 0));
+    angleController.setI(SmartDashboard.getNumber(Constants.I_phiSmartdashboard, 0));
+    angleController.setD(SmartDashboard.getNumber(Constants.D_phiSmartdashboard, 0));
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("AbsoluteShooterPosition", getAbsolutePosition());
@@ -208,6 +219,8 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("LeftCurrentDraw", left.getOutputCurrent());
     SmartDashboard.putNumber("RightCurrentDraw", right.getOutputCurrent());
     SmartDashboard.putBoolean("HasNote", hasNoteInShooter());
+
+    // updatePID();
     // This method will be called once per scheduler run
     configUltrashot();
   }

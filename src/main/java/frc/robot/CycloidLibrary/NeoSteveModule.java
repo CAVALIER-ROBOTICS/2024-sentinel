@@ -51,9 +51,10 @@ public class NeoSteveModule {
         driveEncoder.setVelocityConversionFactor((1 / 6.75 / 60) * (.1016 * Math.PI));
         driveEncoder.setPositionConversionFactor((1 / 6.75) * (.1016 * Math.PI));
         target.setInverted(false);
-        target.setIdleMode(IdleMode.kBrake);
+        target.setIdleMode(IdleMode.kCoast);
         target.enableVoltageCompensation(NOMINAL_VOLTAGE);
-        // target.setOpenLoopRampRate(.1);
+        target.setOpenLoopRampRate(.1);
+        target.setSmartCurrentLimit(35);
 
         target.burnFlash();
     }
@@ -70,6 +71,18 @@ public class NeoSteveModule {
         target.enableVoltageCompensation(NOMINAL_VOLTAGE);
 
         target.burnFlash();
+    }
+
+    public void invertSteer(boolean inversionState) {
+        steerMotor.setInverted(inversionState);
+    }
+
+    public void setSteerP(double p) {
+        steerController.setP(p);
+    }
+
+    public void setPercentOutput(double speed) {
+        steerMotor.set(speed);
     }
 
     private void setupEncoder(CANcoder encoder) {
