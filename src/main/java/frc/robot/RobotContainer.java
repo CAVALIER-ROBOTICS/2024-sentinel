@@ -58,7 +58,7 @@ public class RobotContainer {
   public void registerCommands() {
     NamedCommands.registerCommand("Intake", intake());
     NamedCommands.registerCommand("Shoot", getStationaryShotCommand());
-    NamedCommands.registerCommand("FlywheelIdle", new IdleShooterSpin(shooterSubsystem));
+    NamedCommands.registerCommand("ShooterSpin", new IdleShooterSpin(shooterSubsystem));
   }
 
   public RobotContainer() {
