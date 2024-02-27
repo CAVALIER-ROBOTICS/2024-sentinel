@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   DriveSubsystem driveSubsystem;
 
-  String pathName = "two_note";
+  String pathName = "RedBottom";
 
   @Override
   public void robotInit() {
