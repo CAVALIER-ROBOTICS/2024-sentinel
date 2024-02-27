@@ -8,6 +8,7 @@ package frc.robot;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndKickCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndSpinupCommand;
+import frc.robot.commands.AutonCommands.IdleShooterSpin;
 import frc.robot.commands.AutonCommands.UltrashotAndSpinupCommand;
 import frc.robot.commands.AutonCommands.VectorFieldCommand;
 import frc.robot.commands.AutonCommands.StartThetaOverrideCommand;
@@ -57,6 +58,7 @@ public class RobotContainer {
   public void registerCommands() {
     NamedCommands.registerCommand("Intake", intake());
     NamedCommands.registerCommand("Shoot", getStationaryShotCommand());
+    NamedCommands.registerCommand("FlywheelIdle", new IdleShooterSpin(shooterSubsystem));
   }
 
   public RobotContainer() {
