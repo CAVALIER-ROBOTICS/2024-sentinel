@@ -52,8 +52,8 @@ public class PathLoader {
         Consumer<ChassisSpeeds> drivelol = speeds -> driveSub.autonDrive(speeds);
 
         HolonomicPathFollowerConfig hpfc = new HolonomicPathFollowerConfig(
-            new PIDConstants(.05, 0, 0),
-            new PIDConstants(.1, 0, 0),
+            new PIDConstants(.2),
+            new PIDConstants(4.26, 0.0, 0.1),
             4.2,
             SwerveConstants.BOT_LENGTH / 2,
             new ReplanningConfig(),

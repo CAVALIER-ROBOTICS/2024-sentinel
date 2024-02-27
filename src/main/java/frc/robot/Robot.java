@@ -22,9 +22,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   DriveSubsystem driveSubsystem;
-  PathLoader auto;
 
-  String pathName = "two_note";
+  String pathName = "fournote_local";
 
   @Override
   public void robotInit() {
@@ -45,14 +44,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    // m_autonomousCommand = m_robotContainer.getPathCommand(pathName);
-    // Pose2d initial = PathPlannerAuto.getStaringPoseFromAutoFile(pathName);
-    // driveSubsystem.updateOdometry(initial);
-    // driveSubsystem.setYaw(initial.getRotation().getDegrees());
-    // driveSubsystem.updatePoseEstimator(initial);
+    m_autonomousCommand = m_robotContainer.getPathCommand(pathName);
+    Pose2d initial = PathPlannerAuto.getStaringPoseFromAutoFile(pathName);
+    driveSubsystem.updateOdometry(initial);
+    driveSubsystem.setYaw(initial.getRotation().getDegrees());
+    driveSubsystem.updatePoseEstimator(initial);
     // driveSubsystem.updateOdometry(new Pose2d(0.0, 0.0, new Rotation2d()));
     // driveSubsystem.setYaw(0);
-    m_autonomousCommand = auto.loadAuto(pathName);
+
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
