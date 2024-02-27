@@ -9,6 +9,7 @@ import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndKickCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndSpinupCommand;
 import frc.robot.commands.AutonCommands.UltrashotAndSpinupCommand;
+import frc.robot.commands.AutonCommands.VectorFieldCommand;
 import frc.robot.commands.AutonCommands.StartThetaOverrideCommand;
 import frc.robot.commands.AutonCommands.StopThetaOverrideCommand;
 import frc.robot.commands.AutonCommands.UltrashotAndKickCommand;
@@ -26,6 +27,9 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.vectorfields.VectorFieldConstants;
+import frc.robot.vectorfields.VectorFieldGenerator;
+
 import java.util.Optional;
 
 import com.pathplanner.lib.auto.NamedCommands;
@@ -108,7 +112,7 @@ public class RobotContainer {
   private void configureBindings() {
     JoystickButton toggleIntake = new JoystickButton(driver, 5);
     JoystickButton zeroGyro = new JoystickButton(driver, 4);
-    JoystickButton targetTrack = new JoystickButton(driver, 2);
+    JoystickButton targetTrack = new JoystickButton(operator, 2);
     JoystickButton ampMode = new JoystickButton(driver, 3);
     JoystickButton retractIntake = new JoystickButton(operator, 1);
 
@@ -170,6 +174,16 @@ public class RobotContainer {
     return new SequentialCommandGroup(
       new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(2),
       new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(2)
+    );
+  }
+
+  public Command getVectorFieldCommand() {
+    VectorFieldGenerator vectorField = driveSubsystem.getVectorFieldGenerator();
+    return new VectorFieldCommand(
+      driveSubsystem,
+      () -> vectorField.getVelocity().getX(),
+      () -> vectorField.getVelocity().getY(),
+      () -> 0
     );
   }
 }

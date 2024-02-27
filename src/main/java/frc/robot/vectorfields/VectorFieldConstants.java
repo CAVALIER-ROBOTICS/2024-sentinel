@@ -4,15 +4,15 @@ import frc.robot.ultrashot.Point2D;
 
 public class VectorFieldConstants {
     public static final Point2D[] antiNodes = {
-        new Point2D(4.0, 3.0),
-        new Point2D(-3.0, -2.0),
-        new Point2D(1.0, -4.0)
+        new Point2D(13.404342, 4.098544),
+        new Point2D(10.813542, 2.650744),
+        new Point2D(10.813542, 5.546344)
     };
 
-    public static final Point2D node = new Point2D(0, 0);
+    public static final Point2D node = new Point2D(13.683742, 6.994144);
 
     public static final double attraction = 1;
-    public static final double repulsion = 0.8;
+    public static final double repulsion = 0;
 
 
 }

@@ -21,7 +21,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.CycloidLibrary.NeoSteveModule;
+import frc.robot.ultrashot.Point2D;
+import frc.robot.vectorfields.VectorFieldGenerator;
 import frc.robot.vision.Limelight;
+import frc.robot.vectorfields.*;
 
 public class DriveSubsystem extends SubsystemBase {
   NeoSteveModule fleft, fright, bleft, bright;
@@ -35,6 +38,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   Field2d odometryField;
   Field2d poseEstimatorField;
+
+  VectorFieldGenerator vectorField;
 
   double currentOffset = 0;
 
@@ -53,6 +58,14 @@ public class DriveSubsystem extends SubsystemBase {
     headingController.enableContinuousInput(0, 2 * Math.PI);
     odometryField = new Field2d();
     poseEstimatorField = new Field2d();
+
+    vectorField = new VectorFieldGenerator();
+    vectorField.configure(
+      VectorFieldConstants.attraction,
+      VectorFieldConstants.repulsion,
+      VectorFieldConstants.node,
+      VectorFieldConstants.antiNodes
+    );
 
     SmartDashboard.putData("OdometryField", odometryField);
     SmartDashboard.putData("PoseEstimatorField", poseEstimatorField);
@@ -115,6 +128,10 @@ public class DriveSubsystem extends SubsystemBase {
 
   public Rotation2d getFieldDriveAngle() {
     return Rotation2d.fromDegrees(getAngle().getDegrees() - currentOffset);
+  }
+
+  public VectorFieldGenerator getVectorFieldGenerator() {
+    return this.vectorField;
   }
 
   public void resetGyroFieldDrive() {
@@ -216,6 +233,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     updateOdometry();
     updatePoseEstimator();
+    vectorField.update(new Point2D(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY()));
+
 
     odometryField.setRobotPose(odometry.getPoseMeters());
     poseEstimatorField.setRobotPose(estimator.getEstimatedPosition());
