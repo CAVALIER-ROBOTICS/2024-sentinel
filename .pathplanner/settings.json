@@ -3,14 +3,13 @@
   "robotLength": 0.6858,
   "holonomicMode": true,
   "pathFolders": [
-    "RedLocal",
     "RedLeft",
-    "RedRightDynamic",
-    "RedRightStatic"
+    "RedMiddle",
+    "RedTop"
   ],
   "autoFolders": [
-    "twonote_test",
-    "Static Paths"
+    "Static Paths",
+    "RedMiddle"
   ],
   "defaultMaxVel": 4.2,
   "defaultMaxAccel": 3.0,

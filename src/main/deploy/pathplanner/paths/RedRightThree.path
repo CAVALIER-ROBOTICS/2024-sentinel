@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 9.490265519332374,
-        "y": 7.237189745145308
+        "x": 9.518597150401849,
+        "y": 7.1337099832912205
       },
       "isLocked": false,
       "linkedName": "IntakePosOne"
     },
     {
       "anchor": {
-        "x": 10.36306285709131,
-        "y": 6.243349401238204
+        "x": 10.757758785217904,
+        "y": 6.417749927619722
       },
       "prevControl": {
-        "x": 10.36306285709131,
-        "y": 7.023562282418683
+        "x": 9.977545904037425,
+        "y": 6.913414581546145
       },
       "nextControl": null,
       "isLocked": false,
@@ -61,12 +61,12 @@
     "maxAngularAcceleration": 360.0
   },
   "goalEndState": {
-    "velocity": 3.0,
+    "velocity": 0.0,
     "rotation": 179.3370572436692,
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "RedRightStatic",
+  "folder": "RedTop",
   "previewStartingState": {
     "rotation": -178.9948347441999,
     "velocity": 0.0
