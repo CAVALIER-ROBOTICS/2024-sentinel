@@ -39,10 +39,10 @@ public class UltraShot {
     }
 
     public Point3D getTarget() {
-        Point3D target;
-        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {target = UltraShotConstants.redTarget;}
-        else {target = UltraShotConstants.blueTarget;}
-        return UltraShotConstants.redTarget;
+        Point3D target = UltraShotConstants.redTarget;
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {target = UltraShotConstants.blueTarget;}
+        // return UltraShotConstants.redTarget;
+        return target;
     }
 
     public AngleStates getAngleStates() {
