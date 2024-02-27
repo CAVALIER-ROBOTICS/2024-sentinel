@@ -36,6 +36,7 @@ public class DriveSubsystem extends SubsystemBase {
   SwerveDrivePoseEstimator estimator;
 
   Field2d odometryField;
+  Field2d limelightField;
   Field2d poseEstimatorField;
 
   VectorFieldGenerator vectorField;
@@ -57,6 +58,7 @@ public class DriveSubsystem extends SubsystemBase {
     headingController.enableContinuousInput(0, 2 * Math.PI);
     odometryField = new Field2d();
     poseEstimatorField = new Field2d();
+    limelightField = new Field2d();
 
     vectorField = new VectorFieldGenerator();
     vectorField.configure(
@@ -67,6 +69,7 @@ public class DriveSubsystem extends SubsystemBase {
     );
 
     SmartDashboard.putData("OdometryField", odometryField);
+    SmartDashboard.putData("LimelightField", limelightField);
     SmartDashboard.putData("PoseEstimatorField", poseEstimatorField);
   }
 
@@ -148,7 +151,7 @@ public class DriveSubsystem extends SubsystemBase {
         if(!(limePose.getX() == 0 && limePose.getY() == 0)) {
           limePose = new Pose2d(limePose.getX(), limePose.getY(), Rotation2d.fromDegrees(limePose.getRotation().getDegrees() + 180));
           updateOdometry(limePose);
-          setYaw(limePose.getRotation().getDegrees());
+          // setYaw(limePose.getRotation().getDegrees());
           return;
         }
       }
@@ -203,7 +206,7 @@ public class DriveSubsystem extends SubsystemBase {
     Rotation2d currentAngle = getAngle();
     pushMeasurementAndSetpoint(angle.getRadians());
     double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians()) + headingController.getD() * omega;
-    rotSpeeds = clamp(rotSpeeds, -1, 1);
+    // rotSpeeds = clamp(rotSpeeds, -2, 2);
     SmartDashboard.putNumber("OmegaNutsLol", omega);
     ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle);
 
@@ -237,5 +240,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     odometryField.setRobotPose(odometry.getPoseMeters());
     poseEstimatorField.setRobotPose(estimator.getEstimatedPosition());
+    limelightField.setRobotPose(Limelight.getPose2d());
   }
 }
