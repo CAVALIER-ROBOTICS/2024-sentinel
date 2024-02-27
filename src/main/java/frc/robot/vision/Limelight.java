@@ -22,7 +22,7 @@ public class Limelight {
         if(!targetBlue()) {
             return LimelightHelpers.getBotPose2d_wpiRed(limelightName);
         }
-        return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
+        return LimelightHelpers.getBotPose2d_wpiRed(limelightName);
     }
 
     public static Pose2d getPose2d() {
@@ -30,8 +30,8 @@ public class Limelight {
     }
 
     public static boolean targetBlue() {
-        if (DriverStation.getAlliance().get() == Alliance.Blue) {return true;}
-        else {return false;}
+        // if (DriverStation.getAlliance().get() == Alliance.Blue) {return true;}
+        {return false;}
         // Alliance allaince = Alliance.Red;
         // try {
         //     alliance = DriverStation.getAlliance().get();

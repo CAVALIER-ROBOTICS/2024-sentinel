@@ -50,7 +50,6 @@ public class DriveSubsystem extends SubsystemBase {
     bleft = new NeoSteveModule(Constants.BLEFT_DRIVE_ID, Constants.BLEFT_STEER_ID, Constants.BLEFT_CANCODER_ID, SwerveConstants.BLEFT_OFFSET, Constants.CANIVORE);
     bright = new NeoSteveModule(Constants.BRIGHT_DRIVE_ID, Constants.BRIGHT_STEER_ID, Constants.BRIGHT_CANCODER_ID, SwerveConstants.BRIGHT_OFFSET, Constants.CANIVORE);
 
-    bright.invertSteer(false);
     bright.setSteerP(.1);
     odometry = new SwerveDriveOdometry(SwerveConstants.m_kinematics, getAngle(), getSwerveModulePositions());
     estimator = new SwerveDrivePoseEstimator(SwerveConstants.m_kinematics, getAngle(), getSwerveModulePositions(), new Pose2d());
@@ -151,7 +150,7 @@ public class DriveSubsystem extends SubsystemBase {
         if(!(limePose.getX() == 0 && limePose.getY() == 0)) {
           limePose = new Pose2d(limePose.getX(), limePose.getY(), Rotation2d.fromDegrees(limePose.getRotation().getDegrees() + 180));
           updateOdometry(limePose);
-          // setYaw(limePose.getRotation().getDegrees());
+          setYaw(limePose.getRotation().getDegrees());
           return;
         }
       }
@@ -206,7 +205,7 @@ public class DriveSubsystem extends SubsystemBase {
     Rotation2d currentAngle = getAngle();
     pushMeasurementAndSetpoint(angle.getRadians());
     double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians()) + headingController.getD() * omega;
-    // rotSpeeds = clamp(rotSpeeds, -2, 2);
+    rotSpeeds = clamp(rotSpeeds, -3, 3);
     SmartDashboard.putNumber("OmegaNutsLol", omega);
     ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle);
 
