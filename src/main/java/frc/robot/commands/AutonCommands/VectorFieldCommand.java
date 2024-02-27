@@ -30,7 +30,7 @@ public class VectorFieldCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    ChassisSpeeds speeds = ChassisSpeeds.fromRobotRelativeSpeeds(
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
       x.getAsDouble(), 
       y.getAsDouble(), 
       rot.getAsDouble(), 
