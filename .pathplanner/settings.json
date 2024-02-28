@@ -9,11 +9,12 @@
     "RedRightStatic"
   ],
   "autoFolders": [
-    "twonote_test",
-    "Static Paths"
+    "fournote_local",
+    "Static Paths",
+    "twonote_test"
   ],
-  "defaultMaxVel": 4.2,
-  "defaultMaxAccel": 3.0,
+  "defaultMaxVel": 2.0,
+  "defaultMaxAccel": 1.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 360.0,
   "maxModuleSpeed": 4.5

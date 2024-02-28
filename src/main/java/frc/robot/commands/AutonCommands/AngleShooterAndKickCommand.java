@@ -28,7 +28,7 @@ public class AngleShooterAndKickCommand extends Command {
     AngleStates states = shooterSubsystem.getAngleStates();
 
     shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
-    shooterSubsystem.gotoAngle(states.getPhi());
+    shooterSubsystem.gotoAngle(states.getPhi(), states.getPsi());
     shooterSubsystem.setKickerSpeed(-1);
   }
 

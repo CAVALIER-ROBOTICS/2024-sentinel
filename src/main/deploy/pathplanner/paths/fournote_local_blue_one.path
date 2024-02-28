@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 14.951179460707221,
-        "y": 5.555934540445088
+        "x": 1.3363329583802028,
+        "y": 6.963242497913567
       },
       "prevControl": null,
       "nextControl": {
-        "x": 14.63911009699751,
-        "y": 5.524631207434379
+        "x": 2.336332958380206,
+        "y": 6.963242497913567
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 12.989723668463029,
-        "y": 5.555934540445088
+        "x": 2.890235494756704,
+        "y": 6.963242497913567
       },
       "prevControl": {
-        "x": 13.034745790022125,
-        "y": 5.544443562737194
-      },
-      "nextControl": {
-        "x": 12.825771956822088,
-        "y": 5.597779868883561
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 12.989723668463029,
-        "y": 5.555934540445088
-      },
-      "prevControl": {
-        "x": 12.93116948573412,
-        "y": 5.574358195791997
+        "x": 1.8902354947567042,
+        "y": 6.963242497913567
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -178.7269699799433,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "RedLocal",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true

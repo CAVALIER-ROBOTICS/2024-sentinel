@@ -35,7 +35,7 @@ public final class Constants {
   public final class IntakeConstants {
 
     public static final I2C.Port INTAKE_SENSOR_PORT = I2C.Port.kOnboard;
-    public static final int MINIMUM_PROXIMITY_TRIGGER = 6;
+    public static final int MINIMUM_PROXIMITY_TRIGGER = 9;
 
     public static final double RETRACTED_POS = 0.77851161951279;
     public static final double EXTENDED_POS = 0.079076751851919;
@@ -49,6 +49,8 @@ public final class Constants {
     public static final double FRIGHT_OFFSET = -2.311709047343661;
     public static final double BLEFT_OFFSET = -2.16444689170664;
     public static final double BRIGHT_OFFSET = -0.193281579273591;
+
+    public static final double DRIVE_MOTOR_RAMP_RATE = .1;
 
     public static final double BOT_LENGTH = .6858;
     public static double L = BOT_LENGTH;

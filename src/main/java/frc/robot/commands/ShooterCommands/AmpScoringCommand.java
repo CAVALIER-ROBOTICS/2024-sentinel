@@ -35,7 +35,7 @@ public class AmpScoringCommand extends Command {
     // angle = SmartDashboard.getNumber(Constants.ShooterAngleAmpSD, 0);
     // speed = SmartDashboard.getNumber(Constants.FlywheelSpeedAmpSD, 0);
 
-    shooterSubsystem.gotoAngle(angle); //lmao
+    shooterSubsystem.gotoAngle(angle, 0); //lmao
     shooterSubsystem.setKickerSpeed(-kicker.getAsDouble());
     shooterSubsystem.setFlywheelSpeed((int) (flywheel.getAsDouble() + .5) * speed, -.1);
   }

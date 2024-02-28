@@ -10,7 +10,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AutonCommands.VectorFieldCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.ultrashot.Point2D;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -23,7 +25,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   DriveSubsystem driveSubsystem;
 
-  String pathName = "RedBottom";
+  String pathName = "fournote_local";
 
   @Override
   public void robotInit() {
@@ -51,7 +53,8 @@ public class Robot extends TimedRobot {
     // driveSubsystem.updatePoseEstimator(initial);
     // driveSubsystem.updateOdometry(new Pose2d(0.0, 0.0, new Rotation2d()));
     // driveSubsystem.setYaw(0);
-    m_autonomousCommand = m_robotContainer.getVectorFieldCommand();
+    Point2D velo = driveSubsystem.getVectorFieldGenerator().getVelocity();
+    m_autonomousCommand = new VectorFieldCommand(driveSubsystem, () -> velo.getX(), () -> velo.getY(), () -> 0);
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -70,6 +73,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    driveSubsystem.setDriveMotorRampRate(Constants.SwerveConstants.DRIVE_MOTOR_RAMP_RATE);
   }
 
   @Override

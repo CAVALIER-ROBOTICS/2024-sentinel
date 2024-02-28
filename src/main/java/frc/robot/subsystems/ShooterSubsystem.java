@@ -50,8 +50,8 @@ public class ShooterSubsystem extends SubsystemBase {
     bottom.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
     left.setIdleMode(IdleMode.kBrake);
     right.setIdleMode(IdleMode.kBrake);
-    top.setIdleMode(IdleMode.kCoast);
-    bottom.setIdleMode(IdleMode.kCoast);
+    top.setIdleMode(IdleMode.kBrake);
+    bottom.setIdleMode(IdleMode.kBrake);
     kicker.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
 
     rpmEncoderTop = top.getEncoder();
@@ -74,7 +74,8 @@ public class ShooterSubsystem extends SubsystemBase {
       UltraShotConstants.localGravity,
       UltraShotConstants.airDrag,
       UltraShotConstants.settleTime,
-      UltraShotConstants.omegaStepTime
+      UltraShotConstants.futureStepTime,
+      0.0
     );
 
   }
@@ -128,8 +129,8 @@ public class ShooterSubsystem extends SubsystemBase {
     return (Constants.ShooterConstants.SHOOTER_HORIZONTAL - (enc.getAbsolutePosition())) *2*Math.PI;
   }
 
-  public void setPosition(double position) {
-    double setpoint = angleController.calculate(getAbsolutePosition(), position);
+  public void setPosition(double position, double psi) {
+    double setpoint = angleController.calculate(getAbsolutePosition(), position) + psi * angleController.getD();
     setAngleSpeed(setpoint);
   }
 
@@ -154,7 +155,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void updateUltrashot(DriveSubsystem driveSubsystem) {
-    ultraShot.update(driveSubsystem.getOdometry(), driveSubsystem.getChassisSpeeds(), getTarget());
+    ultraShot.update(driveSubsystem.getOdometry(), driveSubsystem.getChassisSpeeds(), getTarget(), UltraShotConstants.shooterSpeed, 0.02);
   }
 
   private double clamp(double x, double min, double max) {
@@ -167,14 +168,14 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("errornuts", getAbsolutePosition() - setpoint);
   }
 
-  public void gotoAngle(double angle) {
+  public void gotoAngle(double angle, double psi) {
     angle = clamp(angle, 0, (Math.PI / 2));
     pushMeasurementAndSetpoint(angle);
-    setPosition(angle);
+    setPosition(angle, psi);
   }
 
   public void track() {
-    ultraShot.track();
+    // ultraShot.track();
   }
   
   public void ultimatum() {
