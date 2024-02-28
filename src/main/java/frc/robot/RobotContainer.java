@@ -55,7 +55,8 @@ public class RobotContainer {
 
   public void registerCommands() {
     NamedCommands.registerCommand("Intake", intake());
-    NamedCommands.registerCommand("Shoot", getStationaryShotCommand());
+    NamedCommands.registerCommand("ShootStation", getStationaryShotCommand());
+    NamedCommands.registerCommand("ShootMoving", getShootingWhileMovingCommand());
     NamedCommands.registerCommand("ShooterSpin", new IdleShooterSpin(shooterSubsystem));
     NamedCommands.registerCommand("DisableRamp", new InstantCommand(() -> driveSubsystem.setDriveMotorRampRate(0)));
     NamedCommands.registerCommand("EnableRamp", new InstantCommand(() -> driveSubsystem.setDriveMotorRampRate(Constants.SwerveConstants.DRIVE_MOTOR_RAMP_RATE)));
