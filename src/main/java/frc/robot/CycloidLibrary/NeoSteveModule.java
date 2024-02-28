@@ -94,7 +94,7 @@ public class NeoSteveModule {
     }
 
     public void configureRampRate(double ramp) {
-        driveMotor.setClosedLoopRampRate(ramp);
+        driveMotor.setOpenLoopRampRate(ramp);
     }
 
     public NeoSteveModule(int drive, int steer, int encoderId, double offsetValue) {

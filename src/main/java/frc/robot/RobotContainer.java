@@ -57,11 +57,14 @@ public class RobotContainer {
     NamedCommands.registerCommand("Intake", intake());
     NamedCommands.registerCommand("Shoot", getStationaryShotCommand());
     NamedCommands.registerCommand("ShooterSpin", new IdleShooterSpin(shooterSubsystem));
+    NamedCommands.registerCommand("DisableRamp", new InstantCommand(() -> driveSubsystem.setDriveMotorRampRate(0)));
+    NamedCommands.registerCommand("EnableRamp", new InstantCommand(() -> driveSubsystem.setDriveMotorRampRate(Constants.SwerveConstants.DRIVE_MOTOR_RAMP_RATE)));
   }
 
   public RobotContainer() {
     registerCommands();
     PathLoader.configureAutoBuilder(driveSubsystem);
+    PathLoader.initSendableChooser();
     
     driveSubsystem.setDefaultCommand(new FieldDrive(
 
@@ -173,7 +176,7 @@ public class RobotContainer {
   public Command getStationaryShotCommand() {
     return new SequentialCommandGroup(
       new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(2),
-      new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(2)
+      new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(.5)
     );
   }
 

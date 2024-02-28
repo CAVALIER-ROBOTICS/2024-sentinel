@@ -42,7 +42,7 @@ public class UltrashotAndSpinupCommand extends Command {
     if(Double.isNaN(states.getTheta())) {return;}
 
     driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta() + Math.PI), 0.001, 0.001, states.getOmega()); // 0.1 is the heading controller D
-    shooterSubsystem.gotoAngle(states.getPhi());
+    shooterSubsystem.gotoAngle(states.getPhi(), states.getPsi());
   }
 
   // Called once the command ends or is interrupted.
@@ -54,6 +54,6 @@ public class UltrashotAndSpinupCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return shooterSubsystem.getAverageRPM() >= Constants.ShooterConstants.MAX_RPM_FLYWHEEL;
   }
 }

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 15.273814520991976,
-        "y": 4.1689010348054
+        "x": 7.727856598570341,
+        "y": 5.922420987699119
       },
       "prevControl": null,
       "nextControl": {
-        "x": 14.548675490247764,
-        "y": 4.1689010348054
+        "x": 6.056678399071084,
+        "y": 6.33288580862876
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "topintake2"
     },
     {
       "anchor": {
-        "x": 14.365095988793533,
-        "y": 4.1689010348054
+        "x": 4.429478573242861,
+        "y": 6.215610145506006
       },
       "prevControl": {
-        "x": 15.136184529721998,
-        "y": 4.1689010348054
+        "x": 5.543597372909033,
+        "y": 6.200950687615661
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "topshoot"
     }
   ],
   "rotationTargets": [],
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -179.0608090542643,
+    "rotation": 14.470294100065704,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "RedLeft",
+  "folder": "RedFieldMiddle",
   "previewStartingState": {
-    "rotation": -132.0643265535792,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true

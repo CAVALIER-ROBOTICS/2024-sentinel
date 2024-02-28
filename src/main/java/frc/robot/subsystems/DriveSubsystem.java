@@ -83,6 +83,13 @@ public class DriveSubsystem extends SubsystemBase {
     // bright.setPercentOutput(.5);
   }
 
+  public void setDriveMotorRampRate(double ramp) {
+    fleft.configureRampRate(ramp);
+    fright.configureRampRate(ramp);
+    bleft.configureRampRate(ramp);
+    bright.configureRampRate(ramp);
+  }
+
   public void resetHeadingPID() {
     headingController.reset();
   }

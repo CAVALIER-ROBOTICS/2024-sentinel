@@ -18,9 +18,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.vision.Limelight;
 import frc.robot.Constants.SwerveConstants;
 
 /** Add your docs here. */
@@ -29,12 +30,19 @@ public class PathLoader {
     static PIDController y = new PIDController(0.0, 0.0, 0.0);
     static PIDController theta = new PIDController(0.0, 0.0, 0.0);
 
+    static SendableChooser<String> chooser = new SendableChooser<String>();
+
+    static String[] validAutonPaths = {
+        "fournote_local",
+        "fournote_local_blue"
+    };
+
     public static PathPlannerPath getPath(String path) {
         return PathPlannerPath.fromPathFile(path);
     }
 
     public static Boolean getShouldFlipPath() {
-        return Limelight.targetBlue();
+        return false;
     }
 
     public static void configureAutoBuilder(DriveSubsystem driveSub) {
@@ -46,8 +54,8 @@ public class PathLoader {
         Consumer<ChassisSpeeds> drivelol = speeds -> driveSub.autonDrive(speeds);
 
         HolonomicPathFollowerConfig hpfc = new HolonomicPathFollowerConfig(
-            new PIDConstants(.05, 0, 0),
-            new PIDConstants(.1, 0, 0),
+            new PIDConstants(.2),
+            new PIDConstants(4.26, 0.0, 0.1),
             4.2,
             SwerveConstants.BOT_LENGTH / 2,
             new ReplanningConfig(),
@@ -79,5 +87,17 @@ public class PathLoader {
     public static Command loadPath(String name) {
         PathPlannerPath path = PathPlannerPath.fromPathFile(name);
         return AutoBuilder.followPath(path);
+    }
+
+    public static void initSendableChooser() {
+        for(String v: validAutonPaths) {
+            chooser.addOption(v, v);
+        }
+        SmartDashboard.putData("Autonomous type", chooser);
+    }
+
+    public static Command getChosenAuton() {
+        String selected = chooser.getSelected();
+        return loadAuto(selected);
     }
 }

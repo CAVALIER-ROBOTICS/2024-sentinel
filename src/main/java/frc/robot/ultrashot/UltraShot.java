@@ -2,14 +2,12 @@ package frc.robot.ultrashot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class UltraShot {
 
     private Point3D robot, axis, velocity, target; // Note that the axis should have 0 y-component and the velocity should have 0 z-component
     private AngleStates states;
-    private double shooterLength, shooterSpeed, localGravity, airDrag, settleTime, omegaStepTime;
+    private double shooterLength, shooterSpeed, shooterAlpha, localGravity, airDrag, settleTime, futureStepTime;
 
     public UltraShot() {
         this.robot = new Point3D();
@@ -22,7 +20,8 @@ public class UltraShot {
         this.localGravity = 0.0;
         this.airDrag = 0.0;
         this.settleTime = 0.0;
-        this.omegaStepTime = 0.0;
+        this.futureStepTime = 0.0;
+        this.shooterAlpha = 0.0;
     }
 
     // Get Methods
@@ -40,10 +39,7 @@ public class UltraShot {
     }
 
     public Point3D getTarget() {
-        Point3D target = UltraShotConstants.redTarget;
-        // if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {target = UltraShotConstants.blueTarget;}
-        // return UltraShotConstants.redTarget;
-        return target;
+        return this.target;
     }
 
     public AngleStates getAngleStates() {
@@ -86,8 +82,12 @@ public class UltraShot {
         return this.settleTime;
     }
 
-    public double getOmegaStepTime() {
-        return this.omegaStepTime;
+    public double getFutureStepTime() {
+        return this.futureStepTime;
+    }
+
+    public double getShooterAlpha() {
+        return this.shooterAlpha;
     }
 
     // Set Methods
@@ -128,15 +128,35 @@ public class UltraShot {
         this.airDrag = airDrag;
     }
 
+    public void setTheta(double theta) {
+        this.states.setTheta(theta);
+    }
+
+    public void setOmega(double omega) {
+        this.states.setOmega(omega);
+    }
+
+    public void setPhi(double phi) {
+        this.states.setPhi(phi);
+    }
+
+    public void setPsi(double psi) {
+        this.states.setPsi(psi);
+    }
+
     public void setSettleTime(double settleTime) {
         this.settleTime = settleTime;
     }
 
-    public void setOmegaStepTime(double omegaStepTime) {
-        this.omegaStepTime = omegaStepTime;
+    public void setFutureStepTime(double futureStepTime) {
+        this.futureStepTime = futureStepTime;
     }
 
-    public void configure(Point3D robot, Point3D axis, Point3D velocity, Point3D target, AngleStates states, double shooterLength, double shooterSpeed, double localGravity, double airDrag, double settleTime, double omegaStepTime) {
+    public void setShooterAlpha(double shooterAlpha) {
+        this.shooterAlpha = shooterAlpha;
+    }
+
+    public void configure(Point3D robot, Point3D axis, Point3D velocity, Point3D target, AngleStates states, double shooterLength, double shooterSpeed, double localGravity, double airDrag, double settleTime, double futureStepTime, double shooterAlpha) {
         setRobot(robot);
         setAxis(axis);
         setVelocity(velocity);
@@ -147,22 +167,39 @@ public class UltraShot {
         setLocalGravity(localGravity);
         setAirDrag(airDrag);
         setSettleTime(settleTime);
-        setOmegaStepTime(omegaStepTime);
+        setFutureStepTime(futureStepTime);
+        setShooterAlpha(shooterAlpha);
     }
 
-    public void update(Point3D robot, Point3D velocity, Point3D target) {
+    public void update(Point3D robot, Point3D velocity, Point3D target, double shooterSpeed, double timeSinceLastUpdate) {
+        setShooterAlpha((shooterSpeed - this.shooterSpeed) / timeSinceLastUpdate);
+        setShooterSpeed(shooterSpeed);
         setRobot(robot);
         setVelocity(velocity);
         setTarget(target);
+
+        ultimatum();
+        double currentTheta = getTheta();
+        double currentPhi = getPhi();
+
+        setRobot(Point3D.add(robot, Point3D.scalar(velocity, this.futureStepTime)));
+        setShooterSpeed(this.shooterSpeed + this.shooterAlpha * this.futureStepTime);
+
+        ultimatum();
+        double nextTheta = getTheta();
+        double nextPhi = getPhi();
+
+        setTheta(currentTheta);
+        setOmega((nextTheta - currentTheta) / this.futureStepTime);
+        setPhi(currentPhi);
+        setPsi((nextPhi - currentPhi) / this.futureStepTime);
     }
 
-    public void update(Pose2d robot, ChassisSpeeds velocity, Point3D target) {
-        update(new Point3D(robot.getX(), robot.getY(), 0), new Point3D(velocity.vxMetersPerSecond, velocity.vyMetersPerSecond, 0), target);
+    public void update(Pose2d robot, ChassisSpeeds vel, Point3D targ, double shooterSpeed, double timeSinceLastUpdate) {
+        Point3D point = new Point3D(robot.getX(), robot.getY(), 0);
+        Point3D velocity = new Point3D(vel.vxMetersPerSecond, vel.vyMetersPerSecond, 0);
+        update(point, velocity, targ, shooterSpeed, timeSinceLastUpdate);
     }
-
-    // ultimatum() returns the true values of theta and phi
-    // omega and psi are zero since it is impractical to shoot while changing the angles
-    // use this when you want to shoot
 
     public void ultimatum() {
         Point3D prediction = Point3D.add(robot, new Point3D(velocity.getX()*settleTime, velocity.getY()*settleTime, velocity.getZ()*settleTime));
@@ -170,24 +207,11 @@ public class UltraShot {
         double thetaV = velocity.getAngle();
         parabolicAngle(prediction, target, true);
         parabolicAngle(prediction, target, false);
-        states.setTheta(velocity.getHypot() * Math.sin(thetaS - thetaV) * 0.08);
+        setTheta(velocity.getHypot() * Math.sin(thetaS - thetaV) * 0.08);
         
         slingShot();
 
-        states.setTheta(states.getTheta() + thetaS);
-        states.setOmega((Point3D.difference(Point3D.add(robot, Point3D.scalar(velocity, omegaStepTime)), target).getAngle() - Point3D.difference(robot, target).getAngle()) / (omegaStepTime));
-    }
-
-    // track() returns approximate values of theta, omega, phi, and psi so that a control loop has less error to deal with when ultimatum() is called
-    // use this when you want to shoot SOON
-
-    public void track() {
-        Point3D prediction = Point3D.add(robot, new Point3D(velocity.getX()*settleTime, velocity.getY()*settleTime, velocity.getZ()*settleTime));
-        double thetaS = Point3D.difference(prediction, target).getAngle();
-        double thetaV = velocity.getAngle();
-        parabolicAngle(prediction, target, true);
-        parabolicAngle(prediction, target, false);
-        states.setTheta(velocity.getHypot() * Math.sin(thetaS - thetaV) * 0.08 + thetaS);
+        setTheta(getTheta() + thetaS);
     }
 
     private void parabolicAngle(Point3D robot, Point3D target, boolean isFirst) {
@@ -224,7 +248,8 @@ public class UltraShot {
         double thetaSlingShot = (theta2*thetaSlope2 - theta1*thetaSlope1 + phi2 - phi1) / (thetaSlope2 - thetaSlope1);
         double phiSlingShot = (phi2*phiSlope2 - phi1*phiSlope1 + theta2 - theta1) / (phiSlope2 - phiSlope1);
 
-        states.setAll(thetaSlingShot, 0.0, phiSlingShot, 0.0);
+        setTheta(thetaSlingShot);
+        setPhi(phiSlingShot);
     }
 
     private AngleStates projection1(AngleStates states) {
