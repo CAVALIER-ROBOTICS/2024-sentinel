@@ -7,11 +7,6 @@ package frc.robot.NeoLibrary;
 import com.revrobotics.CANSparkBase.ExternalFollower;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
-
-import edu.wpi.first.hal.CANAPITypes.CANDeviceType;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-
 import com.revrobotics.CANSparkMax;
 
 /** Add your docs here. */

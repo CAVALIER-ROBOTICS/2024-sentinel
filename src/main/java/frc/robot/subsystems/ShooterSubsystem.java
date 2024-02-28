@@ -20,12 +20,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.NeoLibrary.SparkMaxConfigurator;
 import frc.robot.ultrashot.AngleStates;
 import frc.robot.ultrashot.Point3D;
 import frc.robot.ultrashot.UltraShot;
 import frc.robot.ultrashot.UltraShotConstants;
-import frc.robot.vision.Limelight;
 
 public class ShooterSubsystem extends SubsystemBase {
   CANSparkMax top = new CANSparkMax(Constants.TOP_SHOOTER_ID, MotorType.kBrushless);
