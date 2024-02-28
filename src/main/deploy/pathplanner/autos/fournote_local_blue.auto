@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 15.027409227429013,
-      "y": 7.014791090923124
+      "x": 1.3363329583802028,
+      "y": 6.963242497913567
     },
-    "rotation": -178.15238973400537
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -18,12 +18,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "jiggle2"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Shoot"
@@ -36,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "fournote_local_one"
+                  "pathName": "fournote_local_blue_one"
                 }
               },
               {
@@ -61,7 +55,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "fournote_local_two"
+                  "pathName": "fournote_local_blue_two"
                 }
               },
               {
@@ -84,15 +78,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Intake"
+                  "pathName": "fournote_local_blue_three"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "fournote_local_three"
+                  "name": "Intake"
                 }
               }
             ]
@@ -107,7 +101,7 @@
         {
           "type": "named",
           "data": {
-            "name": "EnableRamp"
+            "name": "DisableRamp"
           }
         }
       ]

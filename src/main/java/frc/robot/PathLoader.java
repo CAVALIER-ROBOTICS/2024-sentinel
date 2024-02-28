@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -20,8 +21,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.vision.Limelight;
 import frc.robot.Constants.SwerveConstants;
 
 /** Add your docs here. */
@@ -30,17 +35,20 @@ public class PathLoader {
     static PIDController y = new PIDController(0.0, 0.0, 0.0);
     static PIDController theta = new PIDController(0.0, 0.0, 0.0);
 
+    static SendableChooser<String> chooser = new SendableChooser<String>();
+
+    static String[] validAutonPaths = {
+        "fournote_local",
+        "fournote_local_blue"
+    };
+
     public static PathPlannerPath getPath(String path) {
         return PathPlannerPath.fromPathFile(path);
     }
 
     public static Boolean getShouldFlipPath() {
-        Alliance alliance = Alliance.Red;
-        try {
-            alliance = DriverStation.getAlliance().get();
-        } catch(Exception e) {}
-
-        return (alliance == Alliance.Blue); 
+        // return Limelight.targetBlue();
+        return false;
     }
 
     public static void configureAutoBuilder(DriveSubsystem driveSub) {
@@ -85,5 +93,17 @@ public class PathLoader {
     public static Command loadPath(String name) {
         PathPlannerPath path = PathPlannerPath.fromPathFile(name);
         return AutoBuilder.followPath(path);
+    }
+
+    public static void initSendableChooser() {
+        for(String v: validAutonPaths) {
+            chooser.addOption(v, v);
+        }
+        SmartDashboard.putData("Autonomous type", chooser);
+    }
+
+    public static Command getChosenAuton() {
+        String selected = chooser.getSelected();
+        return loadAuto(selected);
     }
 }

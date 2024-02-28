@@ -50,6 +50,8 @@ public final class Constants {
     public static final double BLEFT_OFFSET = -2.16444689170664;
     public static final double BRIGHT_OFFSET = -0.193281579273591;
 
+    public static final double DRIVE_MOTOR_RAMP_RATE = .1;
+
     public static final double BOT_LENGTH = .6858;
     public static double L = BOT_LENGTH;
     public static double W = BOT_LENGTH;

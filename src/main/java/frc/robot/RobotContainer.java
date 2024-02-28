@@ -60,12 +60,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("Shoot", getStationaryShotCommand());
     NamedCommands.registerCommand("ShooterSpin", new IdleShooterSpin(shooterSubsystem));
     NamedCommands.registerCommand("DisableRamp", new InstantCommand(() -> driveSubsystem.setDriveMotorRampRate(0)));
-    NamedCommands.registerCommand("EnableRamp", new InstantCommand(() -> driveSubsystem.setDriveMotorRampRate(.1)));
+    NamedCommands.registerCommand("EnableRamp", new InstantCommand(() -> driveSubsystem.setDriveMotorRampRate(Constants.SwerveConstants.DRIVE_MOTOR_RAMP_RATE)));
   }
 
   public RobotContainer() {
     registerCommands();
     PathLoader.configureAutoBuilder(driveSubsystem);
+    PathLoader.initSendableChooser();
     
     driveSubsystem.setDefaultCommand(new FieldDrive(
 
