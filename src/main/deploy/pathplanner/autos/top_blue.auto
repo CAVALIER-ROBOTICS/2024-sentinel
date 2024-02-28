@@ -2,31 +2,31 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 15.44,
-      "y": 3.38
+      "x": 1.541565368845024,
+      "y": 7.403026234623898
     },
-    "rotation": 180.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "RedBottom1"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "Intake"
+            "name": "Shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RedBottom3"
+            "pathName": "TopOne"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TopTwo"
           }
         },
         {
@@ -38,19 +38,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RedBottom4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
+            "pathName": "TopThree"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RedBottomFive"
+            "pathName": "TopFour"
           }
         },
         {

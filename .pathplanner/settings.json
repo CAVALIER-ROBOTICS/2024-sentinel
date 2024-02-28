@@ -3,8 +3,9 @@
   "robotLength": 0.6858,
   "holonomicMode": true,
   "pathFolders": [
-    "RedLocal",
+    "RedFieldMiddle",
     "RedLeft",
+    "RedLocal",
     "RedRightDynamic",
     "RedRightStatic"
   ],
@@ -13,8 +14,8 @@
     "Static Paths",
     "twonote_test"
   ],
-  "defaultMaxVel": 2.0,
-  "defaultMaxAccel": 1.0,
+  "defaultMaxVel": 4.2,
+  "defaultMaxAccel": 2.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 360.0,
   "maxModuleSpeed": 4.5
