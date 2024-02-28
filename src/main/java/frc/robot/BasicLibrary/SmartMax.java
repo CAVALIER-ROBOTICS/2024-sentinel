@@ -11,7 +11,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
 /** Add your docs here. */
-public class SparkMaxConfigurator {
+public class SmartMax {
 
     private final CANSparkMax sparky;
 
@@ -21,11 +21,12 @@ public class SparkMaxConfigurator {
     private final double rampRate = 0.05;
 
     /**
-     * Creates a new SparkMax object
+     * Creates a new SparkMax object 
      * 
      * @param sparkMax CAN ID of the SparkMax
+     * @return kCoast, false inversionState, and 0.05 rampRate
      */
-    public SparkMaxConfigurator(int sparkMax) {
+    public SmartMax(int sparkMax) {
         sparky = new CANSparkMax(sparkMax, MotorType.kBrushless);
         sparky.restoreFactoryDefaults();
         sparky.clearFaults();
@@ -46,9 +47,8 @@ public class SparkMaxConfigurator {
      * @param sparkMax CAN ID of the SparkMax
      * @param idleMode IdleMode.kCoast/kBrake
      * @param inversionState Boolean if the motor should be inverted
-     * @param rampRate Miniumum time in seconds allowed for the motor to go from 0 to full throttle
      */
-    public SparkMaxConfigurator(int sparkMax, IdleMode idleMode, Boolean inversionState, Double rampRate) {
+    public SmartMax(int sparkMax, IdleMode idleMode, Boolean inversionState) {
         sparky = new CANSparkMax(sparkMax, MotorType.kBrushless);
         sparky.restoreFactoryDefaults();
         sparky.clearFaults();
@@ -134,6 +134,15 @@ public class SparkMaxConfigurator {
      */
     public double getSpeed() {
         return sparky.get();
+    }
+
+    /**
+     * Miniumum time for the motor to go from 0 to full throttle
+     * 
+     * @param rampRate Time in seconds
+     */
+    public void setRampRate(double rampRate) {
+        sparky.setOpenLoopRampRate(rampRate);
     }
 
 }

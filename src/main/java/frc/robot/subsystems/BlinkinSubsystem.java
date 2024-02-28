@@ -6,6 +6,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
@@ -19,6 +20,18 @@ public class BlinkinSubsystem extends SubsystemBase {
 
   public void setColor(double color) {
     blink.set(color);
+  }
+
+  public void setEnabled(Boolean is) {
+      if (is) {blink.set(LEDConstants.enabled);}
+      else {blink.set(LEDConstants.disabled);}
+  }
+
+  public void isError() {
+      if ((DriverStation.getMatchType() == DriverStation.MatchType.Qualification) 
+      || (DriverStation.getMatchType() == DriverStation.MatchType.Elimination)) 
+      {if (!DriverStation.isFMSAttached()) {setColor(LEDConstants.error);}}
+      else if (!DriverStation.isDSAttached()) {setColor(LEDConstants.error);}
   }
 
   @Override
