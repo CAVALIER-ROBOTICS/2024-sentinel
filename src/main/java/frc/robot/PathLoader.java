@@ -47,7 +47,6 @@ public class PathLoader {
     }
 
     public static Boolean getShouldFlipPath() {
-        // return Limelight.targetBlue();
         return false;
     }
 
