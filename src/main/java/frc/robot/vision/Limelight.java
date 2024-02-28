@@ -33,11 +33,10 @@ public class Limelight {
 
     public static boolean targetBlue() {
         Alliance alliance = Alliance.Red;
-        try {
-            alliance = DriverStation.getAlliance().get();
-        } catch(Exception e) {}
+        alliance = DriverStation.getAlliance().get();
 
         return (alliance == Alliance.Blue); 
+        // return false;
     }
 
     public static Pose2d[] getPoses() {

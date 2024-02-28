@@ -31,8 +31,8 @@ public class VectorFieldCommand extends Command {
   @Override
   public void execute() {
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-      x.getAsDouble(), 
-      y.getAsDouble(), 
+      -x.getAsDouble(), 
+      -y.getAsDouble(), 
       rot.getAsDouble(), 
       dSub.getFieldDriveAngle()
     );

@@ -27,7 +27,7 @@ public class UltrashotAndKickCommand extends UltrashotAndSpinupCommand {
     if(Double.isNaN(states.getTheta())) {return;}
 
     driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta() + Math.PI), 0.001, 0.001, states.getOmega()); // 0.1 is the heading controller D
-    shooterSubsystem.gotoAngle(states.getPhi());
+    shooterSubsystem.gotoAngle(states.getPhi(), states.getPsi());
   }
 
   @Override

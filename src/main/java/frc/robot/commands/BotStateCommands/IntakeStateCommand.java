@@ -27,7 +27,7 @@ public class IntakeStateCommand extends Command {
   @Override
   public void execute() {
     intakeSubsystem.setPosition(IntakeConstants.EXTENDED_POS);
-    shooterSubsystem.setPosition(ShooterConstants.SHOOTER_LINEUP_POSITION);
+    shooterSubsystem.setPosition(ShooterConstants.SHOOTER_LINEUP_POSITION, 0);
     intakeSubsystem.setIntakeSpin(1);
   }
 

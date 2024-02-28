@@ -42,17 +42,16 @@ public class UltrashotCommand extends Command {
   @Override
   public void execute() {
     shooterSubsystem.updateUltrashot(driveSubsystem);
-    shooterSubsystem.ultimatum();
 
     AngleStates states = shooterSubsystem.getAngleStates();
 
     if(Double.isNaN(states.getTheta())) {return;}
 
     driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta() + Math.PI), x.getAsDouble(), y.getAsDouble(), states.getOmega()); // 0.1 is the heading controller D
-    shooterSubsystem.gotoAngle(states.getPhi());
+    shooterSubsystem.gotoAngle(states.getPhi(), states.getPsi());
 
     shooterSubsystem.setKickerSpeed(-k.getAsDouble());
-    shooterSubsystem.setFlywheelSpeed((int) (f.getAsDouble() + .5) * Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
+    shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
     
     SmartDashboard.putNumber("theta", states.getTheta());
   }
