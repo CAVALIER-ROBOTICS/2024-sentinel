@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 14.49,
-        "y": 6.96
+        "x": 14.869939617792667,
+        "y": 6.931772531691568
       },
       "prevControl": null,
       "nextControl": {
-        "x": 12.23557377192446,
-        "y": 7.170425883582068
+        "x": 12.676164575414614,
+        "y": 6.996025357200549
       },
       "isLocked": false,
       "linkedName": null
@@ -49,17 +49,14 @@
       "command": {
         "type": "sequential",
         "data": {
-          "commands": []
-        }
-      }
-    },
-    {
-      "name": "Intake",
-      "waypointRelativePos": 0.85,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "ShootMoving"
+              }
+            }
+          ]
         }
       }
     }
@@ -76,10 +73,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "RedRightStatic",
+  "folder": null,
   "previewStartingState": {
     "rotation": 180.0,
-    "velocity": 2.0
+    "velocity": 0.0
   },
   "useDefaultConstraints": true
 }
