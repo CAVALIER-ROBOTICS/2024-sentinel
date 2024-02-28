@@ -4,14 +4,9 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-
 import java.util.Optional;
-
 import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -19,18 +14,27 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.BasicLibrary.SmartMax;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.ultrashot.AngleStates;
 import frc.robot.ultrashot.Point3D;
 import frc.robot.ultrashot.UltraShot;
 import frc.robot.ultrashot.UltraShotConstants;
+import frc.robot.vision.Limelight;
 
 public class ShooterSubsystem extends SubsystemBase {
-  CANSparkMax top = new CANSparkMax(Constants.TOP_SHOOTER_ID, MotorType.kBrushless);
-  CANSparkMax bottom = new CANSparkMax(Constants.BOTTOM_SHOOTER_ID, MotorType.kBrushless);
-  CANSparkMax left = new CANSparkMax(Constants.LEFT_SHOOTER_PIVOT_ID, MotorType.kBrushless);
-  CANSparkMax right = new CANSparkMax(Constants.RIGHT_SHOOTER_PIVOT_ID, MotorType.kBrushless);
-  CANSparkMax kicker = new CANSparkMax(Constants.KICKER_ID, MotorType.kBrushless);
+
+  SmartMax top = new SmartMax(Constants.TOP_SHOOTER_ID);
+  SmartMax bottom = new SmartMax(Constants.TOP_SHOOTER_ID);
+  SmartMax left = new SmartMax(Constants.TOP_SHOOTER_ID, IdleMode.kBrake, false);
+  SmartMax right = new SmartMax(Constants.TOP_SHOOTER_ID, IdleMode.kBrake, false);
+  SmartMax kicker = new SmartMax(Constants.TOP_SHOOTER_ID);
+
+  // CANSparkMax top = new CANSparkMax(Constants.TOP_SHOOTER_ID, MotorType.kBrushless);
+  // CANSparkMax bottom = new CANSparkMax(Constants.BOTTOM_SHOOTER_ID, MotorType.kBrushless);
+  // CANSparkMax left = new CANSparkMax(Constants.LEFT_SHOOTER_PIVOT_ID, MotorType.kBrushless);
+  // CANSparkMax right = new CANSparkMax(Constants.RIGHT_SHOOTER_PIVOT_ID, MotorType.kBrushless);
+  // CANSparkMax kicker = new CANSparkMax(Constants.KICKER_ID, MotorType.kBrushless);
 
   DigitalInput limit = new DigitalInput(ShooterConstants.SHOOTER_LIMIT_SWITCH_ID);
 
@@ -44,21 +48,11 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem() {
 
     angleController.enableContinuousInput(0,2*Math.PI);
-
-    top.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
-    bottom.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
-    left.setIdleMode(IdleMode.kBrake);
-    right.setIdleMode(IdleMode.kBrake);
-    top.setIdleMode(IdleMode.kBrake);
-    bottom.setIdleMode(IdleMode.kBrake);
-    kicker.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
-
     rpmEncoderTop = top.getEncoder();
     rpmEncoderBottom = bottom.getEncoder();
+    enc.reset();
 
     configUltrashot();
-
-    enc.reset();
   }
 
   public void configUltrashot() {
@@ -104,10 +98,10 @@ public class ShooterSubsystem extends SubsystemBase {
     setKickerSpeed(0);
   }
 
-  public void setAngleSpeed(double speed) {
-    SmartDashboard.putNumber("Requested shooter speed", speed);
-    left.set(speed);
-    right.set(-speed);
+  public void setAngleSpeed(double angularSpeed) {
+    SmartDashboard.putNumber("Requested shooter angular speed", angularSpeed);
+    left.set(angularSpeed);
+    right.set(-angularSpeed);
   }
 
   public void setKickerSpeed(double speed) {
@@ -140,16 +134,11 @@ public class ShooterSubsystem extends SubsystemBase {
   public boolean hasNoteInShooter() {
     return !limit.get();
   }
-
-  // public void updateUltrashot(ChassisSpeeds botVelocity, Pose2d pose) {
-  //   ultraShot.setRobotPos(pose);
-  //   ultraShot.setRobotVelocity(botVelocity);
-  // }
   
   public Point3D getTarget() {
-    // if(Limelight.targetBlue()) {
-    //   return UltraShotConstants.blueTarget;
-    // }
+    if(Limelight.targetBlue()) {
+      return UltraShotConstants.blueTarget;
+    }
     return UltraShotConstants.redTarget;
   }
 
@@ -184,26 +173,6 @@ public class ShooterSubsystem extends SubsystemBase {
     return ultraShot.getAngleStates();
   }
 
-  /*Formula for going from degrees to setpoint
-
-  ((theta/90) * (max-min)) + min
-  90 is the range of motion
-   
-  */
-
-
-//   public void setAngle(double theta) {
-
-//     left.set(angler.calculate(enc.getAbsolutePosition(), angleToSetPoints(theta)));
-//     right.set(angler.calculate(enc.getAbsolutePosition(), angleToSetPoints(theta)));
-//   }
-
-//   public double angleToSetPoints(double theta) {
-
-// // 90 is the range of motion in degrees
-//     return ((theta/90) * (maxPos - minPos)) + minPos;
-//   }
-
   public void updatePID() {
     angleController.setP(SmartDashboard.getNumber(Constants.P_phiSmartdashboard, 0));
     angleController.setI(SmartDashboard.getNumber(Constants.I_phiSmartdashboard, 0));
@@ -221,7 +190,6 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("HasNote", hasNoteInShooter());
 
     // updatePID();
-    // This method will be called once per scheduler run
     configUltrashot();
   }
 
