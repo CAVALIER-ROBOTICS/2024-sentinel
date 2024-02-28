@@ -20,7 +20,7 @@ public class Limelight {
 
     public static Pose2d getPose2d(String limelightName) {
         // if(!targetBlue()) {
-        //     return LimelightHelpers.getBotPose2d_wpiRed(limelightName);
+        //     return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
         // }
         return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
     }
