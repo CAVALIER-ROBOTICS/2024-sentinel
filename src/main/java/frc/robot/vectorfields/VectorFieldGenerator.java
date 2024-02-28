@@ -1,6 +1,5 @@
 package frc.robot.vectorfields;
 
-import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.ultrashot.Point2D;
 
 public class VectorFieldGenerator {

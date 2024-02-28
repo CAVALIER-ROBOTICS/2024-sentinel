@@ -14,7 +14,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -37,6 +36,7 @@ public class DriveSubsystem extends SubsystemBase {
   SwerveDrivePoseEstimator estimator;
 
   Field2d odometryField;
+  Field2d limelightField;
   Field2d poseEstimatorField;
 
   VectorFieldGenerator vectorField;
@@ -50,7 +50,6 @@ public class DriveSubsystem extends SubsystemBase {
     bleft = new NeoSteveModule(Constants.BLEFT_DRIVE_ID, Constants.BLEFT_STEER_ID, Constants.BLEFT_CANCODER_ID, SwerveConstants.BLEFT_OFFSET, Constants.CANIVORE);
     bright = new NeoSteveModule(Constants.BRIGHT_DRIVE_ID, Constants.BRIGHT_STEER_ID, Constants.BRIGHT_CANCODER_ID, SwerveConstants.BRIGHT_OFFSET, Constants.CANIVORE);
 
-    bright.invertSteer(false);
     bright.setSteerP(.1);
     odometry = new SwerveDriveOdometry(SwerveConstants.m_kinematics, getAngle(), getSwerveModulePositions());
     estimator = new SwerveDrivePoseEstimator(SwerveConstants.m_kinematics, getAngle(), getSwerveModulePositions(), new Pose2d());
@@ -58,6 +57,7 @@ public class DriveSubsystem extends SubsystemBase {
     headingController.enableContinuousInput(0, 2 * Math.PI);
     odometryField = new Field2d();
     poseEstimatorField = new Field2d();
+    limelightField = new Field2d();
 
     vectorField = new VectorFieldGenerator();
     vectorField.configure(
@@ -68,6 +68,7 @@ public class DriveSubsystem extends SubsystemBase {
     );
 
     SmartDashboard.putData("OdometryField", odometryField);
+    SmartDashboard.putData("LimelightField", limelightField);
     SmartDashboard.putData("PoseEstimatorField", poseEstimatorField);
   }
 
@@ -211,7 +212,7 @@ public class DriveSubsystem extends SubsystemBase {
     Rotation2d currentAngle = getAngle();
     pushMeasurementAndSetpoint(angle.getRadians());
     double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians()) + headingController.getD() * omega;
-    rotSpeeds = clamp(rotSpeeds, -1, 1);
+    rotSpeeds = clamp(rotSpeeds, -3, 3);
     SmartDashboard.putNumber("OmegaNutsLol", omega);
     ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle);
 
@@ -245,5 +246,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     odometryField.setRobotPose(odometry.getPoseMeters());
     poseEstimatorField.setRobotPose(estimator.getEstimatedPosition());
+    limelightField.setRobotPose(Limelight.getPose2d());
   }
 }

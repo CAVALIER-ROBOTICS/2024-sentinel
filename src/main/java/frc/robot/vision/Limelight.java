@@ -4,7 +4,6 @@
 
 package frc.robot.vision;
 
-import edu.wpi.first.math.estimator.KalmanFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -23,7 +22,6 @@ public class Limelight {
         // if(!targetBlue()) {
         //     return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
         // }
-
         return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
     }
 

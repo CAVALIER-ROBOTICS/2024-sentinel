@@ -39,9 +39,12 @@ public class IntakeSubsystem extends SubsystemBase {
     // controller.setTolerance(.1);
     //enc.setPositionOffset(0);
     // intakeLeft.setInverted(true);
-    intakeSpin.setIdleMode(IdleMode.kBrake);
+    intakeSpin.setIdleMode(IdleMode.kCoast);
+    intakeSpin.setSmartCurrentLimit(35);
     intakeRight.setIdleMode(IdleMode.kBrake);
+    intakeRight.setSmartCurrentLimit(35);
     intakeLeft.setIdleMode(IdleMode.kBrake);
+    intakeLeft.setSmartCurrentLimit(35);
 
     distanceSensor.setAutomaticMode(true);
     distanceSensor.setEnabled(true);

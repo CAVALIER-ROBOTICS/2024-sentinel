@@ -102,7 +102,6 @@ public class NeoSteveModule {
         steerMotor = new CANSparkMax(steer, MotorType.kBrushless);
         encoderObject = new CANcoder(encoderId);
         offset = offsetValue;
-        
         configureRampRate(.5);
         setupEncoder(encoderObject);
         configDriveMotor(driveMotor);

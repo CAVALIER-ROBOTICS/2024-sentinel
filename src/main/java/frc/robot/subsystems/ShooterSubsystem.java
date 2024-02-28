@@ -24,7 +24,6 @@ import frc.robot.ultrashot.AngleStates;
 import frc.robot.ultrashot.Point3D;
 import frc.robot.ultrashot.UltraShot;
 import frc.robot.ultrashot.UltraShotConstants;
-import frc.robot.vision.Limelight;
 
 public class ShooterSubsystem extends SubsystemBase {
   CANSparkMax top = new CANSparkMax(Constants.TOP_SHOOTER_ID, MotorType.kBrushless);
@@ -148,9 +147,9 @@ public class ShooterSubsystem extends SubsystemBase {
   // }
   
   public Point3D getTarget() {
-    if(Limelight.targetBlue()) {
-      return UltraShotConstants.blueTarget;
-    }
+    // if(Limelight.targetBlue()) {
+    //   return UltraShotConstants.blueTarget;
+    // }
     return UltraShotConstants.redTarget;
   }
 
