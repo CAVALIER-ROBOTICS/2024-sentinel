@@ -53,14 +53,10 @@ public class NeoSteveModule {
         target.setInverted(false);
         target.setIdleMode(IdleMode.kBrake);
         target.enableVoltageCompensation(NOMINAL_VOLTAGE);
-        configRampRate(.1);
+        target.setOpenLoopRampRate(.1);
         target.setSmartCurrentLimit(35);
 
         target.burnFlash();
-    }
-
-    public void configRampRate(double rate) {
-        driveMotor.setOpenLoopRampRate(rate);
     }
 
     private void configSteerMotor(CANSparkMax target) {
