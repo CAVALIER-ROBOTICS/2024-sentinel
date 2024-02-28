@@ -4,11 +4,20 @@
 
 package frc.robot.NeoLibrary;
 
+import com.revrobotics.CANSparkBase.ExternalFollower;
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
+
+import edu.wpi.first.hal.CANAPITypes.CANDeviceType;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+
 import com.revrobotics.CANSparkMax;
 
 /** Add your docs here. */
 public class SparkMaxConfigurator {
+
+    private final CANSparkMax sparky;
 
     private final double NOMINAL_VOLTAGE = 12.2;
     private final IdleMode idleMode = IdleMode.kCoast;
@@ -16,7 +25,8 @@ public class SparkMaxConfigurator {
     private final double rampRate = 0.05;
 
 
-    public SparkMaxConfigurator(CANSparkMax sparky) {
+    public SparkMaxConfigurator(int sparkMax) {
+        sparky = new CANSparkMax(sparkMax, MotorType.kBrushless);
         sparky.restoreFactoryDefaults();
         sparky.clearFaults();
 
@@ -30,7 +40,8 @@ public class SparkMaxConfigurator {
         sparky.burnFlash();
     }
 
-    public SparkMaxConfigurator(CANSparkMax sparky, IdleMode idleMode, Boolean inversionState, Double rampRate) {
+    public SparkMaxConfigurator(int sparkMax, IdleMode idleMode, Boolean inversionState, Double rampRate) {
+        sparky = new CANSparkMax(sparkMax, MotorType.kBrushless);
         sparky.restoreFactoryDefaults();
         sparky.clearFaults();
 
@@ -42,6 +53,14 @@ public class SparkMaxConfigurator {
         sparky.setSmartCurrentLimit(35);
 
         sparky.burnFlash();
+    }
+
+    public void set(double speed) {
+        sparky.set(speed);
+    }
+
+    public void follow(int leader, Boolean inversionState) {
+        sparky.follow(ExternalFollower.kFollowerSpark, leader, inversionState);
     }
 
 }

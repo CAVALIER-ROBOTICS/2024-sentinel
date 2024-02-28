@@ -48,7 +48,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     distanceSensor.setAutomaticMode(true);
     distanceSensor.setEnabled(true);
-    distanceSensor.setRangeProfile(RangeProfile.kHighAccuracy);
+    distanceSensor.setRangeProfile(RangeProfile.kLongRange);
 
     // intakeRight.follow(intakeLeft, true);
     controller.enableContinuousInput(0, 1);

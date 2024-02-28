@@ -41,7 +41,7 @@ public class UltraShot {
 
     public Point3D getTarget() {
         Point3D target = UltraShotConstants.redTarget;
-        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {target = UltraShotConstants.blueTarget;}
+        // if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {target = UltraShotConstants.blueTarget;}
         // return UltraShotConstants.redTarget;
         return target;
     }

@@ -148,9 +148,9 @@ public class ShooterSubsystem extends SubsystemBase {
   // }
   
   public Point3D getTarget() {
-    if(Limelight.targetBlue()) {
-      return UltraShotConstants.blueTarget;
-    }
+    // if(Limelight.targetBlue()) {
+    //   return UltraShotConstants.blueTarget;
+    // }
     return UltraShotConstants.redTarget;
   }
 
