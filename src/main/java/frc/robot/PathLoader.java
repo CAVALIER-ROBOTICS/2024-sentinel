@@ -90,7 +90,7 @@ public class PathLoader {
     }
 
     public static void initSendableChooser() {
-        chooser.setDefaultOption(validAutonPaths[0]);
+        chooser.setDefaultOption("Default", validAutonPaths[0]);
         for(String v: validAutonPaths) {
             if(v == validAutonPaths[0]) {
                 continue;
