@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 10.36306285709131,
-        "y": 6.243349401238204
+        "x": 10.757758785217904,
+        "y": 6.417749927619722
       },
       "prevControl": null,
       "nextControl": {
-        "x": 9.986724879110136,
-        "y": 5.747684747311781
+        "x": 10.262094131291482,
+        "y": 5.903727323547877
       },
       "isLocked": false,
       "linkedName": "RedRightShooterPosition"
@@ -20,8 +20,8 @@
         "y": 4.123006159441842
       },
       "prevControl": {
-        "x": 9.325838673874907,
-        "y": 4.857324165258764
+        "x": 9.417628424602022,
+        "y": 4.912398015695033
       },
       "nextControl": null,
       "isLocked": false,
@@ -66,7 +66,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "RedRightStatic",
+  "folder": "RedTop",
   "previewStartingState": {
     "rotation": 179.66982446281062,
     "velocity": 0

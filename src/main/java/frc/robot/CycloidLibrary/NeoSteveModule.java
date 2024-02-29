@@ -51,7 +51,7 @@ public class NeoSteveModule {
         driveEncoder.setVelocityConversionFactor((1 / 6.75 / 60) * (.1016 * Math.PI));
         driveEncoder.setPositionConversionFactor((1 / 6.75) * (.1016 * Math.PI));
         target.setInverted(false);
-        target.setIdleMode(IdleMode.kCoast);
+        target.setIdleMode(IdleMode.kBrake);
         target.enableVoltageCompensation(NOMINAL_VOLTAGE);
         target.setOpenLoopRampRate(.1);
         target.setSmartCurrentLimit(35);

@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.541565368845024,
-      "y": 7.403026234623898
+      "x": 1.407706324685116,
+      "y": 6.9679477447399965
     },
     "rotation": 0
   },
@@ -18,44 +18,39 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "TopOne"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "TopTwo"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "TopThree"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "TopFour"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "top_katy_one"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "top_katy_two"
           }
         }
       ]
     }
   },
-  "folder": "unused",
+  "folder": null,
   "choreoAuto": false
 }

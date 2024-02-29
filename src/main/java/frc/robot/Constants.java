@@ -62,16 +62,22 @@ public final class Constants {
     new Translation2d(-L/2, W/2),
     new Translation2d(-L/2, -W/2)
     );
-
   }
 
   public final class LEDConstants {
-
     public static final int BLINKIN_ID = 3;
     public static final double enabled = 0.75; // Green
     public static final double disabled = 0.61; // Red
     public static final double autonomous = -0.95; // Rainbow Ocean
     public static final double error = 0.69; // Yellow
+  }
+
+  public final class PiConstants {
+    public static final String table = "targeting";
+    public static final String robotX = "targetdata_robotX";
+    public static final String robotY = "targetdata_robotX";
+    public static final String noteX = "targetdata_noteX";
+    public static final String noteY = "targetdata_noteY";
   }
 
   public static final int LEFT_INTAKE_ID = 16;

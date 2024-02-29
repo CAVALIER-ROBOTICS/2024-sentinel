@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 15.25545657084655,
-      "y": 6.830803805891741
+      "x": 15.273814520991976,
+      "y": 4.1689010348054
     },
-    "rotation": 126.38435181583576
+    "rotation": -124.3302171955036
   },
   "command": {
     "type": "sequential",
@@ -16,55 +16,49 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "ShooterSpin"
-                }
-              },
-              {
                 "type": "sequential",
                 "data": {
                   "commands": [
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "RedRightOne"
+                        "pathName": "RedLeftOne"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "RedRightTwo"
+                        "pathName": "RedLeftTwo"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "RedRightThree"
+                        "pathName": "RedLeftThree"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "RedRightFour"
+                        "pathName": "RedLeftFour"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "RedRightFive"
+                        "pathName": "RedLeftFive"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "RedRightSix"
+                        "pathName": "RedLeftSix"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "RedRightSeven"
+                        "pathName": "RedLeftSeven"
                       }
                     }
                   ]

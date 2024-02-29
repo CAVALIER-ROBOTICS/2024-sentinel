@@ -44,9 +44,6 @@
   },
   "reversed": false,
   "folder": "RedLeft",
-  "previewStartingState": {
-    "rotation": -132.0643265535792,
-    "velocity": 0
-  },
+  "previewStartingState": null,
   "useDefaultConstraints": true
 }

@@ -24,11 +24,14 @@ import frc.robot.commands.ShooterCommands.AmpScoringCommand;
 import frc.robot.commands.ShooterCommands.ForceIntakeUpCommand;
 import frc.robot.commands.ShooterCommands.ForceSendbackCommand;
 import frc.robot.commands.ShooterCommands.UltrashotCommand;
+import frc.robot.commands.ShooterCommands.ShooterIntakeCommands.IndexNoteInShooterCommand;
+import frc.robot.commands.ShooterCommands.ShooterIntakeCommands.ShooterIntakeCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.vectorfields.VectorFieldGenerator;
+import frc.robot.vision.PiHandler;
 
 import java.util.Optional;
 
@@ -55,7 +58,8 @@ public class RobotContainer {
 
   public void registerCommands() {
     NamedCommands.registerCommand("Intake", intake());
-    NamedCommands.registerCommand("Shoot", getStationaryShotCommand());
+    NamedCommands.registerCommand("ShootStation", getStationaryShotCommand());
+    NamedCommands.registerCommand("ShootMoving", getShootingWhileMovingCommand());
     NamedCommands.registerCommand("ShooterSpin", new IdleShooterSpin(shooterSubsystem));
     NamedCommands.registerCommand("DisableRamp", new InstantCommand(() -> driveSubsystem.setDriveMotorRampRate(0)));
     NamedCommands.registerCommand("EnableRamp", new InstantCommand(() -> driveSubsystem.setDriveMotorRampRate(Constants.SwerveConstants.DRIVE_MOTOR_RAMP_RATE)));
@@ -65,6 +69,7 @@ public class RobotContainer {
     registerCommands();
     PathLoader.configureAutoBuilder(driveSubsystem);
     PathLoader.initSendableChooser();
+    PiHandler.initialize();
     
     driveSubsystem.setDefaultCommand(new FieldDrive(
 
@@ -187,6 +192,13 @@ public class RobotContainer {
       () -> vectorField.getVelocity().getX(),
       () -> vectorField.getVelocity().getY(),
       () -> 0
+    );
+  }
+
+  public Command shooterIntakeCommand() {
+    return new SequentialCommandGroup(
+      new ShooterIntakeCommand(shooterSubsystem),
+      new IndexNoteInShooterCommand(shooterSubsystem)
     );
   }
 }

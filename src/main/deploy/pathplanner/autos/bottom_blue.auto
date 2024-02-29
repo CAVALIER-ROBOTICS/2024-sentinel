@@ -2,60 +2,60 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 15.25545657084655,
-      "y": 6.830803805891741
+      "x": 1.5248146901429311,
+      "y": 1.3350353662190912
     },
-    "rotation": 123.53148729027136
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "RedRightOne"
+            "name": "Shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RedRightTwo"
+            "pathName": "BottomOne"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RedRightThree"
+            "pathName": "BottomTwo"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RedRightFour"
+            "pathName": "BottomThree"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RedRightFive"
+            "pathName": "BottomFour"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "RedRightSix"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RedRightSeven"
+            "name": "Shoot"
           }
         }
       ]
     }
   },
-  "folder": "Static Paths",
+  "folder": "unused",
   "choreoAuto": false
 }
