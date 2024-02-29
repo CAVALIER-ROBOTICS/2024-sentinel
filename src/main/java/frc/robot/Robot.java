@@ -5,15 +5,11 @@
 package frc.robot;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerTrajectory;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.AutonCommands.VectorFieldCommand;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.ultrashot.Point2D;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
