@@ -12,6 +12,7 @@ public class UltraShotConstants {
 
     public static double shooterLength = 0.4303; // m
     public static double shooterSpeed = 11.5; // m/s
+    public static double shooterSpeedAuto = 10.5;
     public static double localGravity = 9.79327; // m/s^2
     public static double airDrag = 1.276; // unitless
     public static double settleTime = 0.1; // s

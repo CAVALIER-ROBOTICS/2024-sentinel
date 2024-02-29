@@ -10,6 +10,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.ultrashot.AngleStates;
+import frc.robot.ultrashot.UltraShotConstants;
 
 public class UltrashotAndSpinupCommand extends Command {
   /** Creates a new UltrashotCommand. */
@@ -33,7 +34,7 @@ public class UltrashotAndSpinupCommand extends Command {
 
   @Override
   public void execute() {
-    shooterSubsystem.updateUltrashot(driveSubsystem);
+    shooterSubsystem.updateUltrashot(driveSubsystem, UltraShotConstants.shooterSpeedAuto);
     shooterSubsystem.ultimatum();
     shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
 
@@ -54,6 +55,7 @@ public class UltrashotAndSpinupCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return shooterSubsystem.getAverageRPM() >= Constants.ShooterConstants.MAX_RPM_FLYWHEEL;
+    // return shooterSubsystem.getAverageRPM() >= Constants.ShooterConstants.MAX_RPM_FLYWHEEL;
+    return false;
   }
 }

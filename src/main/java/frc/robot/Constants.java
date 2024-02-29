@@ -29,7 +29,7 @@ public final class Constants {
     public static final double SHOOTER_HORIZONTAL = 0.418373110459328;
     public static final double SHOOTER_45_DEGREE = 0.291827032295676; 
     public static final double SHOOTER_VERTICAL = 0.169686904242173;
-    public static final double SHOOTER_LINEUP_POSITION = 0.06;
+    public static final double SHOOTER_LINEUP_POSITION = 0.05;
   }
 
   public final class IntakeConstants {

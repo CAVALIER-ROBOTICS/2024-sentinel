@@ -9,6 +9,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.ultrashot.AngleStates;
+import frc.robot.ultrashot.UltraShotConstants;
 
 public class UltrashotAndKickCommand extends UltrashotAndSpinupCommand {
   public UltrashotAndKickCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem) {
@@ -17,7 +18,7 @@ public class UltrashotAndKickCommand extends UltrashotAndSpinupCommand {
 
   @Override
   public void execute() {
-    shooterSubsystem.updateUltrashot(driveSubsystem);
+    shooterSubsystem.updateUltrashot(driveSubsystem, UltraShotConstants.shooterSpeedAuto);
     shooterSubsystem.ultimatum();
     shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
     shooterSubsystem.setKickerSpeed(-1);

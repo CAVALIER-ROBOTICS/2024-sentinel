@@ -147,6 +147,10 @@ public class RobotContainer {
     return driveSubsystem;
   }
 
+  public ShooterSubsystem getShooterSubsystem() {
+    return shooterSubsystem;
+  }
+
   public Command getPathCommand(String path) {
     return PathLoader.loadAuto(path);
   }
@@ -181,8 +185,8 @@ public class RobotContainer {
 
   public Command getStationaryShotCommand() {
     return new SequentialCommandGroup(
-      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(2),
-      new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(.5)
+      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(1),
+      new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(1.25)
     );
   }
 

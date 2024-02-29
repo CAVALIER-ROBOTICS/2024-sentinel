@@ -21,7 +21,7 @@ import frc.robot.Constants.IntakeConstants;
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new Intake. */
 
-    SmartMax intakeLeft = new SmartMax(Constants.LEFT_INTAKE_ID, IdleMode.kCoast, false);
+    SmartMax intakeLeft = new SmartMax(Constants.LEFT_INTAKE_ID, IdleMode.kBrake, false);
     SmartMax intakeRight = new SmartMax(Constants.RIGHT_INTAKE_ID, IdleMode.kBrake, false);
     SmartMax intakeSpin = new SmartMax(Constants.SPIN_INTAKE_ID, IdleMode.kBrake, false);
 
@@ -29,7 +29,7 @@ public class IntakeSubsystem extends SubsystemBase {
     // CANSparkMax intakeRight = new CANSparkMax(Constants.RIGHT_INTAKE_ID, MotorType.kBrushless);
     // CANSparkMax intakeSpin = new CANSparkMax(Constants.SPIN_INTAKE_ID, MotorType.kBrushless);
 
-    PIDController controller = new PIDController(1.5, 0.0001, 0.05);
+    PIDController controller = new PIDController(1.0, 0.0001, 0.05);
     DutyCycleEncoder enc = new DutyCycleEncoder(3);
     Rev2mDistanceSensor distanceSensor = new Rev2mDistanceSensor(Port.kOnboard);
 
@@ -70,10 +70,17 @@ public class IntakeSubsystem extends SubsystemBase {
     return distanceSensor.getRange();
   }
 
+  public void checkSensor() {
+    if(distanceSensor.GetRange() < 0) {
+      distanceSensor.setEnabled(true);
+    }
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Intake Encoder" , enc.getAbsolutePosition());
     SmartDashboard.putNumber("Sensor Proximty", distanceSensor.getRange());
+    checkSensor();
     // controller.setP(SmartDashboard.getNumber("Intake angle P", 0));
     // SmartDashboard.putNumber("Current P", controller.getP());
     // goToAbsolutePos(currentGoalPos);

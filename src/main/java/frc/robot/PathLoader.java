@@ -18,8 +18,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -44,7 +42,7 @@ public class PathLoader {
     }
 
     public static Boolean getShouldFlipPath() {
-        return (DriverStation.getAlliance().get() == Alliance.Blue);
+        return false;
     }
 
     public static void configureAutoBuilder(DriveSubsystem driveSub) {
@@ -57,7 +55,7 @@ public class PathLoader {
 
         HolonomicPathFollowerConfig hpfc = new HolonomicPathFollowerConfig(
             new PIDConstants(.2),
-            new PIDConstants(4.26, 0.0, 0.1),
+            new PIDConstants(4.0, 0.0, 0.1),
             4.2,
             SwerveConstants.BOT_LENGTH / 2,
             new ReplanningConfig(),
@@ -92,17 +90,14 @@ public class PathLoader {
     }
 
     public static void initSendableChooser() {
-        chooser.setDefaultOption("Default", validAutonPaths[0]);
         for(String v: validAutonPaths) {
-            if(v == validAutonPaths[0]) {
-                continue;
-            }
             chooser.addOption(v, v);
         }
         SmartDashboard.putData("Autonomous type", chooser);
     }
 
-    public static String getChosenAuton() {
-        return new String(chooser.getSelected());
+    public static Command getChosenAuton() {
+        String selected = chooser.getSelected();
+        return loadAuto(selected);
     }
 }

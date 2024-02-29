@@ -9,7 +9,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AutonCommands.IdleShooterSpin;
+import frc.robot.commands.ShooterCommands.ForceSendbackCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -21,6 +24,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   DriveSubsystem driveSubsystem;
+
+  String pathName = "fournote_local_blue";
 
   @Override
   public void robotInit() {
@@ -42,14 +47,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    String pathName = PathLoader.getChosenAuton();
-    m_autonomousCommand = PathLoader.loadAuto(pathName);
+    // String pathName = PathLoader.getChosenAuton();
+      m_autonomousCommand = PathLoader.loadAuto(pathName);
       Pose2d initial = PathPlannerAuto.getStaringPoseFromAutoFile(pathName);
       driveSubsystem.updateOdometry(initial);
       driveSubsystem.setYaw(initial.getRotation().getDegrees());
       driveSubsystem.updatePoseEstimator(initial);
     
     if (m_autonomousCommand != null) {
+      ShooterSubsystem shooterSubsystem = m_robotContainer.getShooterSubsystem();
+      shooterSubsystem.setDefaultCommand(new IdleShooterSpin(shooterSubsystem));
       m_autonomousCommand.schedule();
     }
   }
@@ -62,6 +69,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    ShooterSubsystem shooterSubsystem = m_robotContainer.getShooterSubsystem();
+    shooterSubsystem.setDefaultCommand(new ForceSendbackCommand(shooterSubsystem, m_robotContainer.operator::getRightBumper, m_robotContainer.operator::getLeftBumper));
+
   }
 
   @Override
