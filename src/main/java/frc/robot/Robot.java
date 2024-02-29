@@ -25,7 +25,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   DriveSubsystem driveSubsystem;
 
-  String pathName = "fournote_local";
+  String pathName = "fournote_local_blue";
 
   @Override
   public void robotInit() {

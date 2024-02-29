@@ -24,6 +24,8 @@ import frc.robot.commands.ShooterCommands.AmpScoringCommand;
 import frc.robot.commands.ShooterCommands.ForceIntakeUpCommand;
 import frc.robot.commands.ShooterCommands.ForceSendbackCommand;
 import frc.robot.commands.ShooterCommands.UltrashotCommand;
+import frc.robot.commands.ShooterIntakeCommands.IndexNoteInShooterCommand;
+import frc.robot.commands.ShooterIntakeCommands.ShooterIntakeCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -190,6 +192,13 @@ public class RobotContainer {
       () -> vectorField.getVelocity().getX(),
       () -> vectorField.getVelocity().getY(),
       () -> 0
+    );
+  }
+
+  public Command shooterIntakeCommand() {
+    return new SequentialCommandGroup(
+      new ShooterIntakeCommand(shooterSubsystem),
+      new IndexNoteInShooterCommand(shooterSubsystem)
     );
   }
 }
