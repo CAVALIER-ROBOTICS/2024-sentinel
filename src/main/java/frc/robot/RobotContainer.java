@@ -57,7 +57,7 @@ public class RobotContainer {
   ClimbSubsystem climb = new ClimbSubsystem();
 
   public void registerCommands() {
-    NamedCommands.registerCommand("Intake", intake());
+    NamedCommands.registerCommand("Intake", intakeAuton());
     NamedCommands.registerCommand("ShootStation", getStationaryShotCommand());
     NamedCommands.registerCommand("ShootMoving", getShootingWhileMovingCommand());
     NamedCommands.registerCommand("ShooterSpin", new IdleShooterSpin(shooterSubsystem));
@@ -171,6 +171,17 @@ public class RobotContainer {
         new ShooterTransferCommand(intake, shooterSubsystem),
         new ShooterFinishCommand(shooterSubsystem),
         new SendbackCommand(shooterSubsystem).withTimeout(.05) 
+      ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
+  }
+
+  public Command intakeAuton() {
+      return new SequentialCommandGroup(
+        new IntakeStateCommand(intake, shooterSubsystem),
+        new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
+        new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(1),
+        new ShooterTransferCommand(intake, shooterSubsystem),
+        new ShooterFinishCommand(shooterSubsystem)
+        // new SendbackCommand(shooterSubsystem).withTimeout(.05) 
       ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
   }
 

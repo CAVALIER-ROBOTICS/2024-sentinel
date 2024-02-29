@@ -47,16 +47,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    // String pathName = PathLoader.getChosenAuton();
-      m_autonomousCommand = PathLoader.loadAuto(pathName);
+      m_autonomousCommand = PathLoader.getChosenAuton();
       Pose2d initial = PathPlannerAuto.getStaringPoseFromAutoFile(pathName);
       driveSubsystem.updateOdometry(initial);
       driveSubsystem.setYaw(initial.getRotation().getDegrees());
       driveSubsystem.updatePoseEstimator(initial);
     
     if (m_autonomousCommand != null) {
-      ShooterSubsystem shooterSubsystem = m_robotContainer.getShooterSubsystem();
-      shooterSubsystem.setDefaultCommand(new IdleShooterSpin(shooterSubsystem));
       m_autonomousCommand.schedule();
     }
   }
@@ -69,9 +66,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    ShooterSubsystem shooterSubsystem = m_robotContainer.getShooterSubsystem();
-    shooterSubsystem.setDefaultCommand(new ForceSendbackCommand(shooterSubsystem, m_robotContainer.operator::getRightBumper, m_robotContainer.operator::getLeftBumper));
-
   }
 
   @Override
