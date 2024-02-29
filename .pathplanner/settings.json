@@ -3,7 +3,7 @@
   "robotLength": 0.6858,
   "holonomicMode": true,
   "pathFolders": [
-    "RedFieldMiddle",
+    "FieldMiddle",
     "RedLeft",
     "RedLocal",
     "RedRightDynamic",

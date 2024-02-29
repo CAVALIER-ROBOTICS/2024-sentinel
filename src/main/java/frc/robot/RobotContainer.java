@@ -29,6 +29,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.vectorfields.VectorFieldGenerator;
+import frc.robot.vision.PiHandler;
 
 import java.util.Optional;
 
@@ -65,6 +66,7 @@ public class RobotContainer {
     registerCommands();
     PathLoader.configureAutoBuilder(driveSubsystem);
     PathLoader.initSendableChooser();
+    PiHandler.initialize();
     
     driveSubsystem.setDefaultCommand(new FieldDrive(
 
