@@ -131,11 +131,12 @@ public class RobotContainer {
 
     retractIntake.whileTrue(new ForceIntakeUpCommand(intake));
 
-    targetTrack.toggleOnTrue(new UltrashotCommand(shooterSubsystem, driveSubsystem, 
-    () -> -Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
+    targetTrack.toggleOnTrue(new UltrashotCommand(
+      shooterSubsystem, driveSubsystem, 
+      () -> -Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
-    () -> -Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
+      () -> -Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
       operator::getLeftTriggerAxis,
