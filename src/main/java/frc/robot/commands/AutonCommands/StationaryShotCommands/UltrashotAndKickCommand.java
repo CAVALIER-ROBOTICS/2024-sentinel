@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.AutonCommands;
+package frc.robot.commands.AutonCommands.StationaryShotCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants;
@@ -33,6 +33,6 @@ public class UltrashotAndKickCommand extends UltrashotAndSpinupCommand {
 
   @Override
   public boolean isFinished() {
-    return false;
+    return shooterSubsystem.hasNoteInShooter();
   }
 }

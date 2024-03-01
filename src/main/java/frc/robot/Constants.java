@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.I2C;
@@ -62,6 +64,8 @@ public final class Constants {
     new Translation2d(-L/2, W/2),
     new Translation2d(-L/2, -W/2)
     );
+
+    public static final Pose2d KATY_TEST_FIELD_INIT_POSE = new Pose2d(15.3, 5.53, Rotation2d.fromRadians(0));
   }
 
   public final class LEDConstants {

@@ -9,11 +9,13 @@ import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndKickCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndSpinupCommand;
 import frc.robot.commands.AutonCommands.IdleShooterSpin;
-import frc.robot.commands.AutonCommands.UltrashotAndSpinupCommand;
 import frc.robot.commands.AutonCommands.VectorFieldCommand;
+import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndFinishKickCommand;
+import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndFinishPushCommand;
+import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndKickCommand;
+import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndSpinupCommand;
 import frc.robot.commands.AutonCommands.StartThetaOverrideCommand;
 import frc.robot.commands.AutonCommands.StopThetaOverrideCommand;
-import frc.robot.commands.AutonCommands.UltrashotAndKickCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterFinishCommand;
@@ -69,7 +71,7 @@ public class RobotContainer {
     registerCommands();
     PathLoader.configureAutoBuilder(driveSubsystem);
     PathLoader.initSendableChooser();
-    PiHandler.initialize();
+    // PiHandler.initialize();
     
     driveSubsystem.setDefaultCommand(new FieldDrive(
 
@@ -197,7 +199,9 @@ public class RobotContainer {
   public Command getStationaryShotCommand() {
     return new SequentialCommandGroup(
       new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(1),
-      new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(1.25)
+      new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem),
+      new UltrashotAndFinishKickCommand(shooterSubsystem, driveSubsystem),
+      new UltrashotAndFinishPushCommand(shooterSubsystem, driveSubsystem).withTimeout(.05)
     );
   }
 

@@ -34,7 +34,11 @@ public class PathLoader {
 
     static String[] validAutonPaths = {
         "fournote_local",
-        "fournote_local_blue"
+        "fournote_local_blue",
+        "top_katy",
+        "top_katy_red",
+        "bottom_katy",
+        "bottom_katy_red"
     };
 
     public static PathPlannerPath getPath(String path) {
@@ -102,6 +106,7 @@ public class PathLoader {
 
     public static Command getChosenAuton() {
         String selected = chooser.getSelected();
+        SmartDashboard.putString("Selected auto", selected);
         return loadAuto(selected);
     }
 }
