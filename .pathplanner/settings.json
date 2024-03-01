@@ -8,12 +8,11 @@
     "RedTop"
   ],
   "autoFolders": [
-    "unused",
-    "RedMiddle",
-    "Static Paths"
+    "Static Paths",
+    "RedMiddle"
   ],
-  "defaultMaxVel": 4.2,
-  "defaultMaxAccel": 2.0,
+  "defaultMaxVel": 4.1,
+  "defaultMaxAccel": 8.2,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 360.0,
   "maxModuleSpeed": 4.5

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.BasicLibrary.SmartMax;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.filters.BeamBreakFilter;
 import frc.robot.ultrashot.AngleStates;
 import frc.robot.ultrashot.Point3D;
 import frc.robot.ultrashot.UltraShot;
@@ -24,11 +25,14 @@ import frc.robot.vision.Limelight;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-  SmartMax top = new SmartMax(Constants.TOP_SHOOTER_ID);
-  SmartMax bottom = new SmartMax(Constants.BOTTOM_SHOOTER_ID);
+  SmartMax top = new SmartMax(Constants.TOP_SHOOTER_ID, IdleMode.kBrake, false);
+  SmartMax bottom = new SmartMax(Constants.BOTTOM_SHOOTER_ID, IdleMode.kBrake, false);
   SmartMax left = new SmartMax(Constants.LEFT_SHOOTER_PIVOT_ID, IdleMode.kBrake, false);
   SmartMax right = new SmartMax(Constants.RIGHT_SHOOTER_PIVOT_ID, IdleMode.kBrake, false);
   SmartMax kicker = new SmartMax(Constants.KICKER_ID);
+
+  BeamBreakFilter filter = new BeamBreakFilter();
+
 
   // CANSparkMax top = new CANSparkMax(Constants.TOP_SHOOTER_ID, MotorType.kBrushless);
   // CANSparkMax bottom = new CANSparkMax(Constants.BOTTOM_SHOOTER_ID, MotorType.kBrushless);
@@ -132,7 +136,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public boolean hasNoteInShooter() {
-    return !limit.get();
+    return !filter.getFilteredOutput(limit.get());
   }
   
   public Point3D getTarget() {
@@ -144,6 +148,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void updateUltrashot(DriveSubsystem driveSubsystem) {
     ultraShot.update(driveSubsystem.getOdometry(), driveSubsystem.getChassisSpeeds(), getTarget(), UltraShotConstants.shooterSpeed, 0.02);
+  }
+
+  public void updateUltrashot(DriveSubsystem driveSubsystem, double shooterSpeed) {
+    ultraShot.update(driveSubsystem.getOdometry(), driveSubsystem.getChassisSpeeds(), getTarget(), shooterSpeed, 0.02);
   }
 
   private double clamp(double x, double min, double max) {

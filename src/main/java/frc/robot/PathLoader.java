@@ -18,8 +18,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,7 +34,11 @@ public class PathLoader {
 
     static String[] validAutonPaths = {
         "fournote_local",
-        "fournote_local_blue"
+        "fournote_local_blue",
+        "top_katy",
+        "top_katy_red",
+        "bottom_katy",
+        "bottom_katy_red"
     };
 
     public static PathPlannerPath getPath(String path) {
@@ -57,7 +59,7 @@ public class PathLoader {
 
         HolonomicPathFollowerConfig hpfc = new HolonomicPathFollowerConfig(
             new PIDConstants(.2),
-            new PIDConstants(4.26, 0.0, 0.1),
+            new PIDConstants(4.0, 0.0, 0.1),
             4.2,
             SwerveConstants.BOT_LENGTH / 2,
             new ReplanningConfig(),
@@ -92,7 +94,7 @@ public class PathLoader {
     }
 
     public static void initSendableChooser() {
-        chooser.setDefaultOption("Default", validAutonPaths[0]);
+        chooser.setDefaultOption(validAutonPaths[0], validAutonPaths[0]);
         for(String v: validAutonPaths) {
             if(v == validAutonPaths[0]) {
                 continue;
@@ -102,7 +104,9 @@ public class PathLoader {
         SmartDashboard.putData("Autonomous type", chooser);
     }
 
-    public static String getChosenAuton() {
-        return new String(chooser.getSelected());
+    public static Command getChosenAuton() {
+        String selected = chooser.getSelected();
+        SmartDashboard.putString("Selected auto", selected);
+        return loadAuto(selected);
     }
 }

@@ -9,7 +9,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AutonCommands.IdleShooterSpin;
+import frc.robot.commands.ShooterCommands.ForceSendbackCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -21,6 +24,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   DriveSubsystem driveSubsystem;
+
+  String pathName = "justshoot_auto";
 
   @Override
   public void robotInit() {
@@ -42,8 +47,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    String pathName = PathLoader.getChosenAuton();
-    m_autonomousCommand = PathLoader.loadAuto(pathName);
+      m_autonomousCommand = PathLoader.getChosenAuton();
       Pose2d initial = PathPlannerAuto.getStaringPoseFromAutoFile(pathName);
       driveSubsystem.updateOdometry(initial);
       driveSubsystem.setYaw(initial.getRotation().getDegrees());

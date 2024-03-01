@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3363329583802028,
-      "y": 6.963242497913567
+      "x": 1.4896821805055864,
+      "y": 6.991369417831561
     },
     "rotation": 0
   },
@@ -18,9 +18,15 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "jiggleblue"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "ShootStation"
           }
         },
         {
@@ -45,7 +51,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "ShootStation"
           }
         },
         {
@@ -70,7 +76,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "ShootStation"
           }
         },
         {
@@ -95,7 +101,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "ShootStation"
           }
         },
         {

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.I2C;
@@ -29,7 +31,7 @@ public final class Constants {
     public static final double SHOOTER_HORIZONTAL = 0.418373110459328;
     public static final double SHOOTER_45_DEGREE = 0.291827032295676; 
     public static final double SHOOTER_VERTICAL = 0.169686904242173;
-    public static final double SHOOTER_LINEUP_POSITION = 0.06;
+    public static final double SHOOTER_LINEUP_POSITION = 0.05;
   }
 
   public final class IntakeConstants {
@@ -62,6 +64,8 @@ public final class Constants {
     new Translation2d(-L/2, W/2),
     new Translation2d(-L/2, -W/2)
     );
+
+    public static final Pose2d KATY_TEST_FIELD_INIT_POSE = new Pose2d(15.3, 5.53, Rotation2d.fromRadians(0));
   }
 
   public final class LEDConstants {
