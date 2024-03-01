@@ -33,6 +33,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   BeamBreakFilter filter = new BeamBreakFilter();
 
+
   // CANSparkMax top = new CANSparkMax(Constants.TOP_SHOOTER_ID, MotorType.kBrushless);
   // CANSparkMax bottom = new CANSparkMax(Constants.BOTTOM_SHOOTER_ID, MotorType.kBrushless);
   // CANSparkMax left = new CANSparkMax(Constants.LEFT_SHOOTER_PIVOT_ID, MotorType.kBrushless);
