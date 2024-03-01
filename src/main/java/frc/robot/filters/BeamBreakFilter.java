@@ -10,16 +10,16 @@ public class BeamBreakFilter {
   // Number of consecutive falses
   private int numOfConsecFalses = 0;
   // Threshold for true value
-  private int trueValueThreshold = 10;
+//   private int trueValueThreshold = 10;
   // Maximum true value
   private int maxTrueValue = 15;
   // Threshold for consecutive false reset
   private int falseResetThreshold = 3;
 
   // Setters
-  public void setTrueValueThreshold(int falseResetThreshold) {
-      this.trueValueThreshold = trueValueThreshold;
-  }
+//   public void setTrueValueThreshold(int trueValueThreshold) {
+//       this.trueValueThreshold = trueValueThreshold;
+//   }
   public void setFalseResetThreshold(int falseResetThreshold) {
       this.falseResetThreshold = falseResetThreshold;
   }

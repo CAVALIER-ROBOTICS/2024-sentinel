@@ -104,8 +104,12 @@ public class PathLoader {
         SmartDashboard.putData("Autonomous type", chooser);
     }
 
+    public static String getAutoName() {
+        return chooser.getSelected();
+    }
+
     public static Command getChosenAuton() {
-        String selected = chooser.getSelected();
+        String selected = getAutoName();
         SmartDashboard.putString("Selected auto", selected);
         return loadAuto(selected);
     }

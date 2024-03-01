@@ -169,10 +169,6 @@ public class ShooterSubsystem extends SubsystemBase {
     pushMeasurementAndSetpoint(angle);
     setPosition(angle, psi);
   }
-
-  public void track() {
-    // ultraShot.track();
-  }
   
   public void ultimatum() {
     ultraShot.ultimatum();
@@ -181,11 +177,11 @@ public class ShooterSubsystem extends SubsystemBase {
     return ultraShot.getAngleStates();
   }
 
-  public void updatePID() {
-    angleController.setP(SmartDashboard.getNumber(Constants.P_phiSmartdashboard, 0));
-    angleController.setI(SmartDashboard.getNumber(Constants.I_phiSmartdashboard, 0));
-    angleController.setD(SmartDashboard.getNumber(Constants.D_phiSmartdashboard, 0));
-  }
+  // public void updatePID() {
+  //   angleController.setP(SmartDashboard.getNumber(Constants.P_phiSmartdashboard, 0));
+  //   angleController.setI(SmartDashboard.getNumber(Constants.I_phiSmartdashboard, 0));
+  //   angleController.setD(SmartDashboard.getNumber(Constants.D_phiSmartdashboard, 0));
+  // }
 
   @Override
   public void periodic() {
