@@ -151,7 +151,7 @@ public class DriveSubsystem extends SubsystemBase {
       String accurate = Limelight.getMostAccurateLimelightName();
       int targetAmount = Limelight.getTargetCount(accurate);
       
-      if(targetAmount >= 2 && Limelight.getAverageDistanceToAvailableTarget(accurate) <= Constants.MAX_DISTANCE_TO_APRILTAG) {
+      if(targetAmount >= 1 && Limelight.getAverageDistanceToAvailableTarget(accurate) <= Constants.MAX_DISTANCE_TO_APRILTAG) {
         SmartDashboard.putBoolean("UsingLimelight", true);
         Pose2d limePose = Limelight.getPose2d(accurate);
         if(!(limePose.getX() == 0 && limePose.getY() == 0)) {

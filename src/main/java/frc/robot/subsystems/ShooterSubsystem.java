@@ -25,10 +25,10 @@ import frc.robot.vision.Limelight;
 public class ShooterSubsystem extends SubsystemBase {
 
   SmartMax top = new SmartMax(Constants.TOP_SHOOTER_ID);
-  SmartMax bottom = new SmartMax(Constants.TOP_SHOOTER_ID);
-  SmartMax left = new SmartMax(Constants.TOP_SHOOTER_ID, IdleMode.kBrake, false);
-  SmartMax right = new SmartMax(Constants.TOP_SHOOTER_ID, IdleMode.kBrake, false);
-  SmartMax kicker = new SmartMax(Constants.TOP_SHOOTER_ID);
+  SmartMax bottom = new SmartMax(Constants.BOTTOM_SHOOTER_ID);
+  SmartMax left = new SmartMax(Constants.LEFT_SHOOTER_PIVOT_ID, IdleMode.kBrake, false);
+  SmartMax right = new SmartMax(Constants.RIGHT_SHOOTER_PIVOT_ID, IdleMode.kBrake, false);
+  SmartMax kicker = new SmartMax(Constants.KICKER_ID);
 
   // CANSparkMax top = new CANSparkMax(Constants.TOP_SHOOTER_ID, MotorType.kBrushless);
   // CANSparkMax bottom = new CANSparkMax(Constants.BOTTOM_SHOOTER_ID, MotorType.kBrushless);

@@ -44,7 +44,7 @@ public class PathLoader {
     }
 
     public static Boolean getShouldFlipPath() {
-        return (DriverStation.getAlliance().get() == Alliance.Blue);
+        return false;
     }
 
     public static void configureAutoBuilder(DriveSubsystem driveSub) {
