@@ -66,7 +66,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    driveSubsystem.setDriveMotorRampRate(Constants.SwerveConstants.DRIVE_MOTOR_RAMP_RATE);
   }
 
   @Override

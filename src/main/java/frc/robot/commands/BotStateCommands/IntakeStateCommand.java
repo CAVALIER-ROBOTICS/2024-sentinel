@@ -22,7 +22,10 @@ public class IntakeStateCommand extends Command {
   }
 
   @Override
-  public void initialize() {SmartDashboard.putBoolean("hasNote", false);}
+  public void initialize() {
+    SmartDashboard.putBoolean("hasNote", false);
+    intakeSubsystem.resetSensor();
+  }
 
   @Override
   public void execute() {

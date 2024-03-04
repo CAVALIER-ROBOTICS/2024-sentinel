@@ -12,9 +12,11 @@ public class BeamBreakFilter {
   // Threshold for true value
 //   private int trueValueThreshold = 10;
   // Maximum true value
-  private int maxTrueValue = 15;
+  private int maxTrueValue = 10;
   // Threshold for consecutive false reset
   private int falseResetThreshold = 3;
+
+  private int maxFilterVales = 4;
 
   // Setters
 //   public void setTrueValueThreshold(int trueValueThreshold) {
@@ -31,6 +33,12 @@ public class BeamBreakFilter {
           trueValuer += addMultiplier;
           addMultiplier++;
           subtractMultiplier--;
+          if (subtractMultiplier > maxFilterVales) {
+            subtractMultiplier = maxFilterVales;
+          }
+          if (addMultiplier > maxFilterVales) {
+            addMultiplier = maxFilterVales;
+          }
           numOfConsecFalses = 0;
           if (trueValuer > maxTrueValue) {
               trueValuer = maxTrueValue;
@@ -48,11 +56,17 @@ public class BeamBreakFilter {
               numOfConsecFalses++;
               subtractMultiplier++;
               addMultiplier--;
+                if (subtractMultiplier > maxFilterVales) {
+                    subtractMultiplier = maxFilterVales;
+                }
+                if (addMultiplier > maxFilterVales) {
+                    addMultiplier = maxFilterVales;
+                }
           }
       }
 
       // Check against the threshold
-      if (trueValuer > 10) {
+      if (trueValuer > 8) {
           return true;
       } else {
           return false;

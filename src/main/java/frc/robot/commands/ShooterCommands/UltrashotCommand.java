@@ -47,12 +47,11 @@ public class UltrashotCommand extends Command {
 
     if(Double.isNaN(states.getTheta())) {return;}
 
-    driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta() + Math.PI), x.getAsDouble(), y.getAsDouble(), states.getOmega()); // 0.1 is the heading controller D
+    driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta() + Math.PI), -x.getAsDouble(), -y.getAsDouble(), states.getOmega()); // 0.1 is the heading controller D
     shooterSubsystem.gotoAngle(states.getPhi(), states.getPsi());
 
     shooterSubsystem.setKickerSpeed(-k.getAsDouble());
     shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
-    
     SmartDashboard.putNumber("theta", states.getTheta());
   }
 

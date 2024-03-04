@@ -22,6 +22,7 @@ public class Limelight {
         // if(!targetBlue()) {
         //     return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
         // }
+
         return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
     }
 
@@ -65,6 +66,21 @@ public class Limelight {
             }
         }
         return null;
+    }
+
+    public static int getCentralTagId() {
+        if(Limelight.targetBlue()) {
+            return 7;
+        }
+        return 8;
+    }
+
+    public static VisionTarget getTagVisionTargetPercent(int id) {
+        LimelightTarget_Fiducial fid = getTargetFromID(getMostAccurateLimelightName(), id);
+        if(fid != null) {
+            return new VisionTarget(fid.tx_pixels / 960, fid.ty_pixels / 720);
+        }
+        return new VisionTarget(0, 0);
     }
 
     public static double getTX(String limelightName) {

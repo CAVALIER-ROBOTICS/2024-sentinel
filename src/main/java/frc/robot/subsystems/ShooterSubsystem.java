@@ -17,6 +17,7 @@ import frc.robot.Constants;
 import frc.robot.BasicLibrary.SmartMax;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.filters.BeamBreakFilter;
+import frc.robot.filters.SimplerFilter;
 import frc.robot.ultrashot.AngleStates;
 import frc.robot.ultrashot.Point3D;
 import frc.robot.ultrashot.UltraShot;
@@ -136,7 +137,8 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public boolean hasNoteInShooter() {
-    return !filter.getFilteredOutput(limit.get());
+    return !SimplerFilter.filter(limit.get());
+    // return !limit.get();
   }
   
   public Point3D getTarget() {

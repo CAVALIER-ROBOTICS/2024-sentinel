@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4829275372836466,
-      "y": 4.046010377735041
+      "x": 1.497586995173991,
+      "y": 4.133967125077108
     },
     "rotation": 0
   },
@@ -11,6 +11,12 @@
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bottom_katy_jiggle"
+          }
+        },
         {
           "type": "named",
           "data": {

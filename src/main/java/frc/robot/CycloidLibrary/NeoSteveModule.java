@@ -53,7 +53,6 @@ public class NeoSteveModule {
         target.setInverted(false);
         target.setIdleMode(IdleMode.kBrake);
         target.enableVoltageCompensation(NOMINAL_VOLTAGE);
-        target.setOpenLoopRampRate(.1);
         target.setSmartCurrentLimit(35);
 
         target.burnFlash();

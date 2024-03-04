@@ -38,7 +38,9 @@ public class PathLoader {
         "top_katy",
         "top_katy_red",
         "bottom_katy",
-        "bottom_katy_red"
+        "bottom_katy_red",
+        "DONOTUSE_blue_init",
+        "DONOTUSE_red_init"
     };
 
     public static PathPlannerPath getPath(String path) {

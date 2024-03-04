@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.407706324685116,
-      "y": 6.9679477447399965
+      "x": 1.5466072923605372,
+      "y": 6.956132139033785
     },
     "rotation": 0
   },
@@ -12,9 +12,15 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "top_katy_jiggle"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "ShootStation"
           }
         },
         {
@@ -39,7 +45,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "ShootStation"
           }
         },
         {
