@@ -47,12 +47,15 @@ public final class Constants {
 
   public final class SwerveConstants {
 
-    public static final double FLEFT_OFFSET = -2.876213977285577;
-    public static final double FRIGHT_OFFSET = -2.311709047343661;
-    public static final double BLEFT_OFFSET = -2.16444689170664;
-    public static final double BRIGHT_OFFSET = -0.193281579273591;
+    // public static final double FLEFT_OFFSET = -2.876213977285577;
+    // public static final double FRIGHT_OFFSET = -2.311709047343661;
+    // public static final double BLEFT_OFFSET = -2.16444689170664;
+    // public static final double BRIGHT_OFFSET = -0.193281579273591 - Math.toRadians(2);
 
-    public static final double DRIVE_MOTOR_RAMP_RATE = .1;
+    public static final double FLEFT_OFFSET = -2.860874169406721;
+    public static final double FRIGHT_OFFSET = -2.274893508434406;
+    public static final double BLEFT_OFFSET = -2.144505141464126;
+    public static final double BRIGHT_OFFSET = -0.219359252667647;
 
     public static final double BOT_LENGTH = .6858;
     public static double L = BOT_LENGTH;

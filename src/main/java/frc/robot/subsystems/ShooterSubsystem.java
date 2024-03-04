@@ -17,6 +17,7 @@ import frc.robot.Constants;
 import frc.robot.BasicLibrary.SmartMax;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.filters.BeamBreakFilter;
+import frc.robot.filters.SimplerFilter;
 import frc.robot.ultrashot.AngleStates;
 import frc.robot.ultrashot.Point3D;
 import frc.robot.ultrashot.UltraShot;
@@ -136,7 +137,8 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public boolean hasNoteInShooter() {
-    return !filter.getFilteredOutput(limit.get());
+    return !SimplerFilter.filter(limit.get());
+    // return !limit.get();
   }
   
   public Point3D getTarget() {
@@ -169,10 +171,6 @@ public class ShooterSubsystem extends SubsystemBase {
     pushMeasurementAndSetpoint(angle);
     setPosition(angle, psi);
   }
-
-  public void track() {
-    // ultraShot.track();
-  }
   
   public void ultimatum() {
     ultraShot.ultimatum();
@@ -181,11 +179,11 @@ public class ShooterSubsystem extends SubsystemBase {
     return ultraShot.getAngleStates();
   }
 
-  public void updatePID() {
-    angleController.setP(SmartDashboard.getNumber(Constants.P_phiSmartdashboard, 0));
-    angleController.setI(SmartDashboard.getNumber(Constants.I_phiSmartdashboard, 0));
-    angleController.setD(SmartDashboard.getNumber(Constants.D_phiSmartdashboard, 0));
-  }
+  // public void updatePID() {
+  //   angleController.setP(SmartDashboard.getNumber(Constants.P_phiSmartdashboard, 0));
+  //   angleController.setI(SmartDashboard.getNumber(Constants.I_phiSmartdashboard, 0));
+  //   angleController.setD(SmartDashboard.getNumber(Constants.D_phiSmartdashboard, 0));
+  // }
 
   @Override
   public void periodic() {

@@ -38,7 +38,9 @@ public class PathLoader {
         "top_katy",
         "top_katy_red",
         "bottom_katy",
-        "bottom_katy_red"
+        "bottom_katy_red",
+        "DONOTUSE_blue_init",
+        "DONOTUSE_red_init"
     };
 
     public static PathPlannerPath getPath(String path) {
@@ -104,8 +106,12 @@ public class PathLoader {
         SmartDashboard.putData("Autonomous type", chooser);
     }
 
+    public static String getAutoName() {
+        return chooser.getSelected();
+    }
+
     public static Command getChosenAuton() {
-        String selected = chooser.getSelected();
+        String selected = getAutoName();
         SmartDashboard.putString("Selected auto", selected);
         return loadAuto(selected);
     }

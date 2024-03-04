@@ -36,6 +36,11 @@ public class Point2D {
         return difference;
     }
 
+    public static Point2D subtract(Point2D endPoint, Point2D startPoint) {
+        Point2D difference = new Point2D(endPoint.getX() - startPoint.getX(), endPoint.getY() - startPoint.getY());
+        return difference;
+    }
+
     public static Point2D add(Point2D point1, Point2D point2) {
         Point2D sum = new Point2D(point1.getX() + point2.getX(), point1.getY() + point2.getY());
         return sum;

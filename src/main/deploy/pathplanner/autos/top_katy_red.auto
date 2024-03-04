@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "top_katy_jiggle_red"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "ShootStation"

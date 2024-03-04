@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.BasicLibrary.SmartMax;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.ultrashot.UltraShotConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new Intake. */
@@ -38,6 +39,11 @@ public class IntakeSubsystem extends SubsystemBase {
     distanceSensor.setEnabled(true);
     distanceSensor.setRangeProfile(RangeProfile.kLongRange);
     controller.enableContinuousInput(0, 1);
+  }
+
+  public void resetSensor() {
+    distanceSensor.setEnabled(false);
+    distanceSensor.setEnabled(true);
   }
 
   public double getAbsolutePosition() {
@@ -73,6 +79,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public void checkSensor() {
     if(distanceSensor.GetRange() < 0) {
       distanceSensor.setEnabled(true);
+      distanceSensor.setAutomaticMode(true);
     }
   }
 
@@ -80,6 +87,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Intake Encoder" , enc.getAbsolutePosition());
     SmartDashboard.putNumber("Sensor Proximty", distanceSensor.getRange());
+    UltraShotConstants.updateTarget();
     checkSensor();
     // controller.setP(SmartDashboard.getNumber("Intake angle P", 0));
     // SmartDashboard.putNumber("Current P", controller.getP());

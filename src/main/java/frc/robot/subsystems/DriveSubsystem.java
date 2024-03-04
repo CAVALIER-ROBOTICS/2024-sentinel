@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,8 +22,10 @@ import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.CycloidLibrary.NeoSteveModule;
 import frc.robot.ultrashot.Point2D;
+import frc.robot.ultrashot.pose.poseestimator;
 import frc.robot.vectorfields.VectorFieldGenerator;
 import frc.robot.vision.Limelight;
+import frc.robot.vision.VisionTarget;
 import frc.robot.vectorfields.*;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -36,13 +39,14 @@ public class DriveSubsystem extends SubsystemBase {
   SwerveDrivePoseEstimator estimator;
 
   Field2d odometryField;
-  Field2d limelightField;
+  Field2d haydenField;
   Field2d poseEstimatorField;
 
   VectorFieldGenerator vectorField;
 
   double currentOffset = 0;
 
+  poseestimator haydenEstimator;
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     fleft = new NeoSteveModule(Constants.FLEFT_DRIVE_ID, Constants.FLEFT_STEER_ID, Constants.FLEFT_CANCODER_ID, SwerveConstants.FLEFT_OFFSET, Constants.CANIVORE);
@@ -57,7 +61,10 @@ public class DriveSubsystem extends SubsystemBase {
     headingController.enableContinuousInput(0, 2 * Math.PI);
     odometryField = new Field2d();
     poseEstimatorField = new Field2d();
-    limelightField = new Field2d();
+    haydenField = new Field2d();
+
+
+    haydenEstimator = new poseestimator(62.5, 48.9);
 
     vectorField = new VectorFieldGenerator();
     vectorField.configure(
@@ -68,8 +75,15 @@ public class DriveSubsystem extends SubsystemBase {
     );
 
     SmartDashboard.putData("OdometryField", odometryField);
-    SmartDashboard.putData("LimelightField", limelightField);
+    SmartDashboard.putData("HaydenField", haydenField);
     SmartDashboard.putData("PoseEstimatorField", poseEstimatorField);
+  }
+
+  public Pose2d getHaydenEstimatorPose2d() {
+    haydenEstimator.setAlliance(!Limelight.targetBlue());
+    VisionTarget target = Limelight.getTagVisionTargetPercent(Limelight.getCentralTagId());
+    haydenEstimator.update(target.getX(), target.getY(), getAngle().getRadians());
+    return new Pose2d(haydenEstimator.getRobotX(), haydenEstimator.getRobotY(), getAngle());
   }
 
   public void setModuleStates(SwerveModuleState[] states) {
@@ -149,15 +163,19 @@ public class DriveSubsystem extends SubsystemBase {
   
   public void updateOdometry() {
       String accurate = Limelight.getMostAccurateLimelightName();
-      int targetAmount = Limelight.getTargetCount(accurate);
-      
-      if(targetAmount >= 1 && Limelight.getAverageDistanceToAvailableTarget(accurate) <= Constants.MAX_DISTANCE_TO_APRILTAG) {
+      int targetAmount = Limelight.getTargetCount("");
+      SmartDashboard.putBoolean("autonomous", DriverStation.isAutonomous());
+      SmartDashboard.putNumber("targetAmount", targetAmount);
+      SmartDashboard.putNumber("Gyro angle", getAngle().getDegrees());
+      SmartDashboard.putNumber("averagedist", Limelight.getAverageDistanceToAvailableTarget(accurate));
+      if(targetAmount >= 2 && Limelight.getAverageDistanceToAvailableTarget(accurate) <= Constants.MAX_DISTANCE_TO_APRILTAG) {
         SmartDashboard.putBoolean("UsingLimelight", true);
         Pose2d limePose = Limelight.getPose2d(accurate);
         if(!(limePose.getX() == 0 && limePose.getY() == 0)) {
           limePose = new Pose2d(limePose.getX(), limePose.getY(), Rotation2d.fromDegrees(limePose.getRotation().getDegrees() + 180));
-          updateOdometry(limePose);
-          setYaw(limePose.getRotation().getDegrees());
+          updateOdometry(new Pose2d(limePose.getX(), limePose.getY(), getAngle()));
+          // setYaw(limePose.getRotation().getDegrees());
+          SmartDashboard.putNumber("lime rotation", limePose.getRotation().getDegrees());
           return;
         }
       }
@@ -246,6 +264,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     odometryField.setRobotPose(odometry.getPoseMeters());
     poseEstimatorField.setRobotPose(estimator.getEstimatedPosition());
-    limelightField.setRobotPose(Limelight.getPose2d());
+    haydenField.setRobotPose(getHaydenEstimatorPose2d());
   }
 }
