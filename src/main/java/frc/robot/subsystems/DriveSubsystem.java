@@ -24,7 +24,9 @@ import frc.robot.CycloidLibrary.NeoSteveModule;
 import frc.robot.ultrashot.Point2D;
 import frc.robot.ultrashot.pose.poseestimator;
 import frc.robot.vectorfields.VectorFieldGenerator;
+import frc.robot.vision.JetsonHandler;
 import frc.robot.vision.Limelight;
+import frc.robot.vision.PiHandler;
 import frc.robot.vision.VisionTarget;
 import frc.robot.vectorfields.*;
 
@@ -168,20 +170,21 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("targetAmount", targetAmount);
       SmartDashboard.putNumber("Gyro angle", getAngle().getDegrees());
       SmartDashboard.putNumber("averagedist", Limelight.getAverageDistanceToAvailableTarget(accurate));
-      if(targetAmount >= 2 && Limelight.getAverageDistanceToAvailableTarget(accurate) <= Constants.MAX_DISTANCE_TO_APRILTAG) {
-        SmartDashboard.putBoolean("UsingLimelight", true);
-        Pose2d limePose = Limelight.getPose2d(accurate);
-        if(!(limePose.getX() == 0 && limePose.getY() == 0)) {
-          limePose = new Pose2d(limePose.getX(), limePose.getY(), Rotation2d.fromDegrees(limePose.getRotation().getDegrees() + 180));
-          updateOdometry(new Pose2d(limePose.getX(), limePose.getY(), getAngle()));
-          // setYaw(limePose.getRotation().getDegrees());
-          SmartDashboard.putNumber("lime rotation", limePose.getRotation().getDegrees());
-          return;
-        }
-      }
-  
+      // if(targetAmount >= 2 && Limelight.getAverageDistanceToAvailableTarget(accurate) <= Constants.MAX_DISTANCE_TO_APRILTAG) {
+      //   SmartDashboard.putBoolean("UsingLimelight", true);
+      //   Pose2d limePose = Limelight.getPose2d(accurate);
+      //   if(!(limePose.getX() == 0 && limePose.getY() == 0)) {
+      //     limePose = new Pose2d(limePose.getX(), limePose.getY(), Rotation2d.fromDegrees(limePose.getRotation().getDegrees() + 180));
+      //     updateOdometry(new Pose2d(limePose.getX(), limePose.getY(), getAngle()));
+      //     // setYaw(limePose.getRotation().getDegrees());
+      //     SmartDashboard.putNumber("lime rotation", limePose.getRotation().getDegrees());
+      //     return;
+      //   }
+      // }
+      Pose2d cool = JetsonHandler.getBotSlamPose();
+
       SmartDashboard.putBoolean("UsingLimelight", false);
-      odometry.update(getAngle(), getSwerveModulePositions());
+      odometry.resetPosition(getAngle(), getSwerveModulePositions(), cool);
   }
   //test lol
   public void updatePoseEstimator() {

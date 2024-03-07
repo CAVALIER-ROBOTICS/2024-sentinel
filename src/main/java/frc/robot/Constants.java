@@ -85,6 +85,8 @@ public final class Constants {
     public static final String robotY = "targetdata_robotX";
     public static final String noteX = "targetdata_noteX";
     public static final String noteY = "targetdata_noteY";
+    public static String ourBotY = "";
+    public static String ourBotX = "";
   }
 
   public static final int LEFT_INTAKE_ID = 16;

@@ -10,7 +10,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.Constants;
 
-public class PiHandler {
+public class JetsonHandler {
 
     static NetworkTable table = NetworkTableInstance.getDefault().getTable("targeting");
 
