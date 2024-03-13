@@ -181,10 +181,11 @@ public class DriveSubsystem extends SubsystemBase {
       //     return;
       //   }
       // }
-      Pose2d cool = JetsonHandler.getBotSlamPose();
+      // Pose2d cool = JetsonHandler.getBotSlamPose();
 
       SmartDashboard.putBoolean("UsingLimelight", false);
-      odometry.resetPosition(getAngle(), getSwerveModulePositions(), cool);
+      odometry.update(getAngle(), getSwerveModulePositions());
+      // odometry.resetPosition(getAngle(), getSwerveModulePositions(), cool);
   }
   //test lol
   public void updatePoseEstimator() {

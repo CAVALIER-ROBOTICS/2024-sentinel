@@ -6,6 +6,8 @@ package frc.robot;
 
 
 import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.AmpBarCommands.ExtendAmpBarCommand;
+import frc.robot.commands.AmpBarCommands.RetractAmpBarCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndKickCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndSpinupCommand;
 import frc.robot.commands.AutonCommands.IdleShooterSpin;
@@ -30,6 +32,7 @@ import frc.robot.commands.ShooterCommands.SubwooferScoringCommand;
 import frc.robot.commands.ShooterCommands.UltrashotCommand;
 import frc.robot.commands.ShooterCommands.ShooterIntakeCommands.IndexNoteInShooterCommand;
 import frc.robot.commands.ShooterCommands.ShooterIntakeCommands.ShooterIntakeCommand;
+import frc.robot.subsystems.AmpBarSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -39,6 +42,7 @@ import frc.robot.vectorfields.VectorFieldGenerator;
 import frc.robot.vision.Limelight;
 
 import java.util.Optional;
+import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -49,6 +53,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
@@ -62,6 +67,7 @@ public class RobotContainer {
   ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   IntakeSubsystem intake = new IntakeSubsystem();
   ClimbSubsystem climb = new ClimbSubsystem();
+  AmpBarSubsystem ampBarSubsystem = new AmpBarSubsystem();
 
   public void registerCommands() {
     NamedCommands.registerCommand("Intake", intake());
@@ -169,7 +175,7 @@ public class RobotContainer {
     toggleIntake.toggleOnTrue(intake());
     
     zeroGyro.onTrue(new InstantCommand(driveSubsystem::resetGyroFieldDrive));
-    ampMode.toggleOnTrue(new AmpScoringCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
+    ampMode.toggleOnTrue(getAmpScoringCommand(operator::getLeftTriggerAxis, operator::getRightTriggerAxis));
     subwooferMode.toggleOnTrue(new SubwooferScoringCommand(shooterSubsystem, operator::getLeftTriggerAxis));
 
     retractIntake.whileTrue(new ForceIntakeUpCommand(intake));
@@ -210,6 +216,10 @@ public class RobotContainer {
       ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
   }
 
+  public Command getAmpScoringCommand(DoubleSupplier flywheel, DoubleSupplier kicker) {
+    return new ParallelCommandGroup(new AmpScoringCommand(shooterSubsystem, flywheel, kicker), new ExtendAmpBarCommand(ampBarSubsystem))
+      .andThen(new RetractAmpBarCommand(ampBarSubsystem));
+  }
   public Command getShootingWhileMovingCommand() {
     return new SequentialCommandGroup(
       new StartThetaOverrideCommand(shooterSubsystem),

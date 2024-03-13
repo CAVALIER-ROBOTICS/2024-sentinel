@@ -34,15 +34,27 @@ public final class Constants {
     public static final double SHOOTER_LINEUP_POSITION = 0.05;
   }
 
-  public final class IntakeConstants {
+  public final class JetsonConstants {
+    public static final String table = "targeting";
+    public static final String vSlamX = "vslamdata_poseX";
+    public static final String vSlamY = "vslamdata_poseY";
+    public static final String tagX = "";
+    public static final String tagY = "";
+  }
 
+  public final class IntakeConstants {
     public static final I2C.Port INTAKE_SENSOR_PORT = I2C.Port.kOnboard;
     public static final int MINIMUM_PROXIMITY_TRIGGER = 9;
 
     public static final double RETRACTED_POS = 0.77851161951279;
     public static final double EXTENDED_POS = 0.079076751851919;
     public static final double INTAKE_LINEUP_POSITION = RETRACTED_POS;
+  }
 
+  public final class AmpBarConstants {
+    public static final int AMP_MOTOR_ID = 50;
+    public static final double AMPBAR_RETRACTED = 0;
+    public static final double AMPBAR_EXTENDED = 0;
   }
 
   public final class SwerveConstants {
