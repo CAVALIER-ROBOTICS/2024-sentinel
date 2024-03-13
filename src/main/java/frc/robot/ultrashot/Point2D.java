@@ -1,5 +1,7 @@
 package frc.robot.ultrashot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+
 public class Point2D {
     
     private double x, y;
@@ -28,6 +30,10 @@ public class Point2D {
 
     public void setY(double y) {
         this.y = y;
+    }
+
+    public static Point2D fromPose2d(Pose2d pose) {
+        return new Point2D(pose.getX(), pose.getY());
     }
 
 

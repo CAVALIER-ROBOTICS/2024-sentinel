@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
       String pathName = PathLoader.getAutoName();
       m_autonomousCommand = PathLoader.loadAuto(pathName);
       Pose2d initial = PathPlannerAuto.getStaringPoseFromAutoFile(pathName);
-      driveSubsystem.updateOdometry(initial);
+      driveSubsystem.updatePoseEstimator(initial);
       driveSubsystem.setYaw(initial.getRotation().getDegrees());
       driveSubsystem.updatePoseEstimator(initial);
     

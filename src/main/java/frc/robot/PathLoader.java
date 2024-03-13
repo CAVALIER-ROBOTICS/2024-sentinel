@@ -54,7 +54,6 @@ public class PathLoader {
     public static void configureAutoBuilder(DriveSubsystem driveSub) {
         Consumer<Pose2d> resetPose = pose -> {
             driveSub.updatePoseEstimator(pose);
-            driveSub.updateOdometry(pose);
         };
 
         Consumer<ChassisSpeeds> drivelol = speeds -> driveSub.autonDrive(speeds);

@@ -10,13 +10,13 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import frc.robot.vision.LimelightHelpers.LimelightResults;
 import frc.robot.vision.LimelightHelpers.LimelightTarget_Fiducial;
 
 /** Add your docs here. */
 public class Limelight {
-    private static final String backLimelight = "";
-    private static final String frontLimelight = "limelight-cavbots";
+    public static final String limelightname = "";
 
     public static Pose2d getPose2d(String limelightName) {
         // if(!targetBlue()) {
@@ -24,10 +24,6 @@ public class Limelight {
         // }
 
         return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
-    }
-
-    public static Pose2d getPose2d() {
-        return getPose2d(getMostAccurateLimelightName());
     }
 
     public static boolean targetBlue() {
@@ -38,18 +34,14 @@ public class Limelight {
         // return false;
     }
 
-    public static Pose2d[] getPoses() {
-        Pose2d[] arr = new Pose2d[2];
-        arr[0] = getPose2d(frontLimelight);
-        arr[1] = getPose2d(backLimelight);
-        return arr;
+    public static double getCombinedLantencySeconds(String name) {
+        return (LimelightHelpers.getLatency_Capture(name) + LimelightHelpers.getLatency_Pipeline(name)) / 1000;
     }
 
-    public static double[] getLatencies() {
-       double[] arr = new double[2];
-       arr[0] = LimelightHelpers.getLatency_Pipeline(frontLimelight);
-       arr[1] = LimelightHelpers.getLatency_Pipeline(backLimelight);
-       return arr;
+    public static boolean canLimelightProvideAccuratePoseEstimate(String name) {
+        int targetcount = getTargetCount(name);
+        double avgdist = getAverageDistanceToAvailableTarget(name);
+        return (targetcount >= 2 || avgdist < Constants.MAX_DISTANCE_TO_SINGLE_TAG) && avgdist < Constants.MAX_DISTANCE_TO_APRILTAG;
     }
 
     public static int getTargetCount(String limelightName) {
@@ -75,8 +67,8 @@ public class Limelight {
         return 8;
     }
 
-    public static VisionTarget getTagVisionTargetPercent(int id) {
-        LimelightTarget_Fiducial fid = getTargetFromID(getMostAccurateLimelightName(), id);
+    public static VisionTarget getTagVisionTargetPercent(String name, int id) {
+        LimelightTarget_Fiducial fid = getTargetFromID(name, id);
         if(fid != null) {
             return new VisionTarget(fid.tx_pixels / 960, fid.ty_pixels / 720);
         }
@@ -137,11 +129,4 @@ public class Limelight {
    
     }
 
-    public static String getMostAccurateLimelightName() {
-        double backAccuracy = getAccuracyScore(backLimelight);
-        double frontAccuracy = getAccuracyScore(frontLimelight);
-
-        return (backAccuracy > frontAccuracy) ? backLimelight: frontLimelight;
-        // return backLimelight;
-    }
 }

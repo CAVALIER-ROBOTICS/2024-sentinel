@@ -149,11 +149,11 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void updateUltrashot(DriveSubsystem driveSubsystem) {
-    ultraShot.update(driveSubsystem.getOdometry(), driveSubsystem.getChassisSpeeds(), getTarget(), UltraShotConstants.shooterSpeed, 0.02);
+    ultraShot.update(driveSubsystem.getEstimatedPosition(), driveSubsystem.getChassisSpeeds(), getTarget(), UltraShotConstants.shooterSpeed, 0.02);
   }
 
   public void updateUltrashot(DriveSubsystem driveSubsystem, double shooterSpeed) {
-    ultraShot.update(driveSubsystem.getOdometry(), driveSubsystem.getChassisSpeeds(), getTarget(), shooterSpeed, 0.02);
+    ultraShot.update(driveSubsystem.getEstimatedPosition(), driveSubsystem.getChassisSpeeds(), getTarget(), shooterSpeed, 0.02);
   }
 
   private double clamp(double x, double min, double max) {

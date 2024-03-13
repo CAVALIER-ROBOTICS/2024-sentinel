@@ -24,9 +24,7 @@ import frc.robot.CycloidLibrary.NeoSteveModule;
 import frc.robot.ultrashot.Point2D;
 import frc.robot.ultrashot.pose.poseestimator;
 import frc.robot.vectorfields.VectorFieldGenerator;
-import frc.robot.vision.JetsonHandler;
 import frc.robot.vision.Limelight;
-import frc.robot.vision.PiHandler;
 import frc.robot.vision.VisionTarget;
 import frc.robot.vectorfields.*;
 
@@ -36,11 +34,8 @@ public class DriveSubsystem extends SubsystemBase {
   Pigeon2 pigeon = new Pigeon2(Constants.PIGEON_ID, Constants.CANIVORE);
   PIDController headingController = new PIDController(4.26, 0.0, 0.1);
   
-
-  SwerveDriveOdometry odometry;
   SwerveDrivePoseEstimator estimator;
 
-  Field2d odometryField;
   Field2d haydenField;
   Field2d poseEstimatorField;
 
@@ -57,11 +52,9 @@ public class DriveSubsystem extends SubsystemBase {
     bright = new NeoSteveModule(Constants.BRIGHT_DRIVE_ID, Constants.BRIGHT_STEER_ID, Constants.BRIGHT_CANCODER_ID, SwerveConstants.BRIGHT_OFFSET, Constants.CANIVORE);
 
     bright.setSteerP(.1);
-    odometry = new SwerveDriveOdometry(SwerveConstants.m_kinematics, getAngle(), getSwerveModulePositions());
     estimator = new SwerveDrivePoseEstimator(SwerveConstants.m_kinematics, getAngle(), getSwerveModulePositions(), new Pose2d());
 
     headingController.enableContinuousInput(0, 2 * Math.PI);
-    odometryField = new Field2d();
     poseEstimatorField = new Field2d();
     haydenField = new Field2d();
 
@@ -76,14 +69,13 @@ public class DriveSubsystem extends SubsystemBase {
       VectorFieldConstants.antiNodes
     );
 
-    SmartDashboard.putData("OdometryField", odometryField);
     SmartDashboard.putData("HaydenField", haydenField);
     SmartDashboard.putData("PoseEstimatorField", poseEstimatorField);
   }
 
   public Pose2d getHaydenEstimatorPose2d() {
     haydenEstimator.setAlliance(!Limelight.targetBlue());
-    VisionTarget target = Limelight.getTagVisionTargetPercent(Limelight.getCentralTagId());
+    VisionTarget target = Limelight.getTagVisionTargetPercent(Limelight.limelightname, Limelight.getCentralTagId());
     haydenEstimator.update(target.getX(), target.getY(), getAngle().getRadians());
     return new Pose2d(haydenEstimator.getRobotX(), haydenEstimator.getRobotY(), getAngle());
   }
@@ -161,65 +153,26 @@ public class DriveSubsystem extends SubsystemBase {
   public void resetGyroFieldDrive() {
     currentOffset = getAngle().getDegrees();
   }
-
-  
-  public void updateOdometry() {
-      String accurate = Limelight.getMostAccurateLimelightName();
-      int targetAmount = Limelight.getTargetCount("");
-      SmartDashboard.putBoolean("autonomous", DriverStation.isAutonomous());
-      SmartDashboard.putNumber("targetAmount", targetAmount);
-      SmartDashboard.putNumber("Gyro angle", getAngle().getDegrees());
-      SmartDashboard.putNumber("averagedist", Limelight.getAverageDistanceToAvailableTarget(accurate));
-      // if(targetAmount >= 2 && Limelight.getAverageDistanceToAvailableTarget(accurate) <= Constants.MAX_DISTANCE_TO_APRILTAG) {
-      //   SmartDashboard.putBoolean("UsingLimelight", true);
-      //   Pose2d limePose = Limelight.getPose2d(accurate);
-      //   if(!(limePose.getX() == 0 && limePose.getY() == 0)) {
-      //     limePose = new Pose2d(limePose.getX(), limePose.getY(), Rotation2d.fromDegrees(limePose.getRotation().getDegrees() + 180));
-      //     updateOdometry(new Pose2d(limePose.getX(), limePose.getY(), getAngle()));
-      //     // setYaw(limePose.getRotation().getDegrees());
-      //     SmartDashboard.putNumber("lime rotation", limePose.getRotation().getDegrees());
-      //     return;
-      //   }
-      // }
-      // Pose2d cool = JetsonHandler.getBotSlamPose();
-
-      SmartDashboard.putBoolean("UsingLimelight", false);
-      odometry.update(getAngle(), getSwerveModulePositions());
-      // odometry.resetPosition(getAngle(), getSwerveModulePositions(), cool);
-  }
-  //test lol
+ 
   public void updatePoseEstimator() {
-    Pose2d[] estimates = Limelight.getPoses();
-    double[] latencies = Limelight.getLatencies();
+    String llname = Limelight.limelightname;
+    Pose2d pose = Limelight.getPose2d(llname);
+    double latency = Limelight.getCombinedLantencySeconds(llname);
 
     estimator.update(getAngle(), getSwerveModulePositions());
-
-    for(int i = 0; i < estimates.length; i++) {
-      Pose2d pose = estimates[i];
-      double latencySeconds = latencies[i] / 1000;
-
-      if(pose.getX() == 0 && pose.getY() == 0) {
-        continue;
-      }
-
-      estimator.addVisionMeasurement(pose, latencySeconds);
+    
+    if(Limelight.canLimelightProvideAccuratePoseEstimate(Limelight.limelightname)) {
+      estimator.addVisionMeasurement(pose, latency);
     }
   }
+
 
   public void zeroGyro() {
     pigeon.reset();
   }
 
-  public void updateOdometry(Pose2d pose) {
-    odometry.resetPosition(pose.getRotation(), getSwerveModulePositions(), pose);
-  }
-
   public void updatePoseEstimator(Pose2d pose) {
     estimator.resetPosition(pose.getRotation(), getSwerveModulePositions(), pose);
-  }
-
-  public Pose2d getOdometry() {
-    return odometry.getPoseMeters();
   }
 
   public Pose2d getEstimatedPosition() {
@@ -254,6 +207,12 @@ public class DriveSubsystem extends SubsystemBase {
      headingController.setD(SmartDashboard.getNumber(Constants.D_thetaSmartdashboard, 0));
   }
 
+  private void updateVectorField() {
+    Pose2d estimate = getEstimatedPosition();
+    Point2D point = Point2D.fromPose2d(estimate);
+    vectorField.update(point);
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("FLEFT", fleft.getEncoderPosition());
@@ -261,12 +220,9 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("BLEFT", bleft.getEncoderPosition());
     SmartDashboard.putNumber("BRIGHT", bright.getEncoderPosition());
 
-    updateOdometry();
     updatePoseEstimator();
-    vectorField.update(new Point2D(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY()));
+    updateVectorField();
 
-
-    odometryField.setRobotPose(odometry.getPoseMeters());
     poseEstimatorField.setRobotPose(estimator.getEstimatedPosition());
     haydenField.setRobotPose(getHaydenEstimatorPose2d());
   }
