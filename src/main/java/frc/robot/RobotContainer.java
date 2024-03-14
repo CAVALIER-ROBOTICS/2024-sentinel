@@ -103,8 +103,6 @@ public class RobotContainer {
   }
     
 
-     
-
   public RobotContainer() {
     registerCommands();
     PathLoader.configureAutoBuilder(driveSubsystem);
@@ -175,7 +173,10 @@ public class RobotContainer {
     toggleIntake.toggleOnTrue(intake());
     
     zeroGyro.onTrue(new InstantCommand(driveSubsystem::resetGyroFieldDrive));
-    ampMode.toggleOnTrue(getAmpScoringCommand(operator::getLeftTriggerAxis, operator::getRightTriggerAxis));
+
+    ampMode.toggleOnTrue(getAmpScoringCommand(operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
+    ampMode.toggleOnFalse(new RetractAmpBarCommand(ampBarSubsystem));
+
     subwooferMode.toggleOnTrue(new SubwooferScoringCommand(shooterSubsystem, operator::getLeftTriggerAxis));
 
     retractIntake.whileTrue(new ForceIntakeUpCommand(intake));
@@ -217,8 +218,7 @@ public class RobotContainer {
   }
 
   public Command getAmpScoringCommand(DoubleSupplier flywheel, DoubleSupplier kicker) {
-    return new ParallelCommandGroup(new AmpScoringCommand(shooterSubsystem, flywheel, kicker), new ExtendAmpBarCommand(ampBarSubsystem))
-      .andThen(new RetractAmpBarCommand(ampBarSubsystem));
+    return new ParallelCommandGroup(new AmpScoringCommand(shooterSubsystem, flywheel, kicker), new ExtendAmpBarCommand(ampBarSubsystem)).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
   }
   public Command getShootingWhileMovingCommand() {
     return new SequentialCommandGroup(

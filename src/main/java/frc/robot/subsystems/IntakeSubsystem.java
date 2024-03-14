@@ -31,7 +31,7 @@ public class IntakeSubsystem extends SubsystemBase {
     // CANSparkMax intakeSpin = new CANSparkMax(Constants.SPIN_INTAKE_ID, MotorType.kBrushless);
 
     PIDController controller = new PIDController(1.0, 0.0001, 0.05);
-    DutyCycleEncoder enc = new DutyCycleEncoder(3);
+    DutyCycleEncoder enc = new DutyCycleEncoder(0);
     Rev2mDistanceSensor distanceSensor = new Rev2mDistanceSensor(Port.kOnboard);
 
   public IntakeSubsystem() {

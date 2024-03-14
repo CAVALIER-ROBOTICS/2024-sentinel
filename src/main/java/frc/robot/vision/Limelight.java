@@ -41,7 +41,7 @@ public class Limelight {
     public static boolean canLimelightProvideAccuratePoseEstimate(String name) {
         int targetcount = getTargetCount(name);
         double avgdist = getAverageDistanceToAvailableTarget(name);
-        return (targetcount >= 2 || avgdist < Constants.MAX_DISTANCE_TO_SINGLE_TAG) && avgdist < Constants.MAX_DISTANCE_TO_APRILTAG;
+        return (targetcount >= 2 || avgdist < Constants.MAX_DISTANCE_TO_APRILTAG) && avgdist < Constants.MAX_DISTANCE_TO_APRILTAG;
     }
 
     public static int getTargetCount(String limelightName) {

@@ -10,12 +10,13 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class AmpBarSubsystem extends SubsystemBase {
   CANSparkMax motor = new CANSparkMax(Constants.AmpBarConstants.AMP_MOTOR_ID, MotorType.kBrushless);
-  PIDController controller = new PIDController(0, 0, 0);
+  PIDController controller = new PIDController(1.0, 0, 0);
   DutyCycleEncoder encoder = new DutyCycleEncoder(3);
 
   /** Creates a new AmpBarSubsystem. */
@@ -37,8 +38,14 @@ public class AmpBarSubsystem extends SubsystemBase {
     set(speed);
   }
 
+  public boolean atSetpoint() {
+    return controller.atSetpoint();
+  }
+
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("AmpBarPos", getPosition());
+    SmartDashboard.putBoolean("AtSetpoint", atSetpoint());
     // This method will be called once per scheduler run
   }
 }

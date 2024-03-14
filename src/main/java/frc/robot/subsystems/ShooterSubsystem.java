@@ -44,7 +44,7 @@ public class ShooterSubsystem extends SubsystemBase {
   DigitalInput limit = new DigitalInput(ShooterConstants.SHOOTER_LIMIT_SWITCH_ID);
 
   DutyCycleEncoder enc = new DutyCycleEncoder(2);
-  PIDController angleController = new PIDController(1.4, 0.0, 0.01);
+  PIDController angleController = new PIDController(1.2, 0.0, 0.01);
 
   RelativeEncoder rpmEncoderTop, rpmEncoderBottom;
   UltraShot ultraShot = new UltraShot();
@@ -123,8 +123,8 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double getAbsolutePosition() {
-    // return enc.getAbsolutePosition(); // Uncomment to find actual values
-    return (Constants.ShooterConstants.SHOOTER_HORIZONTAL - (enc.getAbsolutePosition())) *2*Math.PI;
+    return (enc.getAbsolutePosition() - Constants.ShooterConstants.SHOOTER_HORIZONTAL) * 2 * Math.PI; // Uncomment to find actual values
+    // return (Constants.ShooterConstants.SHOOTER_HORIZONTAL - (enc.getAbsolutePosition())) *2*Math.PI;
   }
 
   public void setPosition(double position, double psi) {

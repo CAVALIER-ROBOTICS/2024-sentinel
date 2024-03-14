@@ -16,6 +16,7 @@ public class RetractAmpBarCommand extends ExtendAmpBarCommand {
 
   @Override
   public void execute() {
+    System.out.println("Trying 2 retract");
     asub.setPosition(Constants.AmpBarConstants.AMPBAR_RETRACTED);
   }
 }

@@ -26,12 +26,12 @@ public final class Constants {
     public static final int SPEED_SHOOTER = 1;
     public static final double MAX_FLYWHEEL_PERCENT_OUTPUT = .7; // 1.863636363636364
     public static final double MAX_RPM_FLYWHEEL = 3350;
-    public static final double MAX_POSITION_SHOOTER = 0.169686904242173;
-    public static final double MIN_POSITITON_SHOOTER = 0.418373110459328;
-    public static final double SHOOTER_HORIZONTAL = 0.418373110459328;
-    public static final double SHOOTER_45_DEGREE = 0.291827032295676; 
-    public static final double SHOOTER_VERTICAL = 0.169686904242173;
-    public static final double SHOOTER_LINEUP_POSITION = 0.05;
+    public static final double MAX_POSITION_SHOOTER = 0.822;
+    public static final double MIN_POSITITON_SHOOTER = 0.572;
+    public static final double SHOOTER_HORIZONTAL = 0.572;
+    public static final double SHOOTER_45_DEGREE = 0.703; 
+    public static final double SHOOTER_VERTICAL = 0.822;
+    public static final double SHOOTER_LINEUP_POSITION = 0.0;
   }
 
   public final class JetsonConstants {
@@ -52,9 +52,9 @@ public final class Constants {
   }
 
   public final class AmpBarConstants {
-    public static final int AMP_MOTOR_ID = 50;
-    public static final double AMPBAR_RETRACTED = 0;
-    public static final double AMPBAR_EXTENDED = 0;
+    public static final int AMP_MOTOR_ID = 37;
+    public static final double AMPBAR_RETRACTED = .136;
+    public static final double AMPBAR_EXTENDED = .583;
   }
 
   public final class SwerveConstants {
@@ -135,7 +135,7 @@ public final class Constants {
   public static final double NOMINAL_VOLTAGE = 12.2;
 
   public static final double MAX_DISTANCE_TO_APRILTAG = 4.5; //Meters
-  public static final double MAX_DISTANCE_TO_SINGLE_TAG = 1.5;
+  public static final double MAX_DISTANCE_TO_SINGLETAG = 1.5;
   
   public static final String CANIVORE = "OTHERCANIVORE";
   public static final double BOT_LENGTH = .6858;
