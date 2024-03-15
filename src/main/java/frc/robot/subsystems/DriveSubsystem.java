@@ -23,7 +23,6 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.CycloidLibrary.NeoSteveModule;
 import frc.robot.ultrashot.Point2D;
 import frc.robot.ultrashot.pose.poseestimator;
-import frc.robot.vectorfields.VectorFieldGenerator;
 import frc.robot.vision.Limelight;
 import frc.robot.vision.VisionTarget;
 import frc.robot.vectorfields.*;
@@ -70,7 +69,7 @@ public class DriveSubsystem extends SubsystemBase {
     );
 
     SmartDashboard.putData("HaydenField", haydenField);
-    SmartDashboard.putData("PoseEstimatorField", poseEstimatorField);
+    SmartDashboard.putData("fiedd", poseEstimatorField);
   }
 
   public Pose2d getHaydenEstimatorPose2d() {
@@ -158,7 +157,7 @@ public class DriveSubsystem extends SubsystemBase {
     String llname = Limelight.limelightname;
     Pose2d pose = Limelight.getPose2d(llname);
     double latency = Limelight.getCombinedLantencySeconds(llname);
-
+    SmartDashboard.putBoolean("Adding measurements", Limelight.canLimelightProvideAccuratePoseEstimate(llname));
     estimator.update(getAngle(), getSwerveModulePositions());
     
     if(Limelight.canLimelightProvideAccuratePoseEstimate(Limelight.limelightname)) {
@@ -172,7 +171,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void updatePoseEstimator(Pose2d pose) {
-    estimator.resetPosition(pose.getRotation(), getSwerveModulePositions(), pose);
+    estimator.resetPosition(getAngle(), getSwerveModulePositions(), pose);
   }
 
   public Pose2d getEstimatedPosition() {

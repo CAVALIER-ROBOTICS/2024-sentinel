@@ -55,6 +55,12 @@ public class Point3D {
         return sum;
     }
 
+    public void add(Point3D point) {
+        this.x += point.getX();
+        this.y += point.getY();
+        this.z += point.getZ();
+    }
+
     public static Point3D scalar(Point3D point, double scalar) {
         return new Point3D(scalar * point.getX(), scalar * point.getY(), scalar * point.getZ());
     }
@@ -65,6 +71,21 @@ public class Point3D {
 
     public double getHypot() {
         return Math.hypot(this.x, this.y);
+    }
+
+    public boolean isAllZeroes() {
+        if (this.x == 0.0 && this.y == 0.0 && this.z == 0.0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public void copy(Point3D point) {
+        this.x = point.getX();
+        this.y = point.getY();
+        this.z = point.getZ();
     }
 
 }

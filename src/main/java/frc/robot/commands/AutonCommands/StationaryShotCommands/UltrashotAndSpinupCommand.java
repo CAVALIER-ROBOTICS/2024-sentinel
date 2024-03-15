@@ -34,8 +34,8 @@ public class UltrashotAndSpinupCommand extends Command {
 
   @Override
   public void execute() {
-    shooterSubsystem.updateUltrashot(driveSubsystem, UltraShotConstants.shooterSpeedAuto);
-    shooterSubsystem.ultimatum();
+    // shooterSubsystem.updateUltrashot(driveSubsystem, UltraShotConstants.shooterSpeedAuto);
+    // shooterSubsystem.ultimatum();
     shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
 
     AngleStates states = shooterSubsystem.getAngleStates();

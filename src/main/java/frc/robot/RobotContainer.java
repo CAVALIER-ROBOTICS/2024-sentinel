@@ -106,13 +106,6 @@ public class RobotContainer {
   public RobotContainer() {
     registerCommands();
     PathLoader.configureAutoBuilder(driveSubsystem);
-    PathLoader.initSendableChooser();
-
-    SmartDashboard.putNumber(UltraShotConstants.RED_defaultxkey, UltraShotConstants.RED_defaultOffsetX);
-    SmartDashboard.putNumber(UltraShotConstants.RED_defaultykey, UltraShotConstants.RED_defaultOffsetY);
-
-    SmartDashboard.putNumber(UltraShotConstants.BLUE_defaultxkey, UltraShotConstants.BLUE_defaultOffsetX);
-    SmartDashboard.putNumber(UltraShotConstants.BLUE_defaultykey, UltraShotConstants.BLUE_defaultOffsetY);
     // PiHandler.initialize();
     
     driveSubsystem.setDefaultCommand(new FieldDrive(

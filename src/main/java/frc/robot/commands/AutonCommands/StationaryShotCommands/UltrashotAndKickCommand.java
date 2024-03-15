@@ -18,8 +18,8 @@ public class UltrashotAndKickCommand extends UltrashotAndSpinupCommand {
 
   @Override
   public void execute() {
-    shooterSubsystem.updateUltrashot(driveSubsystem, UltraShotConstants.shooterSpeedAuto);
-    shooterSubsystem.ultimatum();
+    // shooterSubsystem.updateUltrashot(driveSubsystem, UltraShotConstants.shooterSpeedAuto);
+    // shooterSubsystem.up();
     shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
     shooterSubsystem.setKickerSpeed(-1);
 

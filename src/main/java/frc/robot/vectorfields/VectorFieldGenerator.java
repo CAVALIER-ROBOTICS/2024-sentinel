@@ -75,7 +75,7 @@ public class VectorFieldGenerator {
     public void update(Point2D robot) {
         setRobot(robot);
         calculateVelocity();
-        velocity.normalize();
+        // velocity.normalize();
     }
 
     private void calculateVelocity() {

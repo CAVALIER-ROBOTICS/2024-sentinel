@@ -21,6 +21,7 @@ import frc.robot.filters.SimplerFilter;
 import frc.robot.ultrashot.AngleStates;
 import frc.robot.ultrashot.Point3D;
 import frc.robot.ultrashot.UltraShot;
+import frc.robot.ultrashot.UltraShot4;
 import frc.robot.ultrashot.UltraShotConstants;
 import frc.robot.vision.Limelight;
 
@@ -47,36 +48,20 @@ public class ShooterSubsystem extends SubsystemBase {
   PIDController angleController = new PIDController(1.2, 0.0, 0.01);
 
   RelativeEncoder rpmEncoderTop, rpmEncoderBottom;
-  UltraShot ultraShot = new UltraShot();
+  UltraShot4 ultraShot = new UltraShot4();
 
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
-
     angleController.enableContinuousInput(0,2*Math.PI);
     rpmEncoderTop = top.getEncoder();
     rpmEncoderBottom = bottom.getEncoder();
     enc.reset();
-
-    configUltrashot();
   }
 
-  public void configUltrashot() {
-    ultraShot.configure(
-      UltraShotConstants.robot,
-      UltraShotConstants.axis,
-      UltraShotConstants.velocity,
-      getTarget(),
-      UltraShotConstants.states,
-      UltraShotConstants.shooterLength,
-      UltraShotConstants.shooterSpeed,
-      UltraShotConstants.localGravity,
-      UltraShotConstants.airDrag,
-      UltraShotConstants.settleTime,
-      UltraShotConstants.futureStepTime,
-      0.0
-    );
-
+  public AngleStates getAngleStates() {
+    return ultraShot.getAngleStates();
   }
+
   public void setFlywheelSpeed(double speed) {
     if(speed == 0) {
       top.set(0);
@@ -140,20 +125,13 @@ public class ShooterSubsystem extends SubsystemBase {
     return !SimplerFilter.filter(limit.get());
     // return !limit.get();
   }
-  
-  public Point3D getTarget() {
-    if(Limelight.targetBlue()) {
-      return UltraShotConstants.blueTarget;
-    }
-    return UltraShotConstants.redTarget;
+
+  public double getNoteSpeed(double rpm) {
+    return rpm * (1.0/60.0) * (Math.PI * 2) * (41.0/22.0) * 1.5 * .0254 * .587492749274927492; //last term is slipping constant
   }
 
   public void updateUltrashot(DriveSubsystem driveSubsystem) {
-    ultraShot.update(driveSubsystem.getEstimatedPosition(), driveSubsystem.getChassisSpeeds(), getTarget(), UltraShotConstants.shooterSpeed, 0.02);
-  }
-
-  public void updateUltrashot(DriveSubsystem driveSubsystem, double shooterSpeed) {
-    ultraShot.update(driveSubsystem.getEstimatedPosition(), driveSubsystem.getChassisSpeeds(), getTarget(), shooterSpeed, 0.02);
+    ultraShot.update(driveSubsystem.getEstimatedPosition(), driveSubsystem.getChassisSpeeds(), getNoteSpeed(getAverageRPM()), 0.02);
   }
 
   private double clamp(double x, double min, double max) {
@@ -171,19 +149,20 @@ public class ShooterSubsystem extends SubsystemBase {
     pushMeasurementAndSetpoint(angle);
     setPosition(angle, psi);
   }
-  
-  public void ultimatum() {
-    ultraShot.ultimatum();
-  }
-  public AngleStates getAngleStates() {
-    return ultraShot.getAngleStates();
-  }
 
   // public void updatePID() {
   //   angleController.setP(SmartDashboard.getNumber(Constants.P_phiSmartdashboard, 0));
   //   angleController.setI(SmartDashboard.getNumber(Constants.I_phiSmartdashboard, 0));
   //   angleController.setD(SmartDashboard.getNumber(Constants.D_phiSmartdashboard, 0));
   // }
+
+  public void updateTarget() {
+    if(Limelight.targetBlue()) {
+      ultraShot.setTargetSpeakerBlue();
+      return;
+    }
+    ultraShot.setTargetSpeakerRed();
+  }
 
   @Override
   public void periodic() {
@@ -195,8 +174,7 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("RightCurrentDraw", right.getOutputCurrent());
     SmartDashboard.putBoolean("HasNote", hasNoteInShooter());
 
-    // updatePID();
-    configUltrashot();
+    updateTarget();
   }
 
   public Optional<Rotation2d> getRotationOverride() {

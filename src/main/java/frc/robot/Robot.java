@@ -26,6 +26,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     driveSubsystem = m_robotContainer.getDriveSubsystem();
+    driveSubsystem.getAngle();
     PathLoader.initSendableChooser();
   }
 
