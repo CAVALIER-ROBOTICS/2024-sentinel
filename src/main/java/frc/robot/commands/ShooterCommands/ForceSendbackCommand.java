@@ -36,6 +36,7 @@ public class ForceSendbackCommand extends Command {
       return;
     }
     shooterSubsystem.setKickerSpeed(0);
+    shooterSubsystem.gotoAngle(Math.PI / 5, 0); //TODO pi/5, really???
   }
 
   // Called once the command ends or is interrupted.

@@ -38,6 +38,7 @@ public class ShooterLineupCommand extends Command {
   public void end(boolean interrupted) {
     shooterSub.setAngleSpeed(0);
     intakeSubsystem.setAnglePercentOutput(0);
+    intakeSubsystem.setIntakeSpin(0);
   }
 
   @Override

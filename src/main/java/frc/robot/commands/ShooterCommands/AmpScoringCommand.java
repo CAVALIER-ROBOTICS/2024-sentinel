@@ -13,7 +13,7 @@ public class AmpScoringCommand extends Command {
   /** Creates a new AmpScoringCommand. */
   ShooterSubsystem shooterSubsystem;
   DoubleSupplier flywheel, kicker;
-  double angle = .9;
+  double angle = 1.05;
   double speed = .15;
 
   public AmpScoringCommand(ShooterSubsystem shooterSubsystem, DoubleSupplier flywheel, DoubleSupplier kicker) {

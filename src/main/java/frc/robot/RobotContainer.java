@@ -6,6 +6,7 @@ package frc.robot;
 
 
 import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.AmpBarCommands.AmpBarHoldingPositionCommand;
 import frc.robot.commands.AmpBarCommands.ExtendAmpBarCommand;
 import frc.robot.commands.AmpBarCommands.RetractAmpBarCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndKickCommand;
@@ -81,7 +82,7 @@ public class RobotContainer {
   public Command getUltrashotDrivingCommand() {
     if(Limelight.targetBlue()) {
       return new UltrashotCommand(
-      shooterSubsystem, driveSubsystem, 
+      shooterSubsystem, driveSubsystem, ampBarSubsystem,
       () -> -Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
@@ -92,7 +93,7 @@ public class RobotContainer {
       operator::getRightTriggerAxis);
     }
     return new UltrashotCommand(
-    shooterSubsystem, driveSubsystem, 
+    shooterSubsystem, driveSubsystem, ampBarSubsystem,
     () -> Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
@@ -121,6 +122,7 @@ public class RobotContainer {
     () -> driver.getRightX() * Math.PI));
 
     shooterSubsystem.setDefaultCommand(new ForceSendbackCommand(shooterSubsystem, operator::getRightBumper, operator::getLeftBumper));
+    ampBarSubsystem.setDefaultCommand(new AmpBarHoldingPositionCommand(ampBarSubsystem));
     climb.setDefaultCommand(new ClimbCommand(climb, operator::getLeftY, operator::getRightY));
     configureBindings();
   }

@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -157,12 +158,15 @@ public class DriveSubsystem extends SubsystemBase {
     String llname = Limelight.limelightname;
     Pose2d pose = Limelight.getPose2d(llname);
     double latency = Limelight.getCombinedLantencySeconds(llname);
-    SmartDashboard.putBoolean("Adding measurements", Limelight.canLimelightProvideAccuratePoseEstimate(llname));
-    estimator.update(getAngle(), getSwerveModulePositions());
+    boolean canAddMeasurement = Limelight.canLimelightProvideAccuratePoseEstimate(llname);
+    SmartDashboard.putBoolean("Adding measurements", canAddMeasurement);
     
-    if(Limelight.canLimelightProvideAccuratePoseEstimate(Limelight.limelightname)) {
+    // estimator.resetPosition(pose.getRotation(), getSwerveModulePositions(), pose);
+    if(canAddMeasurement) {
       estimator.addVisionMeasurement(pose, latency);
     }
+
+    estimator.update(getAngle(), getSwerveModulePositions());
   }
 
 
@@ -171,7 +175,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void updatePoseEstimator(Pose2d pose) {
-    estimator.resetPosition(getAngle(), getSwerveModulePositions(), pose);
+    estimator.resetPosition(pose.getRotation(), getSwerveModulePositions(), pose);
   }
 
   public Pose2d getEstimatedPosition() {
