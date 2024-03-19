@@ -118,10 +118,10 @@ public class RobotContainer {
 
     driveSubsystem,
 
-    () -> Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (600 / 100) // 420 / 100
+    () -> Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (410 / 100) // 420 / 100
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
-    () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (600 / 100) // 420 / 100
+    () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (410 / 100) // 420 / 100
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
     () -> driver.getRightX() * Math.PI));
@@ -169,7 +169,7 @@ public class RobotContainer {
     JoystickButton subwooferMode = new JoystickButton(operator, 4);
     JoystickButton retractIntake = new JoystickButton(operator, 1);
     JoystickButton forceOutIntake = new JoystickButton(operator, 3);
-    JoystickButton teammatePass = new JoystickButton(operator, 8);
+    JoystickButton teammatePass = new JoystickButton(driver, 8);
 
     toggleIntake.toggleOnTrue(intake());
     
