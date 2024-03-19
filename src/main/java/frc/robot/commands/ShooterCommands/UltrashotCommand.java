@@ -20,16 +20,16 @@ public class UltrashotCommand extends Command {
   ShooterSubsystem shooterSubsystem;
   DriveSubsystem driveSubsystem;
   AmpBarSubsystem ampBarSubsystem;
-  DoubleSupplier x, y, k, f;
+  DoubleSupplier x, y, k;
 
-  public UltrashotCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem, AmpBarSubsystem ampBarSubsystem, DoubleSupplier x, DoubleSupplier y, DoubleSupplier k, DoubleSupplier f) {
+  public UltrashotCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem, AmpBarSubsystem ampBarSubsystem, DoubleSupplier x, DoubleSupplier y, DoubleSupplier k) {
     this.shooterSubsystem = shooterSubsystem;
     this.driveSubsystem = driveSubsystem;
     this.ampBarSubsystem = ampBarSubsystem;
     this.x = x;
     this.y = y;
     this.k = k;
-    this.f = f;
+    
     addRequirements(shooterSubsystem, driveSubsystem, ampBarSubsystem);
   }
 
@@ -56,7 +56,7 @@ public class UltrashotCommand extends Command {
     shooterSubsystem.setKickerSpeed(-k.getAsDouble());
     shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
 
-    ampBarSubsystem.setPosition(Constants.AmpBarConstants.AMPBAR_EXTENDED / 2);
+    // ampBarSubsystem.setPosition(Constants.AmpBarConstants.AMPBAR_EXTENDED / 2);
     SmartDashboard.putNumber("theta", states.getTheta());
   }
 

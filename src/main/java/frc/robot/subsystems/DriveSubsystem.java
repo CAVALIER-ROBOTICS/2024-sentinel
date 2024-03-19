@@ -163,7 +163,7 @@ public class DriveSubsystem extends SubsystemBase {
     
     // estimator.resetPosition(pose.getRotation(), getSwerveModulePositions(), pose);
     if(canAddMeasurement) {
-      estimator.addVisionMeasurement(pose, latency);
+      estimator.addVisionMeasurement(pose, latency, VecBuilder.fill(.5, .5, 0));
     }
 
     estimator.update(getAngle(), getSwerveModulePositions());
