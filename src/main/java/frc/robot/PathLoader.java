@@ -39,6 +39,10 @@ public class PathLoader {
         "top_katy_red",
         "bottom_katy",
         "bottom_katy_red",
+        "taxi_lol_blue",
+        "taxi_lol_red",
+        "setpointshot_blue_auto",
+        "setpointshot_red_auto",
         "DONOTUSE_blue_init",
         "DONOTUSE_red_init"
     };

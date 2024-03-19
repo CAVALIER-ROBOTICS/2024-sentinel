@@ -19,6 +19,8 @@ import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndKickC
 import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndSpinupCommand;
 import frc.robot.commands.AutonCommands.StartThetaOverrideCommand;
 import frc.robot.commands.AutonCommands.StopThetaOverrideCommand;
+import frc.robot.commands.AutonCommands.SubwooferScoringAutoCommand;
+import frc.robot.commands.AutonCommands.SubwooferScoringAutoKickCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.ReverseIntakeCommand;
 import frc.robot.commands.BotStateCommands.SendbackCommand;
@@ -30,6 +32,7 @@ import frc.robot.commands.ShooterCommands.AmpScoringCommand;
 import frc.robot.commands.ShooterCommands.ForceIntakeUpCommand;
 import frc.robot.commands.ShooterCommands.ForceSendbackCommand;
 import frc.robot.commands.ShooterCommands.SubwooferScoringCommand;
+import frc.robot.commands.ShooterCommands.TeammatePassCommand;
 import frc.robot.commands.ShooterCommands.UltrashotCommand;
 import frc.robot.commands.ShooterCommands.ShooterIntakeCommands.IndexNoteInShooterCommand;
 import frc.robot.commands.ShooterCommands.ShooterIntakeCommands.ShooterIntakeCommand;
@@ -67,7 +70,7 @@ public class RobotContainer {
   DriveSubsystem driveSubsystem = new DriveSubsystem();
   ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   IntakeSubsystem intake = new IntakeSubsystem();
-  ClimbSubsystem climb = new ClimbSubsystem();
+  // ClimbSubsystem climb = new ClimbSubsystem();
   AmpBarSubsystem ampBarSubsystem = new AmpBarSubsystem();
 
   public void registerCommands() {
@@ -77,6 +80,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShooterSpin", new IdleShooterSpin(shooterSubsystem));
     NamedCommands.registerCommand("DisableRamp", new InstantCommand(() -> driveSubsystem.setDriveMotorRampRate(0)));
     NamedCommands.registerCommand("EnableRamp", new InstantCommand(() -> Commands.none()));
+    NamedCommands.registerCommand("SetpointShot", getSetpointShotCommand());
   }
 
   public Command getUltrashotDrivingCommand() {
@@ -108,22 +112,23 @@ public class RobotContainer {
     registerCommands();
     PathLoader.configureAutoBuilder(driveSubsystem);
     // PiHandler.initialize();
+    driveSubsystem.setDriveMotorRampRate(0);
     
     driveSubsystem.setDefaultCommand(new FieldDrive(
 
     driveSubsystem,
 
-    () -> Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
+    () -> Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (600 / 100) // 420 / 100
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
-    () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
+    () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (600 / 100) // 420 / 100
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
     () -> driver.getRightX() * Math.PI));
 
     shooterSubsystem.setDefaultCommand(new ForceSendbackCommand(shooterSubsystem, operator::getRightBumper, operator::getLeftBumper));
     ampBarSubsystem.setDefaultCommand(new AmpBarHoldingPositionCommand(ampBarSubsystem));
-    climb.setDefaultCommand(new ClimbCommand(climb, operator::getLeftY, operator::getRightY));
+    // climb.setDefaultCommand(new ClimbCommand(climb, operator::getLeftY, operator::getRightY));
     configureBindings();
   }
 
@@ -164,6 +169,7 @@ public class RobotContainer {
     JoystickButton subwooferMode = new JoystickButton(operator, 4);
     JoystickButton retractIntake = new JoystickButton(operator, 1);
     JoystickButton forceOutIntake = new JoystickButton(operator, 3);
+    JoystickButton teammatePass = new JoystickButton(operator, 8);
 
     toggleIntake.toggleOnTrue(intake());
     
@@ -178,6 +184,7 @@ public class RobotContainer {
     forceOutIntake.whileTrue(new ReverseIntakeCommand(intake));
 
     targetTrack.whileTrue(getUltrashotDrivingCommand());
+    teammatePass.toggleOnTrue(new TeammatePassCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
   }
 
   public DriveSubsystem getDriveSubsystem() {
@@ -190,6 +197,13 @@ public class RobotContainer {
 
   public Command getPathCommand(String path) {
     return PathLoader.loadAuto(path);
+  }
+
+  public Command getSetpointShotCommand() {
+    return new SequentialCommandGroup(
+      new SubwooferScoringAutoCommand(shooterSubsystem).withTimeout(1.5),
+      new SubwooferScoringAutoKickCommand(shooterSubsystem).withTimeout(1)
+    );
   }
 
 //  public void RedRight() {
@@ -236,7 +250,7 @@ public class RobotContainer {
   public Command getStationaryShotCommandWithTimers() {
     return new SequentialCommandGroup(
       new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(1),
-      new UltrashotAndFinishPushCommand(shooterSubsystem, driveSubsystem).withTimeout(1.5)
+      new UltrashotAndFinishPushCommand(shooterSubsystem, driveSubsystem).withTimeout(2)
     );
   }
 

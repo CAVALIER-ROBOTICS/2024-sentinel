@@ -29,7 +29,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   SmartMax top = new SmartMax(Constants.TOP_SHOOTER_ID, IdleMode.kBrake, false);
   SmartMax bottom = new SmartMax(Constants.BOTTOM_SHOOTER_ID, IdleMode.kBrake, false);
-  SmartMax left = new SmartMax(Constants.LEFT_SHOOTER_PIVOT_ID, IdleMode.kBrake, false);
+  SmartMax left = new SmartMax(Constants.LEFT_SHOOTER_PIVOT_ID, IdleMode.kCoast, false);
   SmartMax right = new SmartMax(Constants.RIGHT_SHOOTER_PIVOT_ID, IdleMode.kBrake, false);
   SmartMax kicker = new SmartMax(Constants.KICKER_ID);
 
@@ -45,7 +45,7 @@ public class ShooterSubsystem extends SubsystemBase {
   DigitalInput limit = new DigitalInput(ShooterConstants.SHOOTER_LIMIT_SWITCH_ID);
 
   DutyCycleEncoder enc = new DutyCycleEncoder(2);
-  PIDController angleController = new PIDController(1.0, 0.0, 0.01);
+  PIDController angleController = new PIDController(.5, 0.0, 0.0);
 
   RelativeEncoder rpmEncoderTop, rpmEncoderBottom;
   UltraShot4 ultraShot = new UltraShot4();
@@ -110,6 +110,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public double getAbsolutePosition() {
     return (enc.getAbsolutePosition() - Constants.ShooterConstants.SHOOTER_HORIZONTAL) * 2 * Math.PI; // Uncomment to find actual values
     // return (Constants.ShooterConstants.SHOOTER_HORIZONTAL - (enc.getAbsolutePosition())) *2*Math.PI;
+    // return enc.getAbsolutePosition();
   }
 
   public void setPosition(double position, double psi) {
@@ -146,6 +147,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void gotoAngle(double angle, double psi) {
+    SmartDashboard.putNumber("ShooterSetpoint", angle);
     angle = clamp(angle, 0, (Math.PI / 2));
     pushMeasurementAndSetpoint(angle);
     setPosition(angle, psi);

@@ -4,22 +4,28 @@
 
 package frc.robot.commands.ShooterCommands;
 
-import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class ForceSendbackCommand extends Command {
-  /** Creates a new ForceSendbackCommand. */
+public class TeammatePassCommand extends Command {
+  /** Creates a new AmpScoringCommand. */
   ShooterSubsystem shooterSubsystem;
-  BooleanSupplier kF, kB;
-  public ForceSendbackCommand(ShooterSubsystem shooterSubsystem, BooleanSupplier kF, BooleanSupplier kB) {
+  DoubleSupplier flywheel, kicker;
+  double angle = 0.1;
+  double speed = .8;
+
+  public TeammatePassCommand(ShooterSubsystem shooterSubsystem, DoubleSupplier flywheel, DoubleSupplier kicker) {
     this.shooterSubsystem = shooterSubsystem;
-    this.kF = kF;
-    this.kB = kB;
+    this.flywheel = flywheel;
+    this.kicker = kicker;
+
     addRequirements(shooterSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
+  
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
@@ -27,16 +33,9 @@ public class ForceSendbackCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(kF.getAsBoolean()) {
-      shooterSubsystem.setKickerSpeed(-1);
-      return;
-    }
-    if(kB.getAsBoolean()) {
-      shooterSubsystem.setKickerSpeed(1);
-      return;
-    }
-    shooterSubsystem.setKickerSpeed(0);
-    // shooterSubsystem.gotoAngle(Math.PI / 5, 0); //TODO pi/5, really???
+    shooterSubsystem.gotoAngle(angle, 0); //lmao
+    shooterSubsystem.setKickerSpeed(-kicker.getAsDouble());
+    shooterSubsystem.setFlywheelSpeed(speed, -.1);
   }
 
   // Called once the command ends or is interrupted.

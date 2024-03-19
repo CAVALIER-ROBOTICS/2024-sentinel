@@ -26,7 +26,7 @@ public class AmpBarSubsystem extends SubsystemBase {
   }
 
   public void set(double speed) {
-    motor.set(speed);
+    motor.set(0);
   }
 
   public double getPosition() {
