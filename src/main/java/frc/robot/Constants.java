@@ -162,5 +162,6 @@ public final class Constants {
   public static final String ShooterAngleAmpSD = "AmpSetpointAngle";
   public static final String FlywheelSpeedAmpSD = "FlywheelSetpointAngle";
 
+  public static final int blinkinID = 0;
 
 }

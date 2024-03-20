@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
-
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -166,7 +165,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     estimator.update(getAngle(), getSwerveModulePositions());
   }
-
 
   public void zeroGyro() {
     pigeon.reset();
