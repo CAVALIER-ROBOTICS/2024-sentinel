@@ -88,8 +88,8 @@ public class RobotContainer {
       () -> -Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
-      operator::getLeftTriggerAxis,
-      operator::getRightTriggerAxis);
+      operator::getLeftTriggerAxis
+      );
     }
     return new UltrashotCommand(
     shooterSubsystem, driveSubsystem, ampBarSubsystem,
@@ -98,8 +98,8 @@ public class RobotContainer {
 
     () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
-    operator::getLeftTriggerAxis,
-    operator::getRightTriggerAxis);
+    operator::getLeftTriggerAxis
+    );
   }
     
 
