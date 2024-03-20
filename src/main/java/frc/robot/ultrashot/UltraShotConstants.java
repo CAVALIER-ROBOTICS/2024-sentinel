@@ -1,7 +1,5 @@
 package frc.robot.ultrashot;
 
-import edu.wpi.first.math.util.Units;
-
 public class UltraShotConstants {
 
     public static final Point3D POINT_3D_SHOOTER_AXIS = new Point3D(0.0953, 0, 0.3518);
