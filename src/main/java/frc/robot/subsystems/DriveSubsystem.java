@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -29,7 +30,9 @@ public class DriveSubsystem extends SubsystemBase {
   NeoSteveModule fleft, fright, bleft, bright;
 
   Pigeon2 pigeon = new Pigeon2(Constants.PIGEON_ID, Constants.CANIVORE);
-  PIDController headingController = new PIDController(5, 0.0, .15);
+  double headingP = 3.0;
+  PIDController headingController = new PIDController(headingP, 0.01, .15);
+  
   
   SwerveDrivePoseEstimator estimator;
 
@@ -135,6 +138,16 @@ public class DriveSubsystem extends SubsystemBase {
     return SwerveConstants.m_kinematics.toChassisSpeeds(currentStates);
   }
 
+  public double getRobotVelocityMagnitude() {
+    ChassisSpeeds speeds = getChassisSpeeds();
+    return Math.sqrt(Math.pow(speeds.vxMetersPerSecond, 2) + Math.pow(speeds.vyMetersPerSecond, 2));
+  }
+
+  public double getPScalingFactor() {
+    double percent = getRobotVelocityMagnitude() / 4.2;
+    return percent * .2;
+  }
+
   public Rotation2d getAngle() {
     return Rotation2d.fromDegrees(-pigeon.getAngle());
   }
@@ -183,14 +196,19 @@ public class DriveSubsystem extends SubsystemBase {
     pigeon.setYaw(yaw);
   }
 
+  public void updatePWithBotVelocity() {
+    headingController.setP(getPScalingFactor() + headingP);
+  }
+
   public void driveWithAngleOverride(Rotation2d angle, double xSpeed, double ySpeed, double omega) {
     Rotation2d currentAngle = getAngle();
-    pushMeasurementAndSetpoint(angle.getRadians());
-    double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians()) + headingController.getD() * omega;
-    rotSpeeds = clamp(rotSpeeds, -3, 3);
-    SmartDashboard.putNumber("OmegaNutsLol", omega);
-    ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), getFieldDriveAngle());
+    double scalingfactor = getPScalingFactor();
+    updatePWithBotVelocity();
+    double rotSpeeds = (headingController.calculate(currentAngle.getRadians(), angle.getRadians()) + headingController.getD() * omega);
 
+    rotSpeeds = clamp(rotSpeeds, -3, 3);
+    ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), getFieldDriveAngle());
+    SmartDashboard.putNumber("PScale", scalingfactor);
     drive(fieldRelative);
     pushMeasurementAndSetpoint(angle.getRadians());
   }
@@ -222,6 +240,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     updatePoseEstimator();
     updateVectorField();
+
+    // updateShooter();
 
     poseEstimatorField.setRobotPose(estimator.getEstimatedPosition());
     haydenField.setRobotPose(getHaydenEstimatorPose2d());

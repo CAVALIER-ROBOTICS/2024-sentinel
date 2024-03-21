@@ -54,7 +54,7 @@ public class UltrashotCommand extends Command {
     shooterSubsystem.gotoAngle(states.getPhi(), states.getPsi());
 
     shooterSubsystem.setKickerSpeed(-k.getAsDouble());
-    shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
+    shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT, .25);
 
     // ampBarSubsystem.setPosition(Constants.AmpBarConstants.AMPBAR_EXTENDED / 2);
     SmartDashboard.putNumber("theta", states.getTheta());

@@ -9,6 +9,7 @@ import java.util.Optional;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -45,6 +46,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   DutyCycleEncoder enc = new DutyCycleEncoder(5);
   PIDController angleController = new PIDController(.5, 0.0, 0.0);
+  ArmFeedforward armFeedforward = new ArmFeedforward(0.0, .15, 1.46);
 
   RelativeEncoder rpmEncoderTop, rpmEncoderBottom;
   UltraShot4 ultraShot = new UltraShot4();
@@ -132,7 +134,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double getNoteSpeed(double rpm) {
     // return rpm * (1.0/60.0) * (Math.PI * 2) * (41.0/22.0) * 1.5 * .0254 * .587492749274927492; //last term is slipping constant
-    return 10.5;
+    return 10;
   }
 
   public void updateUltrashot(DriveSubsystem driveSubsystem) {
