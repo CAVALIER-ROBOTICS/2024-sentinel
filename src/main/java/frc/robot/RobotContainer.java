@@ -84,7 +84,6 @@ public class RobotContainer {
   }
 
   public Command getUltrashotDrivingCommand() {
-    if(Limelight.targetBlue()) {
       return new UltrashotCommand(
       shooterSubsystem, driveSubsystem, ampBarSubsystem,
       () -> -Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
@@ -95,21 +94,16 @@ public class RobotContainer {
 
       operator::getLeftTriggerAxis
       );
-    }
-    return new UltrashotCommand(
-    shooterSubsystem, driveSubsystem, ampBarSubsystem,
-    () -> Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
-        * directionIsZero(driver.getLeftX(), driver.getLeftY()),
-
-    () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
-        * directionIsZero(driver.getLeftX(), driver.getLeftY()),
-    operator::getLeftTriggerAxis
-    );
   }
     
 
   public RobotContainer() {
+    SmartDashboard.putNumber(Constants.P_thetaSmartdashboard, 0);
+    SmartDashboard.putNumber(Constants.I_thetaSmartdashboard, 0);
+    SmartDashboard.putNumber(Constants.D_thetaSmartdashboard, 0);
+
     registerCommands();
+    SmartDashboard.putNumber("ShooterSpeedEntry", 0);
     PathLoader.configureAutoBuilder(driveSubsystem);
     // PiHandler.initialize();
     driveSubsystem.setDriveMotorRampRate(0);
@@ -169,7 +163,7 @@ public class RobotContainer {
     JoystickButton subwooferMode = new JoystickButton(operator, 4);
     JoystickButton retractIntake = new JoystickButton(operator, 1);
     JoystickButton forceOutIntake = new JoystickButton(operator, 3);
-    JoystickButton teammatePass = new JoystickButton(driver, 8);
+    // JoystickButton teammatePass = new JoystickButton(operator, 8);
 
     toggleIntake.toggleOnTrue(intake());
     
@@ -184,11 +178,12 @@ public class RobotContainer {
     forceOutIntake.whileTrue(new ReverseIntakeCommand(intake));
 
     targetTrack.whileTrue(getUltrashotDrivingCommand());
-    teammatePass.toggleOnTrue(new TeammatePassCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
+    // teammatePass.toggleOnTrue(new TeammatePassCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
   }
 
   public DriveSubsystem getDriveSubsystem() {
     return driveSubsystem;
+
   }
 
   public ShooterSubsystem getShooterSubsystem() {

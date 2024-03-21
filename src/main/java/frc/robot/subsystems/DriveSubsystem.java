@@ -32,7 +32,7 @@ public class DriveSubsystem extends SubsystemBase {
   NeoSteveModule fleft, fright, bleft, bright;
 
   Pigeon2 pigeon = new Pigeon2(Constants.PIGEON_ID, Constants.CANIVORE);
-  PIDController headingController = new PIDController(4.26, 0.0, 0.1);
+  PIDController headingController = new PIDController(5, 0.0, .15);
   
   SwerveDrivePoseEstimator estimator;
 
@@ -162,8 +162,9 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("Adding measurements", canAddMeasurement);
     
     // estimator.resetPosition(pose.getRotation(), getSwerveModulePositions(), pose);
-    if(canAddMeasurement) {
-      estimator.addVisionMeasurement(pose, latency, VecBuilder.fill(.5, .5, 0));
+    if(canAddMeasurement && pose.getX() != 0 && pose.getY() != 0) {
+      estimator.resetPosition(getAngle(), getSwerveModulePositions(), pose);
+      setYaw(pose.getRotation().getDegrees());
     }
 
     estimator.update(getAngle(), getSwerveModulePositions());
@@ -192,7 +193,7 @@ public class DriveSubsystem extends SubsystemBase {
     double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians()) + headingController.getD() * omega;
     rotSpeeds = clamp(rotSpeeds, -3, 3);
     SmartDashboard.putNumber("OmegaNutsLol", omega);
-    ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle);
+    ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), getFieldDriveAngle());
 
     drive(fieldRelative);
     pushMeasurementAndSetpoint(angle.getRadians());

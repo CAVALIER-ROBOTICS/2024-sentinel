@@ -6,6 +6,7 @@ package frc.robot.commands.ShooterCommands;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -33,9 +34,11 @@ public class TeammatePassCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    speed = SmartDashboard.getNumber("ShooterSpeedEntry", 0);
+
     shooterSubsystem.gotoAngle(angle, 0); //lmao
     shooterSubsystem.setKickerSpeed(-kicker.getAsDouble());
-    shooterSubsystem.setFlywheelSpeed(speed, -.1);
+    shooterSubsystem.setFlywheelSpeed(speed, .3);
   }
 
   // Called once the command ends or is interrupted.
