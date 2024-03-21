@@ -21,10 +21,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.filters.BeamBreakFilter;
 import frc.robot.filters.SimplerFilter;
 import frc.robot.ultrashot.AngleStates;
-import frc.robot.ultrashot.Point3D;
-import frc.robot.ultrashot.UltraShot;
 import frc.robot.ultrashot.UltraShot4;
-import frc.robot.ultrashot.UltraShotConstants;
 import frc.robot.vision.Limelight;
 
 public class ShooterSubsystem extends SubsystemBase {

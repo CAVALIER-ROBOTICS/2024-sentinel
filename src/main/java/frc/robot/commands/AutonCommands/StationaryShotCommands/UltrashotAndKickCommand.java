@@ -9,7 +9,6 @@ import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.ultrashot.AngleStates;
-import frc.robot.ultrashot.UltraShotConstants;
 
 public class UltrashotAndKickCommand extends UltrashotAndSpinupCommand {
   public UltrashotAndKickCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem) {

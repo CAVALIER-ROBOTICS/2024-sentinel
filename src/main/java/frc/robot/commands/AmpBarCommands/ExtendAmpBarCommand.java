@@ -4,8 +4,6 @@
 
 package frc.robot.commands.AmpBarCommands;
 
-import java.io.Console;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.AmpBarSubsystem;

@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.BasicLibrary.SmartMax;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.ultrashot.UltraShotConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new Intake. */

@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-
-import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.AmpBarCommands.AmpBarHoldingPositionCommand;
 import frc.robot.commands.AmpBarCommands.ExtendAmpBarCommand;
 import frc.robot.commands.AmpBarCommands.RetractAmpBarCommand;
@@ -37,11 +35,9 @@ import frc.robot.commands.ShooterCommands.UltrashotCommand;
 import frc.robot.commands.ShooterCommands.ShooterIntakeCommands.IndexNoteInShooterCommand;
 import frc.robot.commands.ShooterCommands.ShooterIntakeCommands.ShooterIntakeCommand;
 import frc.robot.subsystems.AmpBarSubsystem;
-import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.ultrashot.UltraShotConstants;
 import frc.robot.vectorfields.VectorFieldGenerator;
 import frc.robot.vision.Limelight;
 
@@ -53,7 +49,6 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -112,10 +107,10 @@ public class RobotContainer {
 
     driveSubsystem,
 
-    () -> Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (410 / 100) // 420 / 100
+    () -> Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100) // 420 / 100
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
-    () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (410 / 100) // 420 / 100
+    () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100) // 420 / 100
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
     () -> driver.getRightX() * Math.PI));
@@ -208,7 +203,6 @@ public class RobotContainer {
 //         PathLoader.loadPath("RedRightDynStarting")
 //     );
 // }
-
 
   public Command intake() {
       return new SequentialCommandGroup(
