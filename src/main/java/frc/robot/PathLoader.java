@@ -72,7 +72,7 @@ public class PathLoader {
         );
         
         AutoBuilder.configureHolonomic(
-                driveSub::getEstimatedPosition, //TODO this uses the pose estimator now, idk how well it'll work
+                driveSub::getEstimatedPosition, 
                 resetPose,
                 driveSub::getChassisSpeeds,
                 drivelol,

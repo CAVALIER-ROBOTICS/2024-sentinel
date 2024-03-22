@@ -5,9 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,11 +18,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.CycloidLibrary.NeoSteveModule;
-import frc.robot.ultrashot.Point2D;
 import frc.robot.ultrashot.pose.poseestimator;
 import frc.robot.vision.Limelight;
 import frc.robot.vision.VisionTarget;
-import frc.robot.vectorfields.*;
 
 public class DriveSubsystem extends SubsystemBase {
   NeoSteveModule fleft, fright, bleft, bright;
@@ -38,8 +34,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   Field2d haydenField;
   Field2d poseEstimatorField;
-
-  VectorFieldGenerator vectorField;
 
   double currentOffset = 0;
 
@@ -60,14 +54,6 @@ public class DriveSubsystem extends SubsystemBase {
 
 
     haydenEstimator = new poseestimator(62.5, 48.9);
-
-    vectorField = new VectorFieldGenerator();
-    vectorField.configure(
-      VectorFieldConstants.attraction,
-      VectorFieldConstants.repulsion,
-      VectorFieldConstants.node,
-      VectorFieldConstants.antiNodes
-    );
 
     SmartDashboard.putData("HaydenField", haydenField);
     SmartDashboard.putData("fiedd", poseEstimatorField);
@@ -156,10 +142,6 @@ public class DriveSubsystem extends SubsystemBase {
     return Rotation2d.fromDegrees(getAngle().getDegrees() - currentOffset);
   }
 
-  public VectorFieldGenerator getVectorFieldGenerator() {
-    return this.vectorField;
-  }
-
   public void resetGyroFieldDrive() {
     currentOffset = getAngle().getDegrees();
   }
@@ -167,7 +149,6 @@ public class DriveSubsystem extends SubsystemBase {
   public void updatePoseEstimator() {
     String llname = Limelight.limelightname;
     Pose2d pose = Limelight.getPose2d(llname);
-    double latency = Limelight.getCombinedLantencySeconds(llname);
     boolean canAddMeasurement = Limelight.canLimelightProvideAccuratePoseEstimate(llname);
     SmartDashboard.putBoolean("Adding measurements", canAddMeasurement);
     
@@ -202,13 +183,11 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void driveWithAngleOverride(Rotation2d angle, double xSpeed, double ySpeed, double omega) {
     Rotation2d currentAngle = getAngle();
-    double scalingfactor = getPScalingFactor();
     updatePWithBotVelocity();
     double rotSpeeds = (headingController.calculate(currentAngle.getRadians(), angle.getRadians()) + headingController.getD() * omega);
 
     rotSpeeds = clamp(rotSpeeds, -3, 3);
     ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), getFieldDriveAngle());
-    SmartDashboard.putNumber("PScale", scalingfactor);
     drive(fieldRelative);
     pushMeasurementAndSetpoint(angle.getRadians());
   }
@@ -225,12 +204,6 @@ public class DriveSubsystem extends SubsystemBase {
      headingController.setD(SmartDashboard.getNumber(Constants.D_thetaSmartdashboard, 0));
   }
 
-  private void updateVectorField() {
-    Pose2d estimate = getEstimatedPosition();
-    Point2D point = Point2D.fromPose2d(estimate);
-    vectorField.update(point);
-  }
-
   @Override
   public void periodic() {
     SmartDashboard.putNumber("FLEFT", fleft.getEncoderPosition());
@@ -239,8 +212,6 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("BRIGHT", bright.getEncoderPosition());
 
     updatePoseEstimator();
-    updateVectorField();
-
     // updateShooter();
 
     poseEstimatorField.setRobotPose(estimator.getEstimatedPosition());
