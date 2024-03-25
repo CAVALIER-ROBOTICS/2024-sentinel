@@ -10,7 +10,6 @@ import frc.robot.commands.AmpBarCommands.RetractAmpBarCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndKickCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndSpinupCommand;
 import frc.robot.commands.AutonCommands.IdleShooterSpin;
-import frc.robot.commands.AutonCommands.VectorFieldCommand;
 import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndFinishKickCommand;
 import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndFinishPushCommand;
 import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndKickCommand;
@@ -30,7 +29,6 @@ import frc.robot.commands.ShooterCommands.AmpScoringCommand;
 import frc.robot.commands.ShooterCommands.ForceIntakeUpCommand;
 import frc.robot.commands.ShooterCommands.ForceSendbackCommand;
 import frc.robot.commands.ShooterCommands.SubwooferScoringCommand;
-import frc.robot.commands.ShooterCommands.TeammatePassCommand;
 import frc.robot.commands.ShooterCommands.UltrashotCommand;
 import frc.robot.commands.ShooterCommands.ShooterIntakeCommands.IndexNoteInShooterCommand;
 import frc.robot.commands.ShooterCommands.ShooterIntakeCommands.ShooterIntakeCommand;
@@ -38,9 +36,6 @@ import frc.robot.subsystems.AmpBarSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.vectorfields.VectorFieldGenerator;
-import frc.robot.vision.Limelight;
-
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
@@ -241,16 +236,6 @@ public class RobotContainer {
     return new SequentialCommandGroup(
       new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(1),
       new UltrashotAndFinishPushCommand(shooterSubsystem, driveSubsystem).withTimeout(2)
-    );
-  }
-
-  public Command getVectorFieldCommand() {
-    VectorFieldGenerator vectorField = driveSubsystem.getVectorFieldGenerator();
-    return new VectorFieldCommand(
-      driveSubsystem,
-      () -> vectorField.getVelocity().getX(),
-      () -> vectorField.getVelocity().getY(),
-      () -> 0
     );
   }
 
