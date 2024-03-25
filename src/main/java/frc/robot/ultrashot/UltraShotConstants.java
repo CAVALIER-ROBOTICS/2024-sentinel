@@ -3,10 +3,10 @@ package frc.robot.ultrashot;
 public class UltraShotConstants {
 
     public static final Point3D POINT_3D_SHOOTER_AXIS = new Point3D(0.0953, 0, 0.3518);
-
+    //g = 8; airdrag = .247
     public static final double SHOOTER_LENGTH = 0.4303; // m
     public static final double LOCAL_GRAVITY = 9.79327; // m/s^2
-    public static final double AIR_DRAG = 0.247; // unitless
+    public static final double AIR_DRAG = 0.05; // unitless
     public static final double FREEDOM_TIME = 0.1; // s
     public static final double MAX_ROBOT_SPEED = 4.2; // m/s
 

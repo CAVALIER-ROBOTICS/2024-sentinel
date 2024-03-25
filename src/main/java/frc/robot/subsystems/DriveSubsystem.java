@@ -145,7 +145,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public double getPScalingFactor() {
     double percent = getRobotVelocityMagnitude() / 4.2;
-    return percent * .2;
+    return percent * .75;
   }
 
   public Rotation2d getAngle() {
@@ -170,11 +170,13 @@ public class DriveSubsystem extends SubsystemBase {
     double latency = Limelight.getCombinedLantencySeconds(llname);
     boolean canAddMeasurement = Limelight.canLimelightProvideAccuratePoseEstimate(llname);
     SmartDashboard.putBoolean("Adding measurements", canAddMeasurement);
+    SmartDashboard.putNumber("TargAmount", Limelight.getTargetCount(llname));
     
     // estimator.resetPosition(pose.getRotation(), getSwerveModulePositions(), pose);
     if(canAddMeasurement && pose.getX() != 0 && pose.getY() != 0) {
+      // estimator.addVisionMeasurement(pose, latency, VecBuilder.fill(.5, .5, 1));
       estimator.resetPosition(getAngle(), getSwerveModulePositions(), pose);
-      setYaw(pose.getRotation().getDegrees());
+      // setYaw(pose.getRotation().getDegrees());
     }
 
     estimator.update(getAngle(), getSwerveModulePositions());
@@ -202,13 +204,12 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void driveWithAngleOverride(Rotation2d angle, double xSpeed, double ySpeed, double omega) {
     Rotation2d currentAngle = getAngle();
-    double scalingfactor = getPScalingFactor();
     updatePWithBotVelocity();
     double rotSpeeds = (headingController.calculate(currentAngle.getRadians(), angle.getRadians()) + headingController.getD() * omega);
 
     rotSpeeds = clamp(rotSpeeds, -3, 3);
     ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), getFieldDriveAngle());
-    SmartDashboard.putNumber("PScale", scalingfactor);
+    SmartDashboard.putNumber("UltrashotThetaSetpoint", angle.getRadians());
     drive(fieldRelative);
     pushMeasurementAndSetpoint(angle.getRadians());
   }
@@ -237,6 +238,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("FRIGHT", fright.getEncoderPosition());
     SmartDashboard.putNumber("BLEFT", bleft.getEncoderPosition());
     SmartDashboard.putNumber("BRIGHT", bright.getEncoderPosition());
+    SmartDashboard.putNumber("Gyro angle rads", getAngle().getRadians());
 
     updatePoseEstimator();
     updateVectorField();

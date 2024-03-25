@@ -16,7 +16,7 @@ import frc.robot.vision.LimelightHelpers.LimelightTarget_Fiducial;
 
 /** Add your docs here. */
 public class Limelight {
-    public static final String limelightname = "";
+    public static final String limelightname = "limelight-bavzots";
 
     public static Pose2d getPose2d(String limelightName) {
         // if(!targetBlue()) {
