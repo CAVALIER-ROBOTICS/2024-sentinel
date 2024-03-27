@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,6 +21,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.CycloidLibrary.NeoSteveModule;
 import frc.robot.ultrashot.pose.poseestimator;
+import frc.robot.vision.LimelightCustom;
 import frc.robot.vision.Limelight;
 import frc.robot.vision.VisionTarget;
 
@@ -155,9 +158,9 @@ public class DriveSubsystem extends SubsystemBase {
     
     // estimator.resetPosition(pose.getRotation(), getSwerveModulePositions(), pose);
     if(canAddMeasurement && pose.getX() != 0 && pose.getY() != 0) {
-      // estimator.addVisionMeasurement(pose, latency, VecBuilder.fill(.5, .5, 1));
-      estimator.resetPosition(getAngle(), getSwerveModulePositions(), pose);
-      // setYaw(pose.getRotation().getDegrees());
+      estimator.addVisionMeasurement(pose, 0, VecBuilder.fill(0, 0, 0));
+      // estimator.resetPosition(getAngle(), getSwerveModulePositions(), pose);
+      setYaw(pose.getRotation().getDegrees());
     }
 
     estimator.update(getAngle(), getSwerveModulePositions());
@@ -186,7 +189,9 @@ public class DriveSubsystem extends SubsystemBase {
   public void driveWithAngleOverride(Rotation2d angle, double xSpeed, double ySpeed, double omega) {
     Rotation2d currentAngle = getAngle();
     updatePWithBotVelocity();
-    double rotSpeeds = (headingController.calculate(currentAngle.getRadians(), angle.getRadians()) + headingController.getD() * omega);
+    double rotSpeeds = (headingController.calculate(currentAngle.getRadians(), angle.getRadians()) + 0.014 * omega);
+      // double rotSpeeds = (headingController.calculate(currentAngle.getRadians(), angle.getRadians()));
+
 
     rotSpeeds = clamp(rotSpeeds, -3, 3);
     ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), getFieldDriveAngle());
@@ -219,5 +224,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     poseEstimatorField.setRobotPose(estimator.getEstimatedPosition());
     haydenField.setRobotPose(getHaydenEstimatorPose2d());
+
+    // System.out.println(LimelightCustom.getTX());
   }
 }

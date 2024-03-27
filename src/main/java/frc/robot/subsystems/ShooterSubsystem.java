@@ -133,7 +133,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double getNoteSpeed(double rpm) {
-    //10
+    //10.75
     // return rpm * (1.0/60.0) * (Math.PI * 2) * (41.0/22.0) * 1.5 * .0254 * .587492749274927492; //last term is slipping constant
     return 10.75;
   }
