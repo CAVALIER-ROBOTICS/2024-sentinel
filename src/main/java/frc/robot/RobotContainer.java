@@ -94,9 +94,9 @@ public class RobotContainer {
     SmartDashboard.putNumber(Constants.D_thetaSmartdashboard, 0);
 
     registerCommands();
-    SmartDashboard.putNumber("ShooterSpeedEntry", 0);
+    SmartDashboard.putNumber("ThetaConstant", 0);
     PathLoader.configureAutoBuilder(driveSubsystem);
-    // PiHandler.initialize();
+
     driveSubsystem.setDriveMotorRampRate(0);
     
     driveSubsystem.setDefaultCommand(new FieldDrive(
@@ -225,7 +225,7 @@ public class RobotContainer {
 
   public Command getStationaryShotCommand() {
     return new SequentialCommandGroup(
-      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(1),
+      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(2),
       new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem),
       new UltrashotAndFinishKickCommand(shooterSubsystem, driveSubsystem),
       new UltrashotAndFinishPushCommand(shooterSubsystem, driveSubsystem).withTimeout(.05)
@@ -234,8 +234,8 @@ public class RobotContainer {
 
   public Command getStationaryShotCommandWithTimers() {
     return new SequentialCommandGroup(
-      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(1),
-      new UltrashotAndFinishPushCommand(shooterSubsystem, driveSubsystem).withTimeout(2)
+      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(2),
+      new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(2)
     );
   }
 

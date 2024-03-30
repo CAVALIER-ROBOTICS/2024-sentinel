@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 15.075,
-      "y": 7.014791090923124
+      "x": 15.144517592886828,
+      "y": 6.9679477447399965
     },
     "rotation": 179.7301317601818
   },
@@ -11,18 +11,6 @@
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "DisableRamp"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "jiggle2"
-          }
-        },
         {
           "type": "named",
           "data": {

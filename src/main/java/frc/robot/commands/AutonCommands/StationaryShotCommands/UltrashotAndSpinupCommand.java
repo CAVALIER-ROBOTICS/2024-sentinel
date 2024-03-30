@@ -33,13 +33,16 @@ public class UltrashotAndSpinupCommand extends Command {
 
   @Override
   public void execute() {
-    // shooterSubsystem.updateUltrashot(driveSubsystem, UltraShotConstants.shooterSpeedAuto);
+    shooterSubsystem.updateUltrashot(driveSubsystem);
     // shooterSubsystem.ultimatum();
     shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
 
     AngleStates states = shooterSubsystem.getAngleStates();
 
-    if(Double.isNaN(states.getTheta())) {return;}
+    if(Double.isNaN(states.getTheta())) {
+      System.out.println("zomg its nan");
+      return;
+    }
 
     driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta() + Math.PI), 0.001, 0.001, states.getOmega()); // 0.1 is the heading controller D
     shooterSubsystem.gotoAngle(states.getPhi(), states.getPsi());
