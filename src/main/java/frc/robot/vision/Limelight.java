@@ -7,6 +7,8 @@ package frc.robot.vision;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,7 +18,7 @@ import frc.robot.vision.LimelightHelpers.LimelightTarget_Fiducial;
 
 /** Add your docs here. */
 public class Limelight {
-    public static final String limelightname = "";
+    public static final String limelightname = "limelight-cavbots";
 
     public static Pose2d getPose2d(String limelightName) {
         // if(!targetBlue()) {
@@ -41,7 +43,8 @@ public class Limelight {
     public static boolean canLimelightProvideAccuratePoseEstimate(String name) {
         int targetcount = getTargetCount(name);
         double avgdist = getAverageDistanceToAvailableTarget(name);
-        return (targetcount >= 2 || avgdist < Constants.MAX_DISTANCE_TO_APRILTAG) && avgdist < Constants.MAX_DISTANCE_TO_APRILTAG;
+        return ((targetcount >= 2 || avgdist < Constants.MAX_DISTANCE_TO_SINGLETAG) && avgdist < Constants.MAX_DISTANCE_TO_APRILTAG) && targetcount > 0;
+        // return true;
     }
 
     public static int getTargetCount(String limelightName) {

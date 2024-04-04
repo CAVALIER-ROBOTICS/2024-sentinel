@@ -10,7 +10,6 @@ import frc.robot.commands.AmpBarCommands.RetractAmpBarCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndKickCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndSpinupCommand;
 import frc.robot.commands.AutonCommands.IdleShooterSpin;
-import frc.robot.commands.AutonCommands.VectorFieldCommand;
 import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndFinishKickCommand;
 import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndFinishPushCommand;
 import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndKickCommand;
@@ -30,7 +29,6 @@ import frc.robot.commands.ShooterCommands.AmpScoringCommand;
 import frc.robot.commands.ShooterCommands.ForceIntakeUpCommand;
 import frc.robot.commands.ShooterCommands.ForceSendbackCommand;
 import frc.robot.commands.ShooterCommands.SubwooferScoringCommand;
-import frc.robot.commands.ShooterCommands.TeammatePassCommand;
 import frc.robot.commands.ShooterCommands.UltrashotCommand;
 import frc.robot.commands.ShooterCommands.ShooterIntakeCommands.IndexNoteInShooterCommand;
 import frc.robot.commands.ShooterCommands.ShooterIntakeCommands.ShooterIntakeCommand;
@@ -38,9 +36,6 @@ import frc.robot.subsystems.AmpBarSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.vectorfields.VectorFieldGenerator;
-import frc.robot.vision.Limelight;
-
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
@@ -49,6 +44,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -79,7 +75,6 @@ public class RobotContainer {
   }
 
   public Command getUltrashotDrivingCommand() {
-    if(Limelight.targetBlue()) {
       return new UltrashotCommand(
       shooterSubsystem, driveSubsystem, ampBarSubsystem,
       () -> -Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
@@ -90,23 +85,18 @@ public class RobotContainer {
 
       operator::getLeftTriggerAxis
       );
-    }
-    return new UltrashotCommand(
-    shooterSubsystem, driveSubsystem, ampBarSubsystem,
-    () -> Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
-        * directionIsZero(driver.getLeftX(), driver.getLeftY()),
-
-    () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
-        * directionIsZero(driver.getLeftX(), driver.getLeftY()),
-    operator::getLeftTriggerAxis
-    );
   }
     
 
   public RobotContainer() {
+    SmartDashboard.putNumber(Constants.P_thetaSmartdashboard, 0);
+    SmartDashboard.putNumber(Constants.I_thetaSmartdashboard, 0);
+    SmartDashboard.putNumber(Constants.D_thetaSmartdashboard, 0);
+
     registerCommands();
+    SmartDashboard.putNumber("ThetaConstant", 0);
     PathLoader.configureAutoBuilder(driveSubsystem);
-    // PiHandler.initialize();
+
     driveSubsystem.setDriveMotorRampRate(0);
     
     driveSubsystem.setDefaultCommand(new FieldDrive(
@@ -164,7 +154,7 @@ public class RobotContainer {
     JoystickButton subwooferMode = new JoystickButton(operator, 4);
     JoystickButton retractIntake = new JoystickButton(operator, 1);
     JoystickButton forceOutIntake = new JoystickButton(operator, 3);
-    JoystickButton teammatePass = new JoystickButton(driver, 8);
+    // JoystickButton teammatePass = new JoystickButton(operator, 8);
 
     toggleIntake.toggleOnTrue(intake());
     
@@ -179,11 +169,12 @@ public class RobotContainer {
     forceOutIntake.whileTrue(new ReverseIntakeCommand(intake));
 
     targetTrack.whileTrue(getUltrashotDrivingCommand());
-    teammatePass.toggleOnTrue(new TeammatePassCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
+    // teammatePass.toggleOnTrue(new TeammatePassCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
   }
 
   public DriveSubsystem getDriveSubsystem() {
     return driveSubsystem;
+
   }
 
   public ShooterSubsystem getShooterSubsystem() {
@@ -234,7 +225,7 @@ public class RobotContainer {
 
   public Command getStationaryShotCommand() {
     return new SequentialCommandGroup(
-      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(1),
+      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(2),
       new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem),
       new UltrashotAndFinishKickCommand(shooterSubsystem, driveSubsystem),
       new UltrashotAndFinishPushCommand(shooterSubsystem, driveSubsystem).withTimeout(.05)
@@ -243,18 +234,8 @@ public class RobotContainer {
 
   public Command getStationaryShotCommandWithTimers() {
     return new SequentialCommandGroup(
-      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(1),
-      new UltrashotAndFinishPushCommand(shooterSubsystem, driveSubsystem).withTimeout(2)
-    );
-  }
-
-  public Command getVectorFieldCommand() {
-    VectorFieldGenerator vectorField = driveSubsystem.getVectorFieldGenerator();
-    return new VectorFieldCommand(
-      driveSubsystem,
-      () -> vectorField.getVelocity().getX(),
-      () -> vectorField.getVelocity().getY(),
-      () -> 0
+      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(2),
+      new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(2)
     );
   }
 

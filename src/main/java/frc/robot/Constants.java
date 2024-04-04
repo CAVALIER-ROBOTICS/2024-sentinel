@@ -28,7 +28,7 @@ public final class Constants {
     public static final double MAX_RPM_FLYWHEEL = 3350;
     public static final double MAX_POSITION_SHOOTER = 0.822;
     public static final double MIN_POSITITON_SHOOTER = 0.572;
-    public static final double SHOOTER_HORIZONTAL = 0.558028688950717;
+    public static final double SHOOTER_HORIZONTAL = 0.558720013968;
     public static final double SHOOTER_45_DEGREE = 0.703; 
     public static final double SHOOTER_VERTICAL = 0.822;
     public static final double SHOOTER_LINEUP_POSITION = 0.1;
@@ -134,7 +134,7 @@ public final class Constants {
 
   public static final double NOMINAL_VOLTAGE = 12.2;
 
-  public static final double MAX_DISTANCE_TO_APRILTAG = 4.5; //Meters
+  public static final double MAX_DISTANCE_TO_APRILTAG = 7; //Meters
   public static final double MAX_DISTANCE_TO_SINGLETAG = 2.2;
   
   public static final String CANIVORE = "OTHERCANIVORE";

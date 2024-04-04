@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -19,24 +20,23 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.CycloidLibrary.NeoSteveModule;
-import frc.robot.ultrashot.Point2D;
 import frc.robot.ultrashot.pose.poseestimator;
+import frc.robot.vision.LimelightCustom;
 import frc.robot.vision.Limelight;
 import frc.robot.vision.VisionTarget;
-import frc.robot.vectorfields.*;
 
 public class DriveSubsystem extends SubsystemBase {
   NeoSteveModule fleft, fright, bleft, bright;
 
   Pigeon2 pigeon = new Pigeon2(Constants.PIGEON_ID, Constants.CANIVORE);
-  PIDController headingController = new PIDController(4.26, 0.0, 0.1);
+  double headingP = 3.0;
+  PIDController headingController = new PIDController(headingP, 0.01, .15);
+  
   
   SwerveDrivePoseEstimator estimator;
 
   Field2d haydenField;
   Field2d poseEstimatorField;
-
-  VectorFieldGenerator vectorField;
 
   double currentOffset = 0;
 
@@ -56,14 +56,6 @@ public class DriveSubsystem extends SubsystemBase {
     haydenField = new Field2d();
 
     haydenEstimator = new poseestimator(62.5, 48.9);
-
-    vectorField = new VectorFieldGenerator();
-    vectorField.configure(
-      VectorFieldConstants.attraction,
-      VectorFieldConstants.repulsion,
-      VectorFieldConstants.node,
-      VectorFieldConstants.antiNodes
-    );
 
     SmartDashboard.putData("HaydenField", haydenField);
     SmartDashboard.putData("fiedd", poseEstimatorField);
@@ -134,16 +126,22 @@ public class DriveSubsystem extends SubsystemBase {
     return SwerveConstants.m_kinematics.toChassisSpeeds(currentStates);
   }
 
+  public double getRobotVelocityMagnitude() {
+    ChassisSpeeds speeds = getChassisSpeeds();
+    return Math.sqrt(Math.pow(speeds.vxMetersPerSecond, 2) + Math.pow(speeds.vyMetersPerSecond, 2));
+  }
+
+  public double getPScalingFactor() {
+    double percent = getRobotVelocityMagnitude() / 4.2;
+    return percent;
+  }
+
   public Rotation2d getAngle() {
     return Rotation2d.fromDegrees(-pigeon.getAngle());
   }
 
   public Rotation2d getFieldDriveAngle() {
     return Rotation2d.fromDegrees(getAngle().getDegrees() - currentOffset);
-  }
-
-  public VectorFieldGenerator getVectorFieldGenerator() {
-    return this.vectorField;
   }
 
   public void resetGyroFieldDrive() {
@@ -153,13 +151,15 @@ public class DriveSubsystem extends SubsystemBase {
   public void updatePoseEstimator() {
     String llname = Limelight.limelightname;
     Pose2d pose = Limelight.getPose2d(llname);
-    double latency = Limelight.getCombinedLantencySeconds(llname);
     boolean canAddMeasurement = Limelight.canLimelightProvideAccuratePoseEstimate(llname);
     SmartDashboard.putBoolean("Adding measurements", canAddMeasurement);
+    SmartDashboard.putNumber("TargAmount", Limelight.getTargetCount(llname));
     
     // estimator.resetPosition(pose.getRotation(), getSwerveModulePositions(), pose);
-    if(canAddMeasurement) {
-      estimator.addVisionMeasurement(pose, latency, VecBuilder.fill(.5, .5, 0));
+    if(canAddMeasurement && pose.getX() != 0 && pose.getY() != 0) {
+      // estimator.addVisionMeasurement(pose, Limelight.getCombinedLantencySeconds(llname), VecBuilder.fill(0, 0, 0));
+      estimator.resetPosition(getAngle(), getSwerveModulePositions(), pose);
+      // setYaw(pose.getRotation().getDegrees());
     }
     
     estimator.update(getAngle(), getSwerveModulePositions());
@@ -181,14 +181,16 @@ public class DriveSubsystem extends SubsystemBase {
     pigeon.setYaw(yaw);
   }
 
+  public void updatePWithBotVelocity() {
+    headingController.setP(getPScalingFactor() + headingP);
+  }
+
   public void driveWithAngleOverride(Rotation2d angle, double xSpeed, double ySpeed, double omega) {
     Rotation2d currentAngle = getAngle();
-    pushMeasurementAndSetpoint(angle.getRadians());
-    double rotSpeeds = headingController.calculate(currentAngle.getRadians(), angle.getRadians()) + headingController.getD() * omega;
+    double rotSpeeds = (headingController.calculate(currentAngle.getRadians(), angle.getRadians()) + SmartDashboard.getNumber("ThetaConstant", 0) * omega);
     rotSpeeds = clamp(rotSpeeds, -3, 3);
-    SmartDashboard.putNumber("OmegaNutsLol", omega);
-    ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds), currentAngle);
 
+    ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds * (getPScalingFactor() + 1)), getFieldDriveAngle());
     drive(fieldRelative);
     pushMeasurementAndSetpoint(angle.getRadians());
   }
@@ -205,21 +207,16 @@ public class DriveSubsystem extends SubsystemBase {
      headingController.setD(SmartDashboard.getNumber(Constants.D_thetaSmartdashboard, 0));
   }
 
-  private void updateVectorField() {
-    Pose2d estimate = getEstimatedPosition();
-    Point2D point = Point2D.fromPose2d(estimate);
-    vectorField.update(point);
-  }
-
   @Override
   public void periodic() {
     SmartDashboard.putNumber("FLEFT", fleft.getEncoderPosition());
     SmartDashboard.putNumber("FRIGHT", fright.getEncoderPosition());
     SmartDashboard.putNumber("BLEFT", bleft.getEncoderPosition());
     SmartDashboard.putNumber("BRIGHT", bright.getEncoderPosition());
+    SmartDashboard.putNumber("Gyro angle rads", getAngle().getRadians());
 
     updatePoseEstimator();
-    updateVectorField();
+    // updateShooter();
 
     poseEstimatorField.setRobotPose(estimator.getEstimatedPosition());
     haydenField.setRobotPose(getHaydenEstimatorPose2d());

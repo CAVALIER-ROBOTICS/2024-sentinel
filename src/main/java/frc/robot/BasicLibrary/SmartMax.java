@@ -63,6 +63,10 @@ public class SmartMax {
         sparky.burnFlash();
     }
 
+    public CANSparkMax getCANSparkMax() {
+        return sparky;
+    }
+
     /**
      * Interface for setting the speed of the motor
      * 

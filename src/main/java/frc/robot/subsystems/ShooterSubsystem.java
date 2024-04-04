@@ -7,6 +7,9 @@ package frc.robot.subsystems;
 import com.revrobotics.RelativeEncoder;
 import java.util.Optional;
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
+
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -43,12 +46,17 @@ public class ShooterSubsystem extends SubsystemBase {
 
   DutyCycleEncoder enc = new DutyCycleEncoder(5);
   PIDController angleController = new PIDController(.5, 0.0, 0.0);
+  ArmFeedforward armFeedforward = new ArmFeedforward(0.0, .15, 1.46);
 
   RelativeEncoder rpmEncoderTop, rpmEncoderBottom;
   UltraShot4 ultraShot = new UltraShot4();
 
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
+    top.getCANSparkMax().setPeriodicFramePeriod(PeriodicFrame.kStatus3, 2);
+    bottom.getCANSparkMax().setPeriodicFramePeriod(PeriodicFrame.kStatus3, 2);
+
+
     angleController.enableContinuousInput(0,2*Math.PI);
     rpmEncoderTop = top.getEncoder();
     rpmEncoderBottom = bottom.getEncoder();
@@ -96,12 +104,12 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double[] getRPM() {
-    return new double[] {rpmEncoderTop.getVelocity(), rpmEncoderBottom.getVelocity()};
+    return new double[] {Math.abs(rpmEncoderTop.getVelocity()), Math.abs(rpmEncoderBottom.getVelocity())};
   }
 
   public double getAverageRPM() {
     double[] rpms = getRPM();
-    return (rpms[0] + rpms[1]) / 2;
+    return Math.abs((rpms[0] + rpms[1]) / 2);
   }
 
   public double getAbsolutePosition() {
@@ -125,8 +133,9 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double getNoteSpeed(double rpm) {
+    //10.75
     // return rpm * (1.0/60.0) * (Math.PI * 2) * (41.0/22.0) * 1.5 * .0254 * .587492749274927492; //last term is slipping constant
-    return 11.5;
+    return 10.0;
   }
 
   public void updateUltrashot(DriveSubsystem driveSubsystem) {
@@ -168,6 +177,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("AbsoluteShooterPosition", getAbsolutePosition());
     SmartDashboard.putNumber("RequestedShooterPosistion", ultraShot.getPhi());
+    SmartDashboard.putNumber("FlywheelRPMAverage", getAverageRPM());
     SmartDashboard.putNumber("FlywheelRPMTop", getRPM()[0]);
     SmartDashboard.putNumber("FlywheelRPMBottom", getRPM()[1]);
     SmartDashboard.putNumber("LeftCurrentDraw", left.getOutputCurrent());

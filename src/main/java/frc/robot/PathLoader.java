@@ -63,7 +63,7 @@ public class PathLoader {
         Consumer<ChassisSpeeds> drivelol = speeds -> driveSub.autonDrive(speeds);
 
         HolonomicPathFollowerConfig hpfc = new HolonomicPathFollowerConfig(
-            new PIDConstants(.2),
+            new PIDConstants(5.0),
             new PIDConstants(4.0, 0.0, 0.1),
             4.2,
             SwerveConstants.BOT_LENGTH / 2,
@@ -72,7 +72,7 @@ public class PathLoader {
         );
         
         AutoBuilder.configureHolonomic(
-                driveSub::getEstimatedPosition, //TODO this uses the pose estimator now, idk how well it'll work
+                driveSub::getEstimatedPosition, 
                 resetPose,
                 driveSub::getChassisSpeeds,
                 drivelol,

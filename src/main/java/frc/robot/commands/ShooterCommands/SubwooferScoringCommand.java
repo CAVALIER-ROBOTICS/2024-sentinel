@@ -31,7 +31,7 @@ public class SubwooferScoringCommand extends Command {
   public void execute() {
     shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
     shooterSubsystem.setKickerSpeed(-kick.getAsDouble());
-    shooterSubsystem.gotoAngle(Math.toRadians(56), 0);
+    shooterSubsystem.gotoAngle(Math.toRadians(63), 0);
   }
 
   // Called once the command ends or is interrupted.
