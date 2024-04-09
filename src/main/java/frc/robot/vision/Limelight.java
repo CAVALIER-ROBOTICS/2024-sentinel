@@ -47,6 +47,12 @@ public class Limelight {
         // return true;
     }
 
+    public static boolean canLocalizeWithEstimatorReset(String name) {
+        int targetcount = getTargetCount(name);
+        double avgdist = getAverageDistanceToAvailableTarget(name);
+        return targetcount >= 2 && avgdist < Constants.MAX_DISTANCE_TO_APRILTAG;
+    }
+
     public static int getTargetCount(String limelightName) {
         // return LimelightHelpers.getLimelightNTDoubleArray(limelightName, "test").length;
         LimelightResults results = LimelightHelpers.getLatestResults(limelightName);

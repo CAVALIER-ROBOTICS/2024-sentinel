@@ -25,6 +25,7 @@ import frc.robot.commands.BotStateCommands.ShooterFinishCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
 import frc.robot.commands.BotStateCommands.ShooterTransferCommand;
 import frc.robot.commands.DriveCommands.FieldDrive;
+import frc.robot.commands.ManualShooterCommands.AngleAdjustCommand;
 import frc.robot.commands.ShooterCommands.AmpScoringCommand;
 import frc.robot.commands.ShooterCommands.ForceIntakeUpCommand;
 import frc.robot.commands.ShooterCommands.ForceSendbackCommand;
@@ -154,6 +155,8 @@ public class RobotContainer {
     JoystickButton subwooferMode = new JoystickButton(operator, 4);
     JoystickButton retractIntake = new JoystickButton(operator, 1);
     JoystickButton forceOutIntake = new JoystickButton(operator, 3);
+    JoystickButton manualDriverAim = new JoystickButton(driver, 6);
+    manualDriverAim.whileTrue(new AngleAdjustCommand(shooterSubsystem, driver::getRightY, driver::getLeftTriggerAxis));
     // JoystickButton teammatePass = new JoystickButton(operator, 8);
 
     toggleIntake.toggleOnTrue(intake());

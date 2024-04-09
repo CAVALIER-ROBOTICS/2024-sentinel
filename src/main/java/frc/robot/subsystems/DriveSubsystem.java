@@ -21,7 +21,6 @@ import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.CycloidLibrary.NeoSteveModule;
 import frc.robot.ultrashot.pose.poseestimator;
-import frc.robot.vision.LimelightCustom;
 import frc.robot.vision.Limelight;
 import frc.robot.vision.VisionTarget;
 
@@ -152,7 +151,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void updatePoseEstimator() {
     String llname = Limelight.limelightname;
     Pose2d pose = Limelight.getPose2d(llname);
-    boolean canAddMeasurement = Limelight.canLimelightProvideAccuratePoseEstimate(llname);
+    boolean canAddMeasurement = Limelight.canLocalizeWithEstimatorReset(llname);
     SmartDashboard.putBoolean("Adding measurements", canAddMeasurement);
     SmartDashboard.putNumber("TargAmount", Limelight.getTargetCount(llname));
     
@@ -160,7 +159,7 @@ public class DriveSubsystem extends SubsystemBase {
     if(canAddMeasurement && pose.getX() != 0 && pose.getY() != 0) {
       // estimator.addVisionMeasurement(pose, Limelight.getCombinedLantencySeconds(llname), VecBuilder.fill(0, 0, 0));
       estimator.resetPosition(getAngle(), getSwerveModulePositions(), pose);
-      // setYaw(pose.getRotation().getDegrees());
+      setYaw(pose.getRotation().getDegrees());
     }
 
     estimator.update(getAngle(), getSwerveModulePositions());
@@ -199,7 +198,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void pushMeasurementAndSetpoint(double setpoint) {
     SmartDashboard.putNumber("CurrentTheta", getAngle().getRadians());
     SmartDashboard.putNumber("SetpointTheta", setpoint);
-    SmartDashboard.putNumber("ThetaError", getAngle().getRadians() - setpoint);
+    SmartDashboard.putNumber("ThetaError", (getAngle().getRadians() - setpoint) % Math.PI * 2);
   }
 
   public void updateShooter() {

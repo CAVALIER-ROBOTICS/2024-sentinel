@@ -45,7 +45,7 @@ public class ShooterSubsystem extends SubsystemBase {
   DigitalInput limit = new DigitalInput(ShooterConstants.SHOOTER_LIMIT_SWITCH_ID);
 
   DutyCycleEncoder enc = new DutyCycleEncoder(5);
-  PIDController angleController = new PIDController(.5, 0.0, 0.0);
+  PIDController angleController = new PIDController(.5, 0.015, 0.0);
   ArmFeedforward armFeedforward = new ArmFeedforward(0.0, .15, 1.46);
 
   RelativeEncoder rpmEncoderTop, rpmEncoderBottom;
@@ -135,7 +135,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public double getNoteSpeed(double rpm) {
     //10.75
     // return rpm * (1.0/60.0) * (Math.PI * 2) * (41.0/22.0) * 1.5 * .0254 * .587492749274927492; //last term is slipping constant
-    return 10.0;
+    return 13.6;
   }
 
   public void updateUltrashot(DriveSubsystem driveSubsystem) {

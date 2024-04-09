@@ -2,41 +2,29 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.5221354115665333,
-      "y": 4.0929220861353395
+      "x": 15.32018014107355,
+      "y": 2.213348107152705
     },
-    "rotation": 0
+    "rotation": -176.98721249581658
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "bottom_katy_jiggle"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootStation"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Intake"
+                  "pathName": "cart"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "bottom_katy_one"
+                  "name": "Intake"
                 }
               }
             ]
@@ -46,12 +34,6 @@
           "type": "named",
           "data": {
             "name": "ShootStation"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "bottom_katy_two"
           }
         }
       ]

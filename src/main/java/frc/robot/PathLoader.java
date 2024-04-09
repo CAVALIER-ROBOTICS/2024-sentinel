@@ -44,7 +44,8 @@ public class PathLoader {
         "setpointshot_blue_auto",
         "setpointshot_red_auto",
         "DONOTUSE_blue_init",
-        "DONOTUSE_red_init"
+        "DONOTUSE_red_init",
+        "cart"
     };
 
     public static PathPlannerPath getPath(String path) {
