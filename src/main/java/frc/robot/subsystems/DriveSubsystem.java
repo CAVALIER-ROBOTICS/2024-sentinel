@@ -54,7 +54,6 @@ public class DriveSubsystem extends SubsystemBase {
     poseEstimatorField = new Field2d();
     haydenField = new Field2d();
 
-
     haydenEstimator = new poseestimator(62.5, 48.9);
 
     SmartDashboard.putData("HaydenField", haydenField);
@@ -161,7 +160,7 @@ public class DriveSubsystem extends SubsystemBase {
       estimator.resetPosition(getAngle(), getSwerveModulePositions(), pose);
       setYaw(pose.getRotation().getDegrees());
     }
-
+    
     estimator.update(getAngle(), getSwerveModulePositions());
   }
 
