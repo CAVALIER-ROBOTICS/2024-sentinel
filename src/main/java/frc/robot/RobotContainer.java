@@ -87,7 +87,6 @@ public class RobotContainer {
       operator::getLeftTriggerAxis
       );
   }
-    
 
   public RobotContainer() {
     SmartDashboard.putNumber(Constants.P_thetaSmartdashboard, 0);

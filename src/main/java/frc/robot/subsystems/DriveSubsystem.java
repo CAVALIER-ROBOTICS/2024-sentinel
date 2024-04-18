@@ -20,7 +20,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.CycloidLibrary.NeoSteveModule;
+import frc.robot.ultrashot.Point2D;
 import frc.robot.ultrashot.pose.poseestimator;
+import frc.robot.vectorfields.Riptide;
+import frc.robot.vectorfields.RiptideConstants;
 import frc.robot.vision.Limelight;
 import frc.robot.vision.VisionTarget;
 
@@ -40,6 +43,7 @@ public class DriveSubsystem extends SubsystemBase {
   double currentOffset = 0;
 
   poseestimator haydenEstimator;
+  Riptide riptide;
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     fleft = new NeoSteveModule(Constants.FLEFT_DRIVE_ID, Constants.FLEFT_STEER_ID, Constants.FLEFT_CANCODER_ID, SwerveConstants.FLEFT_OFFSET, Constants.CANIVORE);
@@ -56,8 +60,21 @@ public class DriveSubsystem extends SubsystemBase {
 
     haydenEstimator = new poseestimator(62.5, 48.9);
 
+    riptide = new Riptide();
+
     SmartDashboard.putData("HaydenField", haydenField);
     SmartDashboard.putData("fiedd", poseEstimatorField);
+  }
+
+  public void updateRiptide() {
+    Pose2d pose = getEstimatedPosition();
+    Point2D point = new Point2D(pose.getX(), pose.getY());
+
+    riptide.update(point, new Point2D[0], new Point2D[0]);
+  }
+
+  public Point2D getRiptideSpeeds() {
+    return riptide.getVelocity();
   }
 
   public Pose2d getHaydenEstimatorPose2d() {
@@ -213,6 +230,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("BLEFT", bleft.getEncoderPosition());
     SmartDashboard.putNumber("BRIGHT", bright.getEncoderPosition());
     SmartDashboard.putNumber("Gyro angle rads", getAngle().getRadians());
+    // updateRiptide();
 
     updatePoseEstimator();
     // updateShooter();

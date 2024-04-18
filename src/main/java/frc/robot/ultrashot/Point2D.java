@@ -1,7 +1,5 @@
 package frc.robot.ultrashot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-
 public class Point2D {
     
     private double x, y;
@@ -32,9 +30,6 @@ public class Point2D {
         this.y = y;
     }
 
-    public static Point2D fromPose2d(Pose2d pose) {
-        return new Point2D(pose.getX(), pose.getY());
-    }
 
     public static Point2D difference(Point2D startPoint, Point2D endPoint) {
         Point2D difference = new Point2D(endPoint.getX() - startPoint.getX(), endPoint.getY() - startPoint.getY());
