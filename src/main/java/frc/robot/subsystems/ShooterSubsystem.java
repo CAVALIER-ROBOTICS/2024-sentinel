@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.BasicLibrary.SmartMax;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Interpolation.ShotParam;
 import frc.robot.filters.BeamBreakFilter;
 import frc.robot.filters.SimplerFilter;
 import frc.robot.ultrashot.AngleStates;
@@ -171,6 +172,11 @@ public class ShooterSubsystem extends SubsystemBase {
       return;
     }
     ultraShot.setTargetSpeakerRed();
+  }
+
+  public void shootFromShotParameter(ShotParam param) {
+    setFlywheelSpeed(param.getFlywheelSpeed());
+    gotoAngle(Math.toRadians(param.getShooterAngle()), 0.0);
   }
 
   @Override

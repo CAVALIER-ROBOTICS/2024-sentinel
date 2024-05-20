@@ -29,6 +29,7 @@ import frc.robot.commands.ManualShooterCommands.AngleAdjustCommand;
 import frc.robot.commands.ShooterCommands.AmpScoringCommand;
 import frc.robot.commands.ShooterCommands.ForceIntakeUpCommand;
 import frc.robot.commands.ShooterCommands.ForceSendbackCommand;
+import frc.robot.commands.ShooterCommands.InterpolationShootingCommand;
 import frc.robot.commands.ShooterCommands.SubwooferScoringCommand;
 import frc.robot.commands.ShooterCommands.UltrashotCommand;
 import frc.robot.commands.ShooterCommands.ShooterIntakeCommands.IndexNoteInShooterCommand;
@@ -76,7 +77,7 @@ public class RobotContainer {
   }
 
   public Command getUltrashotDrivingCommand() {
-      return new UltrashotCommand(
+      return new InterpolationShootingCommand(
       shooterSubsystem, driveSubsystem, ampBarSubsystem,
       () -> -Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
@@ -109,7 +110,7 @@ public class RobotContainer {
     () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100) // 420 / 100
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
-    () -> driver.getRightX() * Math.PI));
+    () -> driver.getRightX() * 2 * Math.PI));
 
     shooterSubsystem.setDefaultCommand(new ForceSendbackCommand(shooterSubsystem, operator::getRightBumper, operator::getLeftBumper));
     ampBarSubsystem.setDefaultCommand(new AmpBarHoldingPositionCommand(ampBarSubsystem));

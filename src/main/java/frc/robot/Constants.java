@@ -31,7 +31,7 @@ public final class Constants {
     public static final double SHOOTER_HORIZONTAL = 0.558720013968;
     public static final double SHOOTER_45_DEGREE = 0.703; 
     public static final double SHOOTER_VERTICAL = 0.822;
-    public static final double SHOOTER_LINEUP_POSITION = 0.1;
+    public static final double SHOOTER_LINEUP_POSITION = 0.05;
   }
 
   public final class JetsonConstants {

@@ -26,12 +26,13 @@ public class AngleAdjustCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooterSubsystem.setFlywheelSpeed(.5);
+    shooterSubsystem.setFlywheelSpeed(.25);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    shooterSubsystem.setFlywheelSpeed(.25);
     shooterSubsystem.setAngleSpeed(-0.25 * angleSub.getAsDouble());
     shooterSubsystem.setKickerSpeed(-kickerSub.getAsDouble());
   }

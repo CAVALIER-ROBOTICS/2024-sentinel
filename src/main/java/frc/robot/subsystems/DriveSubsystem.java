@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -18,12 +17,12 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.PiConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.CycloidLibrary.NeoSteveModule;
 import frc.robot.ultrashot.Point2D;
 import frc.robot.ultrashot.pose.poseestimator;
 import frc.robot.vectorfields.Riptide;
-import frc.robot.vectorfields.RiptideConstants;
 import frc.robot.vision.Limelight;
 import frc.robot.vision.VisionTarget;
 
@@ -33,6 +32,7 @@ public class DriveSubsystem extends SubsystemBase {
   Pigeon2 pigeon = new Pigeon2(Constants.PIGEON_ID, Constants.CANIVORE);
   double headingP = 3.0;
   PIDController headingController = new PIDController(headingP, 0.01, .15);
+  PIDController limelightHeadingController = new PIDController(1, 0, 0);
   
   
   SwerveDrivePoseEstimator estimator;
@@ -209,6 +209,13 @@ public class DriveSubsystem extends SubsystemBase {
     ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds * (getPScalingFactor() + 1)), getFieldDriveAngle());
     drive(fieldRelative);
     pushMeasurementAndSetpoint(angle.getRadians());
+  }
+
+  public void driveWithApriltagCentering(double x, double y) {
+    double measurement = Limelight.getTargetTagCenterOffsetX();
+    double setpoint = limelightHeadingController.calculate(measurement, 0.0);
+
+  
   }
 
   public void pushMeasurementAndSetpoint(double setpoint) {

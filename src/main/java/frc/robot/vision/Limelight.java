@@ -73,7 +73,30 @@ public class Limelight {
         if(Limelight.targetBlue()) {
             return 7;
         }
-        return 8;
+        return 4;
+    }
+
+    public static double getDistanceToTargetTag() {
+        int centralID = getCentralTagId();
+        LimelightTarget_Fiducial fid = getTargetFromID(limelightname, centralID);
+
+        if(fid != null) {
+            double tagHeight = fid.ty;
+            double bruh = (1.4478 - .6858) / Math.tan(Math.toRadians(20 + tagHeight));
+            return bruh;
+        }
+
+        return -1.0;
+    }
+
+    public static double getTargetTagCenterOffsetX() {
+        int centralID = getCentralTagId();
+        LimelightTarget_Fiducial fid = getTargetFromID(limelightname, centralID);
+
+        if(fid != null) {
+           return fid.tx;
+        }
+        return 0.0;
     }
 
     public static VisionTarget getTagVisionTargetPercent(String name, int id) {
@@ -120,22 +143,4 @@ public class Limelight {
         double score = getTargetCount(limelightName) / getAverageDistanceToAvailableTarget(limelightName);
         return (Double.isNaN(score)) ? 0: score;
     }
-
-    public static double getOmegaRadToTag(int tagId, ChassisSpeeds lastSpeeds) {
-        LimelightTarget_Fiducial target = getTargetFromID("", 4);
-        if(target == null || lastSpeeds == null) {return 0.0;}
-        Pose2d relative = target.getRobotPose_TargetSpace2D();
-
-        double x = relative.getX();
-        double y = relative.getY();
-
-        double vx = lastSpeeds.vxMetersPerSecond;
-        double vy = lastSpeeds.vyMetersPerSecond;
-
-        SmartDashboard.putString("x, y", x + " ," + y);
-
-        return (vx * y - vy * x) / (Math.pow(x, 2) + Math.pow(y, 2));
-   
-    }
-
 }
