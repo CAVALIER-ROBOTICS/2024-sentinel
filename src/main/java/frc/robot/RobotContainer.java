@@ -29,7 +29,6 @@ import frc.robot.commands.ManualShooterCommands.AngleAdjustCommand;
 import frc.robot.commands.ShooterCommands.AmpScoringCommand;
 import frc.robot.commands.ShooterCommands.ForceIntakeUpCommand;
 import frc.robot.commands.ShooterCommands.ForceSendbackCommand;
-import frc.robot.commands.ShooterCommands.InterpolationShootingCommand;
 import frc.robot.commands.ShooterCommands.SubwooferScoringCommand;
 import frc.robot.commands.ShooterCommands.UltrashotCommand;
 import frc.robot.commands.ShooterCommands.ShooterIntakeCommands.IndexNoteInShooterCommand;
@@ -77,7 +76,7 @@ public class RobotContainer {
   }
 
   public Command getUltrashotDrivingCommand() {
-      return new InterpolationShootingCommand(
+      return new UltrashotCommand(
       shooterSubsystem, driveSubsystem, ampBarSubsystem,
       () -> -Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
