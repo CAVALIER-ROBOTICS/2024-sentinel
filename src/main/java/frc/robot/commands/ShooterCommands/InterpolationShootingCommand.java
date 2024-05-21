@@ -4,8 +4,11 @@
 
 package frc.robot.commands.ShooterCommands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Interpolation.InterpolatingTable;
 import frc.robot.Interpolation.ShotParam;
 import frc.robot.subsystems.DriveSubsystem;
@@ -15,9 +18,13 @@ import frc.robot.vision.Limelight;
 public class InterpolationShootingCommand extends Command {
   ShooterSubsystem shooterSubsystem;
   DriveSubsystem driveSubsystem;
+  DoubleSupplier x, y, kicker;
   /** Creates a new InterpolationShootingCommand. */
-  public InterpolationShootingCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem) {
+  public InterpolationShootingCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier x, DoubleSupplier y, DoubleSupplier kicker) {
     this.shooterSubsystem = shooterSubsystem;
+    this.x = x;
+    this.y = y;
+    this.kicker = kicker;
     addRequirements(shooterSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -33,11 +40,16 @@ public class InterpolationShootingCommand extends Command {
     ShotParam param = InterpolatingTable.getShotParameter(distance);
 
     shooterSubsystem.shootFromShotParameter(param);
-  }
+    driveSubsystem.driveWithApriltagCentering(x.getAsDouble(), y.getAsDouble());
 
+    shooterSubsystem.setKickerSpeed(-kicker.getAsDouble());
+    shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT, -0.25);
+  }
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    shooterSubsystem.stopAll();
+  }
 
   // Returns true when the command should end.
   @Override

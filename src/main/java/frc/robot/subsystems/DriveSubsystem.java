@@ -215,7 +215,7 @@ public class DriveSubsystem extends SubsystemBase {
     double measurement = Limelight.getTargetTagCenterOffsetX();
     double setpoint = limelightHeadingController.calculate(measurement, 0.0);
 
-  
+    drive(ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(x, y, setpoint), getAngle()));
   }
 
   public void pushMeasurementAndSetpoint(double setpoint) {
