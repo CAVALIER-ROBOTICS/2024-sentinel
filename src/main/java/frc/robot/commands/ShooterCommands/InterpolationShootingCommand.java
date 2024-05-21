@@ -22,10 +22,11 @@ public class InterpolationShootingCommand extends Command {
   /** Creates a new InterpolationShootingCommand. */
   public InterpolationShootingCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier x, DoubleSupplier y, DoubleSupplier kicker) {
     this.shooterSubsystem = shooterSubsystem;
+    this.driveSubsystem = driveSubsystem;
     this.x = x;
     this.y = y;
     this.kicker = kicker;
-    addRequirements(shooterSubsystem);
+    addRequirements(shooterSubsystem, driveSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -43,7 +44,6 @@ public class InterpolationShootingCommand extends Command {
     driveSubsystem.driveWithApriltagCentering(x.getAsDouble(), y.getAsDouble());
 
     shooterSubsystem.setKickerSpeed(-kicker.getAsDouble());
-    shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT, -0.25);
   }
   // Called once the command ends or is interrupted.
   @Override

@@ -32,7 +32,7 @@ public class DriveSubsystem extends SubsystemBase {
   Pigeon2 pigeon = new Pigeon2(Constants.PIGEON_ID, Constants.CANIVORE);
   double headingP = 3.0;
   PIDController headingController = new PIDController(headingP, 0.01, .15);
-  PIDController limelightHeadingController = new PIDController(1, 0, 0);
+  PIDController limelightHeadingController = new PIDController(0.08, 0, 0.005);
   
   
   SwerveDrivePoseEstimator estimator;
@@ -213,7 +213,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void driveWithApriltagCentering(double x, double y) {
     double measurement = Limelight.getTargetTagCenterOffsetX();
-    double setpoint = limelightHeadingController.calculate(measurement, 0.0);
+    double setpoint = -limelightHeadingController.calculate(measurement, 0.0);
 
     drive(ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(x, y, setpoint), getAngle()));
   }
