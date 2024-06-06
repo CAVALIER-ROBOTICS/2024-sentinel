@@ -23,7 +23,7 @@ public class SendbackCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    sub.setKickerSpeed(-0.5);
+    sub.setKickerSpeed(0.5);
     sub.setFlywheelSpeed(-0.1);
   }
 

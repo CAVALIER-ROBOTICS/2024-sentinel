@@ -10,6 +10,8 @@ import frc.robot.commands.AmpBarCommands.RetractAmpBarCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndKickCommand;
 import frc.robot.commands.AutonCommands.AngleShooterAndSpinupCommand;
 import frc.robot.commands.AutonCommands.IdleShooterSpin;
+import frc.robot.commands.AutonCommands.InterpolateAndKickCommand;
+import frc.robot.commands.AutonCommands.InterpolateAndSpinupCommand;
 import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndFinishKickCommand;
 import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndFinishPushCommand;
 import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndKickCommand;
@@ -30,6 +32,7 @@ import frc.robot.commands.ShooterCommands.AmpScoringCommand;
 import frc.robot.commands.ShooterCommands.ForceIntakeUpCommand;
 import frc.robot.commands.ShooterCommands.ForceSendbackCommand;
 import frc.robot.commands.ShooterCommands.InterpolationShootingCommand;
+import frc.robot.commands.ShooterCommands.RotateTowardsTarget;
 import frc.robot.commands.ShooterCommands.SubwooferScoringCommand;
 import frc.robot.commands.ShooterCommands.UltrashotCommand;
 import frc.robot.commands.ShooterCommands.ShooterIntakeCommands.IndexNoteInShooterCommand;
@@ -68,8 +71,7 @@ public class RobotContainer {
 
   public void registerCommands() {
     NamedCommands.registerCommand("Intake", intake());
-    NamedCommands.registerCommand("ShootStation", getStationaryShotCommandWithTimers());
-    NamedCommands.registerCommand("ShootMoving", getShootingWhileMovingCommand());
+    NamedCommands.registerCommand("ShootStation", getInterpolationShotCommandAuton());
     NamedCommands.registerCommand("ShooterSpin", new IdleShooterSpin(shooterSubsystem));
     NamedCommands.registerCommand("DisableRamp", new InstantCommand(() -> driveSubsystem.setDriveMotorRampRate(0)));
     NamedCommands.registerCommand("EnableRamp", new InstantCommand(() -> Commands.none()));
@@ -90,7 +92,15 @@ public class RobotContainer {
   }
   
   public Command getInterpolationShootingCommand() {
-      return new InterpolationShootingCommand(
+    return new SequentialCommandGroup(
+      new RotateTowardsTarget(shooterSubsystem, driveSubsystem,
+      () -> -Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
+        * directionIsZero(driver.getLeftX(), driver.getLeftY()),
+
+      () -> -Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
+        * directionIsZero(driver.getLeftX(), driver.getLeftY())
+      ).withTimeout(2),
+       new InterpolationShootingCommand(
       shooterSubsystem, driveSubsystem,
       () -> -Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
@@ -99,7 +109,7 @@ public class RobotContainer {
         * directionIsZero(driver.getLeftX(), driver.getLeftY()),
 
       operator::getLeftTriggerAxis
-      );
+      ));
   }
 
   public RobotContainer() {
@@ -222,7 +232,7 @@ public class RobotContainer {
         new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
         new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(1),
         new ShooterTransferCommand(intake, shooterSubsystem),
-        new ShooterFinishCommand(shooterSubsystem),
+        // new ShooterFinishCommand(shooterSubsystem),
         new SendbackCommand(shooterSubsystem).withTimeout(.05) 
       ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
   }
@@ -252,6 +262,14 @@ public class RobotContainer {
     return new SequentialCommandGroup(
       new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(2),
       new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(2)
+    );
+  }
+
+  public Command getInterpolationShotCommandAuton() {
+    return new SequentialCommandGroup(
+      new RotateTowardsTarget(shooterSubsystem, driveSubsystem, () -> 0, () -> 0).withTimeout(2),
+      new InterpolateAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(2),
+      new InterpolateAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(2)
     );
   }
 

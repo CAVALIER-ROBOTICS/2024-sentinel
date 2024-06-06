@@ -33,19 +33,7 @@ public class PathLoader {
     static SendableChooser<String> chooser = new SendableChooser<String>();
 
     static String[] validAutonPaths = {
-        "fournote_local",
-        "fournote_local_blue",
-        "top_katy",
-        "top_katy_red",
-        "bottom_katy",
-        "bottom_katy_red",
-        "taxi_lol_blue",
-        "taxi_lol_red",
-        "setpointshot_blue_auto",
-        "setpointshot_red_auto",
-        "DONOTUSE_blue_init",
-        "DONOTUSE_red_init",
-        "cart"
+        "redside"
     };
 
     public static PathPlannerPath getPath(String path) {

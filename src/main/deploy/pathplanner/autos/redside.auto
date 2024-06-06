@@ -2,19 +2,38 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 15.056548066792065,
-      "y": 6.992561413694256
+      "x": 15.08596341015792,
+      "y": 7.003080254377342
     },
-    "rotation": 179.3609535341055
+    "rotation": -179.06080905426444
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "top_katy_jiggle_red"
+            "name": "ShootStation"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Red_4note_1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
           }
         },
         {
@@ -28,15 +47,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Intake"
+                  "pathName": "Red_4note2"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "top_katy_red_one"
+                  "name": "Intake"
                 }
               }
             ]
@@ -46,12 +65,6 @@
           "type": "named",
           "data": {
             "name": "ShootStation"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "top_katy_red_two"
           }
         }
       ]

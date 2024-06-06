@@ -53,7 +53,6 @@ public class Robot extends TimedRobot {
       driveSubsystem.setYaw(initial.getRotation().getDegrees());
     
     if (m_autonomousCommand != null) {
-      m_autonomousCommand = new RiptideCommand(driveSubsystem);
       m_autonomousCommand.schedule();
     }
   }

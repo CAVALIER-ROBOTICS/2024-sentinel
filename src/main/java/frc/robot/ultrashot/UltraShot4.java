@@ -219,7 +219,6 @@ public class UltraShot4 {
         this.velocityPrediction.add(Point3D.scalar(this.acceleration, this.freedomTime));
 
         if (velocityPrediction.getHypot() > UltraShotConstants.MAX_ROBOT_SPEED) {
-            System.out.println("flag");
             double ax = this.acceleration.getX();
             double ay = this.acceleration.getY();
             double bx = this.velocity.getX();
