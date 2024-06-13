@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -13,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -167,15 +169,16 @@ public class DriveSubsystem extends SubsystemBase {
   public void updatePoseEstimator() {
     String llname = Limelight.limelightname;
     Pose2d pose = Limelight.getPose2d(llname);
-    boolean canAddMeasurement = Limelight.canLocalizeWithEstimatorReset(llname);
+    boolean canAddMeasurement = Limelight.canLimelightProvideAccuratePoseEstimate(llname);
     SmartDashboard.putBoolean("Adding measurements", canAddMeasurement);
     SmartDashboard.putNumber("TargAmount", Limelight.getTargetCount(llname));
     
     // estimator.resetPosition(pose.getRotation(), getSwerveModulePositions(), pose);
     if(canAddMeasurement && pose.getX() != 0 && pose.getY() != 0) {
-      // estimator.addVisionMeasurement(pose, Limelight.getCombinedLantencySeconds(llname), VecBuilder.fill(0, 0, 0));
-      estimator.resetPosition(getAngle(), getSwerveModulePositions(), pose);
-      setYaw(pose.getRotation().getDegrees());
+      // System.out.println("Adding vision measurement");
+      double measurementTimestamp = Timer.getFPGATimestamp() - Limelight.getCombinedLantencySeconds(llname);
+      estimator.addVisionMeasurement(pose, measurementTimestamp, VecBuilder.fill(.1, .1, 9999999));
+      // estimator.resetPosition(getAngle(), getSwerveModulePositions(), pose);
     }
     
     estimator.update(getAngle(), getSwerveModulePositions());
@@ -195,10 +198,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void setYaw(double yaw) {
     pigeon.setYaw(yaw);
-  }
-
-  public void updatePWithBotVelocity() {
-    headingController.setP(getPScalingFactor() + headingP);
   }
 
   public void driveWithAngleOverride(Rotation2d angle, double xSpeed, double ySpeed, double omega) {
@@ -222,12 +221,6 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("CurrentTheta", getAngle().getRadians());
     SmartDashboard.putNumber("SetpointTheta", setpoint);
     SmartDashboard.putNumber("ThetaError", (getAngle().getRadians() - setpoint) % Math.PI * 2);
-  }
-
-  public void updateShooter() {
-     headingController.setP(SmartDashboard.getNumber(Constants.P_thetaSmartdashboard, 0));
-     headingController.setI(SmartDashboard.getNumber(Constants.I_thetaSmartdashboard, 0));
-     headingController.setD(SmartDashboard.getNumber(Constants.D_thetaSmartdashboard, 0));
   }
 
   @Override

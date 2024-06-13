@@ -33,7 +33,8 @@ public class PathLoader {
     static SendableChooser<String> chooser = new SendableChooser<String>();
 
     static String[] validAutonPaths = {
-        "redside"
+        "redside",
+        "blueside"
     };
 
     public static PathPlannerPath getPath(String path) {

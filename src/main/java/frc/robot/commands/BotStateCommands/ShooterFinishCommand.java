@@ -23,6 +23,7 @@ public class ShooterFinishCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("ShooterFinishCommand");
     sub.setKickerSpeed(0.1);
     sub.setFlywheelSpeed(-0.1);
   }
@@ -37,6 +38,6 @@ public class ShooterFinishCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !sub.hasNoteInShooter();
+    return false;
   }
 }

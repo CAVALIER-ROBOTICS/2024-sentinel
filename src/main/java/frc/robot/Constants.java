@@ -31,7 +31,7 @@ public final class Constants {
     public static final double SHOOTER_HORIZONTAL = 0.558720013968;
     public static final double SHOOTER_45_DEGREE = 0.703; 
     public static final double SHOOTER_VERTICAL = 0.822;
-    public static final double SHOOTER_LINEUP_POSITION = 0.05;
+    public static final double SHOOTER_LINEUP_POSITION = 0.15;
   }
 
   public final class JetsonConstants {
@@ -135,7 +135,7 @@ public final class Constants {
   public static final double NOMINAL_VOLTAGE = 12.2;
 
   public static final double MAX_DISTANCE_TO_APRILTAG = 5; //Meters
-  public static final double MAX_DISTANCE_TO_SINGLETAG = 1;
+  public static final double MAX_DISTANCE_TO_SINGLETAG = 3;
   
   public static final String CANIVORE = "OTHERCANIVORE";
   public static final double BOT_LENGTH = .6858;
