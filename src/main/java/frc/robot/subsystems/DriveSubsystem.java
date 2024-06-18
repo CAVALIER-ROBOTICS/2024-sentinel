@@ -34,7 +34,7 @@ public class DriveSubsystem extends SubsystemBase {
   Pigeon2 pigeon = new Pigeon2(Constants.PIGEON_ID, Constants.CANIVORE);
   double headingP = 3.0;
   PIDController headingController = new PIDController(headingP, 0.01, .15);
-  PIDController limelightHeadingController = new PIDController(0.08, 0, 0.005);
+  PIDController limelightHeadingController = new PIDController(0.04, 0, 0.005);
   
   
   SwerveDrivePoseEstimator estimator;
@@ -177,8 +177,7 @@ public class DriveSubsystem extends SubsystemBase {
     if(canAddMeasurement && pose.getX() != 0 && pose.getY() != 0) {
       // System.out.println("Adding vision measurement");
       double measurementTimestamp = Timer.getFPGATimestamp() - Limelight.getCombinedLantencySeconds(llname);
-      estimator.addVisionMeasurement(pose, measurementTimestamp, VecBuilder.fill(.1, .1, 9999999));
-      // estimator.resetPosition(getAngle(), getSwerveModulePositions(), pose);
+      // estimator.addVisionMeasurement(pose, measurementTimestamp, VecBuilder.fill(.1, .1, 9999999));
     }
     
     estimator.update(getAngle(), getSwerveModulePositions());

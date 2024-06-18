@@ -11,8 +11,8 @@
     "Static Paths",
     "RedMiddle"
   ],
-  "defaultMaxVel": 4.1,
-  "defaultMaxAccel": 8.2,
+  "defaultMaxVel": 4.2,
+  "defaultMaxAccel": 6.75,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 360.0,
   "maxModuleSpeed": 4.5
