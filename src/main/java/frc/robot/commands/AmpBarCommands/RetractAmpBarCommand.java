@@ -4,7 +4,6 @@
 
 package frc.robot.commands.AmpBarCommands;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.AmpBarSubsystem;
 
@@ -16,6 +15,7 @@ public class RetractAmpBarCommand extends ExtendAmpBarCommand {
 
   @Override
   public void execute() {
+    // System.out.println("Trying 2 retract");
     asub.setPosition(Constants.AmpBarConstants.AMPBAR_RETRACTED);
   }
 }

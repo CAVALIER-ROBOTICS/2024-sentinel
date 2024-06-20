@@ -9,7 +9,6 @@ import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.ultrashot.AngleStates;
-import frc.robot.ultrashot.UltraShotConstants;
 
 public class UltrashotAndKickCommand extends UltrashotAndSpinupCommand {
   public UltrashotAndKickCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem) {
@@ -18,14 +17,16 @@ public class UltrashotAndKickCommand extends UltrashotAndSpinupCommand {
 
   @Override
   public void execute() {
-    shooterSubsystem.updateUltrashot(driveSubsystem, UltraShotConstants.shooterSpeedAuto);
-    shooterSubsystem.ultimatum();
+    shooterSubsystem.updateUltrashot(driveSubsystem);
     shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
     shooterSubsystem.setKickerSpeed(-1);
 
     AngleStates states = shooterSubsystem.getAngleStates();
 
-    if(Double.isNaN(states.getTheta())) {return;}
+    if(Double.isNaN(states.getTheta())) {
+      System.out.println("zomg its nan");
+      return;
+    }
 
     driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta() + Math.PI), 0.001, 0.001, states.getOmega()); // 0.1 is the heading controller D
     shooterSubsystem.gotoAngle(states.getPhi(), states.getPsi());
@@ -33,6 +34,6 @@ public class UltrashotAndKickCommand extends UltrashotAndSpinupCommand {
 
   @Override
   public boolean isFinished() {
-    return shooterSubsystem.hasNoteInShooter();
+    return false;
   }
 }

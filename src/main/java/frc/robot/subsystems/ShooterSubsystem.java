@@ -7,6 +7,9 @@ package frc.robot.subsystems;
 import com.revrobotics.RelativeEncoder;
 import java.util.Optional;
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
+
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -16,19 +19,18 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.BasicLibrary.SmartMax;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Interpolation.ShotParam;
 import frc.robot.filters.BeamBreakFilter;
 import frc.robot.filters.SimplerFilter;
 import frc.robot.ultrashot.AngleStates;
-import frc.robot.ultrashot.Point3D;
-import frc.robot.ultrashot.UltraShot;
-import frc.robot.ultrashot.UltraShotConstants;
+import frc.robot.ultrashot.UltraShot4;
 import frc.robot.vision.Limelight;
 
 public class ShooterSubsystem extends SubsystemBase {
 
   SmartMax top = new SmartMax(Constants.TOP_SHOOTER_ID, IdleMode.kBrake, false);
   SmartMax bottom = new SmartMax(Constants.BOTTOM_SHOOTER_ID, IdleMode.kBrake, false);
-  SmartMax left = new SmartMax(Constants.LEFT_SHOOTER_PIVOT_ID, IdleMode.kBrake, false);
+  SmartMax left = new SmartMax(Constants.LEFT_SHOOTER_PIVOT_ID, IdleMode.kCoast, false);
   SmartMax right = new SmartMax(Constants.RIGHT_SHOOTER_PIVOT_ID, IdleMode.kBrake, false);
   SmartMax kicker = new SmartMax(Constants.KICKER_ID);
 
@@ -43,40 +45,29 @@ public class ShooterSubsystem extends SubsystemBase {
 
   DigitalInput limit = new DigitalInput(ShooterConstants.SHOOTER_LIMIT_SWITCH_ID);
 
-  DutyCycleEncoder enc = new DutyCycleEncoder(2);
-  PIDController angleController = new PIDController(1.4, 0.0, 0.01);
+  DutyCycleEncoder enc = new DutyCycleEncoder(5);
+  PIDController angleController = new PIDController(.5, 0.015, 0.0);
+  ArmFeedforward armFeedforward = new ArmFeedforward(0.0, .15, 1.46);
 
   RelativeEncoder rpmEncoderTop, rpmEncoderBottom;
-  UltraShot ultraShot = new UltraShot();
+  UltraShot4 ultraShot = new UltraShot4();
 
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
+    top.getCANSparkMax().setPeriodicFramePeriod(PeriodicFrame.kStatus3, 2);
+    bottom.getCANSparkMax().setPeriodicFramePeriod(PeriodicFrame.kStatus3, 2);
+
 
     angleController.enableContinuousInput(0,2*Math.PI);
     rpmEncoderTop = top.getEncoder();
     rpmEncoderBottom = bottom.getEncoder();
     enc.reset();
-
-    configUltrashot();
   }
 
-  public void configUltrashot() {
-    ultraShot.configure(
-      UltraShotConstants.robot,
-      UltraShotConstants.axis,
-      UltraShotConstants.velocity,
-      getTarget(),
-      UltraShotConstants.states,
-      UltraShotConstants.shooterLength,
-      UltraShotConstants.shooterSpeed,
-      UltraShotConstants.localGravity,
-      UltraShotConstants.airDrag,
-      UltraShotConstants.settleTime,
-      UltraShotConstants.futureStepTime,
-      0.0
-    );
-
+  public AngleStates getAngleStates() {
+    return ultraShot.getAngleStates();
   }
+
   public void setFlywheelSpeed(double speed) {
     if(speed == 0) {
       top.set(0);
@@ -114,17 +105,18 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double[] getRPM() {
-    return new double[] {rpmEncoderTop.getVelocity(), rpmEncoderBottom.getVelocity()};
+    return new double[] {Math.abs(rpmEncoderTop.getVelocity()), Math.abs(rpmEncoderBottom.getVelocity())};
   }
 
   public double getAverageRPM() {
     double[] rpms = getRPM();
-    return (rpms[0] + rpms[1]) / 2;
+    return Math.abs((rpms[0] + rpms[1]) / 2);
   }
 
   public double getAbsolutePosition() {
-    // return enc.getAbsolutePosition(); // Uncomment to find actual values
-    return (Constants.ShooterConstants.SHOOTER_HORIZONTAL - (enc.getAbsolutePosition())) *2*Math.PI;
+    return (enc.getAbsolutePosition() - Constants.ShooterConstants.SHOOTER_HORIZONTAL) * 2 * Math.PI; // Uncomment to find actual values
+    // return (Constants.ShooterConstants.SHOOTER_HORIZONTAL - (enc.getAbsolutePosition())) *2*Math.PI;
+    // return enc.getAbsolutePosition();
   }
 
   public void setPosition(double position, double psi) {
@@ -140,20 +132,15 @@ public class ShooterSubsystem extends SubsystemBase {
     return !SimplerFilter.filter(limit.get());
     // return !limit.get();
   }
-  
-  public Point3D getTarget() {
-    if(Limelight.targetBlue()) {
-      return UltraShotConstants.blueTarget;
-    }
-    return UltraShotConstants.redTarget;
+
+  public double getNoteSpeed(double rpm) {
+    //10.75
+    // return rpm * (1.0/60.0) * (Math.PI * 2) * (41.0/22.0) * 1.5 * .0254 * .587492749274927492; //last term is slipping constant
+    return 13.6;
   }
 
   public void updateUltrashot(DriveSubsystem driveSubsystem) {
-    ultraShot.update(driveSubsystem.getOdometry(), driveSubsystem.getChassisSpeeds(), getTarget(), UltraShotConstants.shooterSpeed, 0.02);
-  }
-
-  public void updateUltrashot(DriveSubsystem driveSubsystem, double shooterSpeed) {
-    ultraShot.update(driveSubsystem.getOdometry(), driveSubsystem.getChassisSpeeds(), getTarget(), shooterSpeed, 0.02);
+    ultraShot.update(driveSubsystem.getEstimatedPosition(), driveSubsystem.getChassisSpeeds(), getNoteSpeed(getAverageRPM()), 0.02);
   }
 
   private double clamp(double x, double min, double max) {
@@ -167,16 +154,10 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void gotoAngle(double angle, double psi) {
+    SmartDashboard.putNumber("ShooterSetpoint", angle);
     angle = clamp(angle, 0, (Math.PI / 2));
     pushMeasurementAndSetpoint(angle);
     setPosition(angle, psi);
-  }
-  
-  public void ultimatum() {
-    ultraShot.ultimatum();
-  }
-  public AngleStates getAngleStates() {
-    return ultraShot.getAngleStates();
   }
 
   // public void updatePID() {
@@ -185,18 +166,31 @@ public class ShooterSubsystem extends SubsystemBase {
   //   angleController.setD(SmartDashboard.getNumber(Constants.D_phiSmartdashboard, 0));
   // }
 
+  public void updateTarget() {
+    if(Limelight.targetBlue()) {
+      ultraShot.setTargetSpeakerBlue();
+      return;
+    }
+    ultraShot.setTargetSpeakerRed();
+  }
+
+  public void shootFromShotParameter(ShotParam param) {
+    setFlywheelSpeed(param.getFlywheelSpeed());
+    gotoAngle(Math.toRadians(param.getShooterAngle()), 0.0);
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("AbsoluteShooterPosition", getAbsolutePosition());
     SmartDashboard.putNumber("RequestedShooterPosistion", ultraShot.getPhi());
+    SmartDashboard.putNumber("FlywheelRPMAverage", getAverageRPM());
     SmartDashboard.putNumber("FlywheelRPMTop", getRPM()[0]);
     SmartDashboard.putNumber("FlywheelRPMBottom", getRPM()[1]);
     SmartDashboard.putNumber("LeftCurrentDraw", left.getOutputCurrent());
     SmartDashboard.putNumber("RightCurrentDraw", right.getOutputCurrent());
     SmartDashboard.putBoolean("HasNote", hasNoteInShooter());
 
-    // updatePID();
-    configUltrashot();
+    updateTarget();
   }
 
   public Optional<Rotation2d> getRotationOverride() {

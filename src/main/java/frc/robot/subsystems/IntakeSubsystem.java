@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.BasicLibrary.SmartMax;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.ultrashot.UltraShotConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new Intake. */
@@ -31,7 +30,7 @@ public class IntakeSubsystem extends SubsystemBase {
     // CANSparkMax intakeSpin = new CANSparkMax(Constants.SPIN_INTAKE_ID, MotorType.kBrushless);
 
     PIDController controller = new PIDController(1.0, 0.0001, 0.05);
-    DutyCycleEncoder enc = new DutyCycleEncoder(3);
+    DutyCycleEncoder enc = new DutyCycleEncoder(0);
     Rev2mDistanceSensor distanceSensor = new Rev2mDistanceSensor(Port.kOnboard);
 
   public IntakeSubsystem() {
@@ -87,7 +86,6 @@ public class IntakeSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Intake Encoder" , enc.getAbsolutePosition());
     SmartDashboard.putNumber("Sensor Proximty", distanceSensor.getRange());
-    UltraShotConstants.updateTarget();
     checkSensor();
     // controller.setP(SmartDashboard.getNumber("Intake angle P", 0));
     // SmartDashboard.putNumber("Current P", controller.getP());

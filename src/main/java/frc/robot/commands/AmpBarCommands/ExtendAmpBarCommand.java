@@ -4,8 +4,6 @@
 
 package frc.robot.commands.AmpBarCommands;
 
-import java.io.Console;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.AmpBarSubsystem;
@@ -31,11 +29,13 @@ public class ExtendAmpBarCommand extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    // asub.set(0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return asub.atSetpoint();
   }
 }

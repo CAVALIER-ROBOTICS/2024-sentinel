@@ -2,17 +2,18 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.BotStateCommands;
+package frc.robot.commands.AmpBarCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.Constants;
+import frc.robot.subsystems.AmpBarSubsystem;
 
-public class ReverseIntakeCommand extends Command {
-  IntakeSubsystem intakeSubsystem;
-  /** Creates a new ReverseIntakeCommand. */
-  public ReverseIntakeCommand(IntakeSubsystem intakeSubsystem) {
-    this.intakeSubsystem = intakeSubsystem;
-    addRequirements(intakeSubsystem);
+public class AmpBarHoldingPositionCommand extends Command {
+  AmpBarSubsystem ampBarSubsystem;
+  /** Creates a new AmpBarHoldingPositionCommand. */
+  public AmpBarHoldingPositionCommand(AmpBarSubsystem ampBarSubsystem) {
+    this.ampBarSubsystem = ampBarSubsystem;
+    addRequirements(ampBarSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -23,13 +24,13 @@ public class ReverseIntakeCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intakeSubsystem.setIntakeSpin(-1);
+    ampBarSubsystem.setPosition(Constants.AmpBarConstants.AMPBAR_RETRACTED);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeSubsystem.setIntakeSpin(0);
+    ampBarSubsystem.set(0);
   }
 
   // Returns true when the command should end.

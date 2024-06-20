@@ -33,14 +33,8 @@ public class PathLoader {
     static SendableChooser<String> chooser = new SendableChooser<String>();
 
     static String[] validAutonPaths = {
-        "fournote_local",
-        "fournote_local_blue",
-        "top_katy",
-        "top_katy_red",
-        "bottom_katy",
-        "bottom_katy_red",
-        "DONOTUSE_blue_init",
-        "DONOTUSE_red_init"
+        "redside",
+        "blueside"
     };
 
     public static PathPlannerPath getPath(String path) {
@@ -54,13 +48,12 @@ public class PathLoader {
     public static void configureAutoBuilder(DriveSubsystem driveSub) {
         Consumer<Pose2d> resetPose = pose -> {
             driveSub.updatePoseEstimator(pose);
-            driveSub.updateOdometry(pose);
         };
 
         Consumer<ChassisSpeeds> drivelol = speeds -> driveSub.autonDrive(speeds);
 
         HolonomicPathFollowerConfig hpfc = new HolonomicPathFollowerConfig(
-            new PIDConstants(.2),
+            new PIDConstants(5.0),
             new PIDConstants(4.0, 0.0, 0.1),
             4.2,
             SwerveConstants.BOT_LENGTH / 2,
@@ -69,7 +62,7 @@ public class PathLoader {
         );
         
         AutoBuilder.configureHolonomic(
-                driveSub::getEstimatedPosition, //TODO this uses the pose estimator now, idk how well it'll work
+                driveSub::getEstimatedPosition, 
                 resetPose,
                 driveSub::getChassisSpeeds,
                 drivelol,

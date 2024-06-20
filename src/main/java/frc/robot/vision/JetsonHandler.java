@@ -3,7 +3,6 @@ package frc.robot.vision;
 import java.io.IOException;
 import java.io.OutputStream;
 import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -96,14 +95,14 @@ public class JetsonHandler {
         o.write((command + "\r\n").getBytes());
     }
 
-    private void sendCommandExec(Session s, String command) throws JSchException, IOException, InterruptedException {
-        Channel c = s.openChannel("exec");
-        ChannelExec exec = (ChannelExec) c;
-        exec.setCommand(command);
-        exec.setErrStream(System.err);
-        exec.setOutputStream(System.out);
-        c.connect();
-    }
+    // private void sendCommandExec(Session s, String command) throws JSchException, IOException, InterruptedException {
+    //     Channel c = s.openChannel("exec");
+    //     ChannelExec exec = (ChannelExec) c;
+    //     exec.setCommand(command);
+    //     exec.setErrStream(System.err);
+    //     exec.setOutputStream(System.out);
+    //     c.connect();
+    // }
 
     private void initialize() {
         System.out.println("Initialization ran");

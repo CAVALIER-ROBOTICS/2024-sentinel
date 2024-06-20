@@ -6,22 +6,27 @@ package frc.robot.commands.ShooterCommands;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class SubwooferScoringCommand extends Command {
+public class TeammatePassCommand extends Command {
+  /** Creates a new AmpScoringCommand. */
   ShooterSubsystem shooterSubsystem;
-  DoubleSupplier kick;
-  /** Creates a new SubwooferScoringCommand. */
-  public SubwooferScoringCommand(ShooterSubsystem shooterSubsystem, DoubleSupplier kick) {
+  DoubleSupplier flywheel, kicker;
+  double angle = 0.1;
+  double speed = .8;
+
+  public TeammatePassCommand(ShooterSubsystem shooterSubsystem, DoubleSupplier flywheel, DoubleSupplier kicker) {
     this.shooterSubsystem = shooterSubsystem;
-    this.kick = kick;
+    this.flywheel = flywheel;
+    this.kicker = kicker;
 
     addRequirements(shooterSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
+  
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
@@ -29,9 +34,11 @@ public class SubwooferScoringCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooterSubsystem.setFlywheelSpeed(Constants.ShooterConstants.MAX_FLYWHEEL_PERCENT_OUTPUT);
-    shooterSubsystem.setKickerSpeed(-kick.getAsDouble());
-    shooterSubsystem.gotoAngle(Math.toRadians(63), 0);
+    speed = SmartDashboard.getNumber("ShooterSpeedEntry", 0);
+
+    shooterSubsystem.gotoAngle(angle, 0); //lmao
+    shooterSubsystem.setKickerSpeed(-kicker.getAsDouble());
+    shooterSubsystem.setFlywheelSpeed(speed, .3);
   }
 
   // Called once the command ends or is interrupted.

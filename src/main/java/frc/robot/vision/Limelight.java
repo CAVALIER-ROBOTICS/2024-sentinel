@@ -7,16 +7,18 @@ package frc.robot.vision;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import frc.robot.vision.LimelightHelpers.LimelightResults;
 import frc.robot.vision.LimelightHelpers.LimelightTarget_Fiducial;
 
 /** Add your docs here. */
 public class Limelight {
-    private static final String backLimelight = "";
-    private static final String frontLimelight = "limelight-cavbots";
+    public static final String limelightname = "limelight-cavbots";
 
     public static Pose2d getPose2d(String limelightName) {
         // if(!targetBlue()) {
@@ -24,10 +26,6 @@ public class Limelight {
         // }
 
         return LimelightHelpers.getBotPose2d_wpiBlue(limelightName);
-    }
-
-    public static Pose2d getPose2d() {
-        return getPose2d(getMostAccurateLimelightName());
     }
 
     public static boolean targetBlue() {
@@ -38,18 +36,21 @@ public class Limelight {
         // return false;
     }
 
-    public static Pose2d[] getPoses() {
-        Pose2d[] arr = new Pose2d[2];
-        arr[0] = getPose2d(frontLimelight);
-        arr[1] = getPose2d(backLimelight);
-        return arr;
+    public static double getCombinedLantencySeconds(String name) {
+        return (LimelightHelpers.getLatency_Capture(name) + LimelightHelpers.getLatency_Pipeline(name)) / 1000;
     }
 
-    public static double[] getLatencies() {
-       double[] arr = new double[2];
-       arr[0] = LimelightHelpers.getLatency_Pipeline(frontLimelight);
-       arr[1] = LimelightHelpers.getLatency_Pipeline(backLimelight);
-       return arr;
+    public static boolean canLimelightProvideAccuratePoseEstimate(String name) {
+        int targetcount = getTargetCount(name);
+        double avgdist = getAverageDistanceToAvailableTarget(name);
+        return ((targetcount >= 2 || avgdist < Constants.MAX_DISTANCE_TO_SINGLETAG) && avgdist < Constants.MAX_DISTANCE_TO_APRILTAG) && targetcount > 0;
+        // return true;
+    }
+
+    public static boolean canLocalizeWithEstimatorReset(String name) {
+        int targetcount = getTargetCount(name);
+        double avgdist = getAverageDistanceToAvailableTarget(name);
+        return targetcount >= 2 && avgdist < Constants.MAX_DISTANCE_TO_APRILTAG;
     }
 
     public static int getTargetCount(String limelightName) {
@@ -72,11 +73,34 @@ public class Limelight {
         if(Limelight.targetBlue()) {
             return 7;
         }
-        return 8;
+        return 4;
     }
 
-    public static VisionTarget getTagVisionTargetPercent(int id) {
-        LimelightTarget_Fiducial fid = getTargetFromID(getMostAccurateLimelightName(), id);
+    public static double getDistanceToTargetTag() {
+        int centralID = getCentralTagId();
+        LimelightTarget_Fiducial fid = getTargetFromID(limelightname, centralID);
+
+        if(fid != null) {
+            double tagHeight = fid.ty;
+            double bruh = (1.4478 - .6858) / Math.tan(Math.toRadians(20 + tagHeight));
+            return bruh;
+        }
+
+        return -1.0;
+    }
+
+    public static double getTargetTagCenterOffsetX() {
+        int centralID = getCentralTagId();
+        LimelightTarget_Fiducial fid = getTargetFromID(limelightname, centralID);
+
+        if(fid != null) {
+           return fid.tx;
+        }
+        return 0.0;
+    }
+
+    public static VisionTarget getTagVisionTargetPercent(String name, int id) {
+        LimelightTarget_Fiducial fid = getTargetFromID(name, id);
         if(fid != null) {
             return new VisionTarget(fid.tx_pixels / 960, fid.ty_pixels / 720);
         }
@@ -118,30 +142,5 @@ public class Limelight {
     public static double getAccuracyScore(String limelightName) {
         double score = getTargetCount(limelightName) / getAverageDistanceToAvailableTarget(limelightName);
         return (Double.isNaN(score)) ? 0: score;
-    }
-
-    public static double getOmegaRadToTag(int tagId, ChassisSpeeds lastSpeeds) {
-        LimelightTarget_Fiducial target = getTargetFromID("", 4);
-        if(target == null || lastSpeeds == null) {return 0.0;}
-        Pose2d relative = target.getRobotPose_TargetSpace2D();
-
-        double x = relative.getX();
-        double y = relative.getY();
-
-        double vx = lastSpeeds.vxMetersPerSecond;
-        double vy = lastSpeeds.vyMetersPerSecond;
-
-        SmartDashboard.putString("x, y", x + " ," + y);
-
-        return (vx * y - vy * x) / (Math.pow(x, 2) + Math.pow(y, 2));
-   
-    }
-
-    public static String getMostAccurateLimelightName() {
-        double backAccuracy = getAccuracyScore(backLimelight);
-        double frontAccuracy = getAccuracyScore(frontLimelight);
-
-        return (backAccuracy > frontAccuracy) ? backLimelight: frontLimelight;
-        // return backLimelight;
     }
 }

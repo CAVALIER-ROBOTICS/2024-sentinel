@@ -7,9 +7,12 @@ package frc.robot;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.DriveCommands.RiptideCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.vision.Limelight;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -26,6 +29,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     driveSubsystem = m_robotContainer.getDriveSubsystem();
+    driveSubsystem.getAngle();
     PathLoader.initSendableChooser();
   }
 
@@ -45,9 +49,8 @@ public class Robot extends TimedRobot {
       String pathName = PathLoader.getAutoName();
       m_autonomousCommand = PathLoader.loadAuto(pathName);
       Pose2d initial = PathPlannerAuto.getStaringPoseFromAutoFile(pathName);
-      driveSubsystem.updateOdometry(initial);
-      driveSubsystem.setYaw(initial.getRotation().getDegrees());
       driveSubsystem.updatePoseEstimator(initial);
+      driveSubsystem.setYaw(initial.getRotation().getDegrees());
     
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -66,6 +69,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    SmartDashboard.putNumber("DistanceToTag", Limelight.getDistanceToTargetTag());
   }
 
   @Override
