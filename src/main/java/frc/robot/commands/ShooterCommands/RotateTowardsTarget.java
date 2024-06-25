@@ -48,7 +48,7 @@ public class RotateTowardsTarget extends Command {
 
     if(Double.isNaN(states.getTheta())) {return;}
 
-    driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta() + Math.PI), -x.getAsDouble(), -y.getAsDouble(), states.getOmega()); // 0.1 is the heading controller D
+    driveSubsystem.driveWithAngleOverride(Rotation2d.fromRadians(states.getTheta() + Math.PI), x.getAsDouble(), y.getAsDouble(), states.getOmega()); // 0.1 is the heading controller D
 
     SmartDashboard.putNumber("theta", states.getTheta());
   }

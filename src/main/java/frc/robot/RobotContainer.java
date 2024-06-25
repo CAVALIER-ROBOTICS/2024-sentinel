@@ -27,13 +27,15 @@ import frc.robot.commands.BotStateCommands.ShooterFinishCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
 import frc.robot.commands.BotStateCommands.ShooterTransferCommand;
 import frc.robot.commands.DriveCommands.FieldDrive;
-import frc.robot.commands.ManualShooterCommands.AngleAdjustCommand;
+// import frc.robot.commands.ManualShooterCommands.AngleAdjustCommand;
 import frc.robot.commands.ShooterCommands.AmpScoringCommand;
 import frc.robot.commands.ShooterCommands.ForceIntakeUpCommand;
 import frc.robot.commands.ShooterCommands.ForceSendbackCommand;
 import frc.robot.commands.ShooterCommands.InterpolationShootingCommand;
 import frc.robot.commands.ShooterCommands.RotateTowardsTarget;
 import frc.robot.commands.ShooterCommands.SubwooferScoringCommand;
+import frc.robot.commands.ShooterCommands.TeammatePassCommand;
+import frc.robot.commands.ShooterCommands.TeammatePassFinishCommand;
 import frc.robot.commands.ShooterCommands.UltrashotCommand;
 import frc.robot.commands.ShooterCommands.ShooterIntakeCommands.IndexNoteInShooterCommand;
 import frc.robot.commands.ShooterCommands.ShooterIntakeCommands.ShooterIntakeCommand;
@@ -93,23 +95,9 @@ public class RobotContainer {
   
   public Command getInterpolationShootingCommand() {
     return new SequentialCommandGroup(
-      new RotateTowardsTarget(shooterSubsystem, driveSubsystem,
-      () -> -Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
-        * directionIsZero(driver.getLeftX(), driver.getLeftY()),
-
-      () -> -Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
-        * directionIsZero(driver.getLeftX(), driver.getLeftY())
-      ).withTimeout(2),
-       new InterpolationShootingCommand(
-      shooterSubsystem, driveSubsystem,
-      () -> -Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
-        * directionIsZero(driver.getLeftX(), driver.getLeftY()),
-
-      () -> -Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
-        * directionIsZero(driver.getLeftX(), driver.getLeftY()),
-
-      operator::getLeftTriggerAxis
-      ));
+      new RotateTowardsTarget(shooterSubsystem, driveSubsystem, () -> driver.getLeftY() * 4.2, () -> driver.getLeftX() * 4.2),
+      new InterpolationShootingCommand(shooterSubsystem, driveSubsystem, () -> driver.getLeftY() * 4.2, () -> driver.getLeftX() * 4.2, operator::getLeftTriggerAxis)
+    );
   }
 
   public RobotContainer() {
@@ -122,17 +110,10 @@ public class RobotContainer {
     PathLoader.configureAutoBuilder(driveSubsystem);
 
     driveSubsystem.setDriveMotorRampRate(0);
-    
     driveSubsystem.setDefaultCommand(new FieldDrive(
-
     driveSubsystem,
-
-    () -> Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100) // 420 / 100
-        * directionIsZero(driver.getLeftX(), driver.getLeftY()),
-
-    () -> Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100) // 420 / 100
-        * directionIsZero(driver.getLeftX(), driver.getLeftY()),
-
+    () -> driver.getLeftY() * 4.2,
+    () -> driver.getLeftX() * 4.2,
     () -> driver.getRightX() * 2 * Math.PI));
 
     shooterSubsystem.setDefaultCommand(new ForceSendbackCommand(shooterSubsystem, operator::getRightBumper, operator::getLeftBumper));
@@ -178,9 +159,7 @@ public class RobotContainer {
     JoystickButton subwooferMode = new JoystickButton(operator, 4);
     JoystickButton retractIntake = new JoystickButton(operator, 1);
     JoystickButton forceOutIntake = new JoystickButton(operator, 3);
-    JoystickButton manualDriverAim = new JoystickButton(driver, 6);
-    manualDriverAim.whileTrue(new AngleAdjustCommand(shooterSubsystem, driver::getRightY, driver::getLeftTriggerAxis));
-    // JoystickButton teammatePass = new JoystickButton(operator, 8);
+    JoystickButton teammatePass = new JoystickButton(driver, 6);
 
     toggleIntake.toggleOnTrue(intake());
     
@@ -193,6 +172,11 @@ public class RobotContainer {
 
     retractIntake.whileTrue(new ForceIntakeUpCommand(intake));
     forceOutIntake.whileTrue(new ReverseIntakeCommand(intake));
+
+    teammatePass.whileTrue(new SequentialCommandGroup(
+      new TeammatePassCommand(shooterSubsystem),
+      new TeammatePassFinishCommand(shooterSubsystem).withTimeout(.25)
+    ));
 
     targetTrack.whileTrue(getInterpolationShootingCommand());
     // teammatePass.toggleOnTrue(new TeammatePassCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
@@ -251,36 +235,12 @@ public class RobotContainer {
   public Command getAmpScoringCommand(DoubleSupplier flywheel, DoubleSupplier kicker) {
     return new ParallelCommandGroup(new AmpScoringCommand(shooterSubsystem, flywheel, kicker), new ExtendAmpBarCommand(ampBarSubsystem)).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
   }
-  public Command getShootingWhileMovingCommand() {
-    return new SequentialCommandGroup(
-      new StartThetaOverrideCommand(shooterSubsystem),
-      new AngleShooterAndSpinupCommand(shooterSubsystem),
-      new AngleShooterAndKickCommand(shooterSubsystem).withTimeout(1),
-      new StopThetaOverrideCommand()
-    );
-  }
-
-  public Command getStationaryShotCommand() {
-    return new SequentialCommandGroup(
-      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(2),
-      new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem),
-      new UltrashotAndFinishKickCommand(shooterSubsystem, driveSubsystem),
-      new UltrashotAndFinishPushCommand(shooterSubsystem, driveSubsystem).withTimeout(.05)
-    );
-  }
-
-  public Command getStationaryShotCommandWithTimers() {
-    return new SequentialCommandGroup(
-      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(2),
-      new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(2)
-    );
-  }
 
   public Command getInterpolationShotCommandAuton() {
     return new SequentialCommandGroup(
       new RotateTowardsTarget(shooterSubsystem, driveSubsystem, () -> 0, () -> 0).withTimeout(2),
-      new InterpolateAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(2),
-      new InterpolateAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(1)
+      new InterpolateAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(1.25),
+      new InterpolateAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(.25)
     );
   }
 

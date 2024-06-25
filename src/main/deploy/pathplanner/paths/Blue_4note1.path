@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 2.5085249599885775,
+        "x": 2.8715608929078047,
         "y": 6.9679477447399965
       },
       "prevControl": {
-        "x": 2.0166698250657547,
+        "x": 2.379705757984982,
         "y": 7.014791090923124
       },
       "nextControl": null,
@@ -28,7 +28,13 @@
       "linkedName": "zorp"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.1,
+      "rotationDegrees": 0,
+      "rotateFast": true
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {

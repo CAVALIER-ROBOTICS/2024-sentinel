@@ -212,8 +212,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void driveWithApriltagCentering(double x, double y) {
     double measurement = Limelight.getTargetTagCenterOffsetX();
     double setpoint = -limelightHeadingController.calculate(measurement, 0.0);
-
-    drive(ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(x, y, setpoint), getAngle()));
+    drive(ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(x, y, setpoint), getFieldDriveAngle()));
   }
 
   public void pushMeasurementAndSetpoint(double setpoint) {
