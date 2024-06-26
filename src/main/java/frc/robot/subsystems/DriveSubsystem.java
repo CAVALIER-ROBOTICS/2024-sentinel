@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -169,7 +170,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void updatePoseEstimator() {
     String llname = Limelight.limelightname;
     Pose2d pose = Limelight.getPose2d(llname);
-    boolean canAddMeasurement = Limelight.canLimelightProvideAccuratePoseEstimate(llname);
+    boolean canAddMeasurement = Limelight.canLimelightProvideAccuratePoseEstimate(llname) && !DriverStation.isAutonomous();
     SmartDashboard.putBoolean("Adding measurements", canAddMeasurement);
     SmartDashboard.putNumber("TargAmount", Limelight.getTargetCount(llname));
     
@@ -177,7 +178,7 @@ public class DriveSubsystem extends SubsystemBase {
     if(canAddMeasurement && pose.getX() != 0 && pose.getY() != 0) {
       // System.out.println("Adding vision measurement");
       double measurementTimestamp = Timer.getFPGATimestamp() - Limelight.getCombinedLantencySeconds(llname);
-      // estimator.addVisionMeasurement(pose, measurementTimestamp, VecBuilder.fill(.1, .1, 9999999));
+      estimator.addVisionMeasurement(pose, measurementTimestamp, VecBuilder.fill(.5, .5, 9999999));
     }
     
     estimator.update(getAngle(), getSwerveModulePositions());

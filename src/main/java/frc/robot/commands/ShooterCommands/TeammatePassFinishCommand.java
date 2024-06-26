@@ -30,11 +30,9 @@ public class TeammatePassFinishCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    speed = SmartDashboard.getNumber("ShooterSpeedEntry", 0);
-
     shooterSubsystem.gotoAngle(angle, 0); //lmao
     shooterSubsystem.setKickerSpeed(-1.0);
-    shooterSubsystem.setFlywheelSpeed(speed, .3);
+    // shooterSubsystem.setFlywheelSpeed(speed, .3);
   }
 
   // Called once the command ends or is interrupted.

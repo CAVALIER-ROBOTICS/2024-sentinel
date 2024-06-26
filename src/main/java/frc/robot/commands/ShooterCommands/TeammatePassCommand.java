@@ -13,8 +13,8 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class TeammatePassCommand extends Command {
   /** Creates a new AmpScoringCommand. */
   ShooterSubsystem shooterSubsystem;
-  double angle = 0.1;
-  double speed = .8;
+  double angle = Math.PI / 3;
+  double speed = 1;
 
   public TeammatePassCommand(ShooterSubsystem shooterSubsystem) {
     this.shooterSubsystem = shooterSubsystem;
@@ -30,12 +30,10 @@ public class TeammatePassCommand extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    System.out.println("Running");
-    speed = SmartDashboard.getNumber("ShooterSpeedEntry", 0);
-
-    shooterSubsystem.gotoAngle(angle, 0); //lmao
+  
+  public void execute() {    
     shooterSubsystem.setFlywheelSpeed(speed, .3);
+    shooterSubsystem.gotoAngle(angle, 0); //lmao
   }
 
   // Called once the command ends or is interrupted.

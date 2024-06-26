@@ -173,10 +173,8 @@ public class RobotContainer {
     retractIntake.whileTrue(new ForceIntakeUpCommand(intake));
     forceOutIntake.whileTrue(new ReverseIntakeCommand(intake));
 
-    teammatePass.whileTrue(new SequentialCommandGroup(
-      new TeammatePassCommand(shooterSubsystem),
-      new TeammatePassFinishCommand(shooterSubsystem).withTimeout(.25)
-    ));
+    teammatePass.toggleOnTrue(new TeammatePassCommand(shooterSubsystem));
+    teammatePass.toggleOnFalse(new TeammatePassFinishCommand(shooterSubsystem).withTimeout(.25));
 
     targetTrack.whileTrue(getInterpolationShootingCommand());
     // teammatePass.toggleOnTrue(new TeammatePassCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));

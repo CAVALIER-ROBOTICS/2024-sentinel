@@ -28,7 +28,7 @@ public final class Constants {
     public static final double MAX_RPM_FLYWHEEL = 3350;
     public static final double MAX_POSITION_SHOOTER = 0.822;
     public static final double MIN_POSITITON_SHOOTER = 0.572;
-    public static final double SHOOTER_HORIZONTAL = 0.558720013968;
+    public static final double SHOOTER_HORIZONTAL = 0.7175;
     public static final double SHOOTER_45_DEGREE = 0.703; 
     public static final double SHOOTER_VERTICAL = 0.822;
     public static final double SHOOTER_LINEUP_POSITION = 0.15;
