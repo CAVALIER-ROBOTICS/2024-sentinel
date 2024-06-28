@@ -36,7 +36,13 @@ public class PathLoader {
         "redside",
         "blueside",
         "shootwhatugotred",
-        "shootwhatugotblue"
+        "shootwhatugotblue",
+        "BLUEBOTTOM_2note",
+        "BLUETOP_2note",
+        "BLUEMID_2note",
+        "REDMID_2note",
+        "REDBOTTOM_2note",
+        "REDTOP_2note"
     };
 
     public static PathPlannerPath getPath(String path) {
