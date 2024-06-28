@@ -72,7 +72,7 @@ public class RobotContainer {
   AmpBarSubsystem ampBarSubsystem = new AmpBarSubsystem();
 
   public void registerCommands() {
-    NamedCommands.registerCommand("Intake", intake().withTimeout(10));
+    NamedCommands.registerCommand("Intake", intakeAuton().withTimeout(10));
     NamedCommands.registerCommand("ShootStation", getInterpolationShotCommandAuton());
     NamedCommands.registerCommand("ShooterSpin", new IdleShooterSpin(shooterSubsystem));
     NamedCommands.registerCommand("DisableRamp", new InstantCommand(() -> driveSubsystem.setDriveMotorRampRate(0)));
@@ -212,7 +212,7 @@ public class RobotContainer {
       return new SequentialCommandGroup(
         new IntakeStateCommand(intake, shooterSubsystem),
         new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
-        new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(.5),
+        new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(1.0),
         new ShooterTransferCommand(intake, shooterSubsystem),
         new ShooterFinishCommand(shooterSubsystem).withTimeout(.2)
         // new SendbackCommand(shooterSubsystem).withTimeout(.1) 
@@ -220,14 +220,14 @@ public class RobotContainer {
   }
 
   public Command intakeAuton() {
-    return new SequentialCommandGroup(
-      new IntakeStateCommand(intake, shooterSubsystem),
-      new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
-      new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(1),
-      new ShooterTransferCommand(intake, shooterSubsystem),
-      new ShooterFinishCommand(shooterSubsystem).withTimeout(.5)
-      // new SendbackCommand(shooterSubsystem).withTimeout(.1) 
-    ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
+   return new SequentialCommandGroup(
+        new IntakeStateCommand(intake, shooterSubsystem),
+        new RunCommand(() -> intake.setIntakeSpin(1), intake).withTimeout(.05),
+        new ShooterLineupCommand(intake, shooterSubsystem).withTimeout(0.75),
+        new ShooterTransferCommand(intake, shooterSubsystem),
+        new ShooterFinishCommand(shooterSubsystem).withTimeout(.2)
+        // new SendbackCommand(shooterSubsystem).withTimeout(.1) 
+      ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
   }
 
   public Command getAmpScoringCommand(DoubleSupplier flywheel, DoubleSupplier kicker) {
