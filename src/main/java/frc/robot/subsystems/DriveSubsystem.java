@@ -26,7 +26,9 @@ import frc.robot.CycloidLibrary.NeoSteveModule;
 import frc.robot.ultrashot.Point2D;
 import frc.robot.ultrashot.pose.poseestimator;
 import frc.robot.vectorfields.Riptide;
+import frc.robot.vision.CavbotsPhotonCamera;
 import frc.robot.vision.Limelight;
+import frc.robot.vision.PoseTimestampPair;
 import frc.robot.vision.VisionTarget;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -37,10 +39,11 @@ public class DriveSubsystem extends SubsystemBase {
   PIDController headingController = new PIDController(headingP, 0.01, .15);
   PIDController limelightHeadingController = new PIDController(0.04, 0, 0.005);
   
+  CavbotsPhotonCamera cpc = new CavbotsPhotonCamera("OV9281");
+  Pose2d previPose2d = new Pose2d();
   
   SwerveDrivePoseEstimator estimator;
 
-  Field2d haydenField;
   Field2d poseEstimatorField;
 
   double currentOffset = 0;
@@ -59,13 +62,11 @@ public class DriveSubsystem extends SubsystemBase {
 
     headingController.enableContinuousInput(0, 2 * Math.PI);
     poseEstimatorField = new Field2d();
-    haydenField = new Field2d();
 
     haydenEstimator = new poseestimator(62.5, 48.9);
 
     riptide = new Riptide();
 
-    SmartDashboard.putData("HaydenField", haydenField);
     SmartDashboard.putData("fiedd", poseEstimatorField);
   }
 
@@ -168,20 +169,13 @@ public class DriveSubsystem extends SubsystemBase {
   }
  
   public void updatePoseEstimator() {
-    String llname = Limelight.limelightname;
-    Pose2d pose = Limelight.getPose2d(llname);
-    boolean canAddMeasurement = Limelight.canLimelightProvideAccuratePoseEstimate(llname) && !DriverStation.isAutonomous();
-    SmartDashboard.putBoolean("Adding measurements", canAddMeasurement);
-    SmartDashboard.putNumber("TargAmount", Limelight.getTargetCount(llname));
-    
-    // estimator.resetPosition(pose.getRotation(), getSwerveModulePositions(), pose);
-    if(canAddMeasurement && pose.getX() != 0 && pose.getY() != 0) {
-      // System.out.println("Adding vision measurement");
-      double measurementTimestamp = Timer.getFPGATimestamp() - Limelight.getCombinedLantencySeconds(llname);
-      estimator.addVisionMeasurement(pose, measurementTimestamp, VecBuilder.fill(.5, .5, 9999999));
-    }
-    
     estimator.update(getAngle(), getSwerveModulePositions());
+    PoseTimestampPair ptp = cpc.fetchPose(previPose2d);
+    if(ptp != null) {
+      previPose2d = ptp.getPose2d();
+      setYaw(ptp.getPose2d().getRotation().getDegrees());
+      estimator.addVisionMeasurement(ptp.getPose2d(), ptp.getTimestamp());
+    }
   }
 
   public void zeroGyro() {
@@ -201,8 +195,8 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void driveWithAngleOverride(Rotation2d angle, double xSpeed, double ySpeed, double omega) {
-    Rotation2d currentAngle = getAngle();
-    double rotSpeeds = (headingController.calculate(currentAngle.getRadians(), angle.getRadians()) + SmartDashboard.getNumber("ThetaConstant", 0) * omega);
+    Rotation2d shootingAngle = getAngle();
+    double rotSpeeds = (headingController.calculate(shootingAngle.getRadians(), angle.getRadians()) + SmartDashboard.getNumber("ThetaConstant", 0) * omega);
     rotSpeeds = clamp(rotSpeeds, -3, 3);
 
     ChassisSpeeds fieldRelative = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, -rotSpeeds * (getPScalingFactor() + 1)), getFieldDriveAngle());
@@ -235,6 +229,5 @@ public class DriveSubsystem extends SubsystemBase {
     // updateShooter();
 
     poseEstimatorField.setRobotPose(estimator.getEstimatedPosition());
-    haydenField.setRobotPose(getHaydenEstimatorPose2d());
   }
 }

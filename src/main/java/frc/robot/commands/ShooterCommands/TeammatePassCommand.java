@@ -32,7 +32,8 @@ public class TeammatePassCommand extends Command {
   @Override
   
   public void execute() {    
-    shooterSubsystem.setFlywheelSpeed(speed, .3);
+    shooterSubsystem.setFlywheelSpeed(speed, .3
+    );
     shooterSubsystem.gotoAngle(angle, 0); //lmao
   }
 

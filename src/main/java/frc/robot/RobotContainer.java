@@ -7,22 +7,15 @@ package frc.robot;
 import frc.robot.commands.AmpBarCommands.AmpBarHoldingPositionCommand;
 import frc.robot.commands.AmpBarCommands.ExtendAmpBarCommand;
 import frc.robot.commands.AmpBarCommands.RetractAmpBarCommand;
-import frc.robot.commands.AutonCommands.AngleShooterAndKickCommand;
-import frc.robot.commands.AutonCommands.AngleShooterAndSpinupCommand;
 import frc.robot.commands.AutonCommands.IdleShooterSpin;
 import frc.robot.commands.AutonCommands.InterpolateAndKickCommand;
 import frc.robot.commands.AutonCommands.InterpolateAndSpinupCommand;
-import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndFinishKickCommand;
-import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndFinishPushCommand;
-import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndKickCommand;
-import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndSpinupCommand;
-import frc.robot.commands.AutonCommands.StartThetaOverrideCommand;
-import frc.robot.commands.AutonCommands.StopThetaOverrideCommand;
 import frc.robot.commands.AutonCommands.SubwooferScoringAutoCommand;
 import frc.robot.commands.AutonCommands.SubwooferScoringAutoKickCommand;
+import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndKickCommand;
+import frc.robot.commands.AutonCommands.StationaryShotCommands.UltrashotAndSpinupCommand;
 import frc.robot.commands.BotStateCommands.IntakeStateCommand;
 import frc.robot.commands.BotStateCommands.ReverseIntakeCommand;
-import frc.robot.commands.BotStateCommands.SendbackCommand;
 import frc.robot.commands.BotStateCommands.ShooterFinishCommand;
 import frc.robot.commands.BotStateCommands.ShooterLineupCommand;
 import frc.robot.commands.BotStateCommands.ShooterTransferCommand;
@@ -73,7 +66,7 @@ public class RobotContainer {
 
   public void registerCommands() {
     NamedCommands.registerCommand("Intake", intakeAuton().withTimeout(10));
-    NamedCommands.registerCommand("ShootStation", getInterpolationShotCommandAuton());
+    NamedCommands.registerCommand("ShootStation", getUltrashotAutonCommand());
     NamedCommands.registerCommand("ShooterSpin", new IdleShooterSpin(shooterSubsystem));
     NamedCommands.registerCommand("DisableRamp", new InstantCommand(() -> driveSubsystem.setDriveMotorRampRate(0)));
     NamedCommands.registerCommand("EnableRamp", new InstantCommand(() -> Commands.none()));
@@ -83,14 +76,17 @@ public class RobotContainer {
   public Command getUltrashotDrivingCommand() {
       return new UltrashotCommand(
       shooterSubsystem, driveSubsystem, ampBarSubsystem,
-      () -> -Math.sin(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
-        * directionIsZero(driver.getLeftX(), driver.getLeftY()),
-
-      () -> -Math.cos(Math.atan2(driver.getLeftY(), driver.getLeftX())) * driver.getRightTriggerAxis() * (420 / 100)
-        * directionIsZero(driver.getLeftX(), driver.getLeftY()),
-
+      () -> -driver.getLeftY() * 4.2,
+      () -> -driver.getLeftX() * 4.2,
       operator::getLeftTriggerAxis
       );
+  }
+
+  public Command getUltrashotAutonCommand() {
+    return new SequentialCommandGroup(
+      new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(1.0),
+      new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(.25)
+    );
   }
   
   public Command getInterpolationShootingCommand() {
@@ -176,7 +172,7 @@ public class RobotContainer {
     teammatePass.toggleOnTrue(new TeammatePassCommand(shooterSubsystem));
     teammatePass.toggleOnFalse(new TeammatePassFinishCommand(shooterSubsystem).withTimeout(.25));
 
-    targetTrack.whileTrue(getInterpolationShootingCommand());
+    targetTrack.whileTrue(getUltrashotDrivingCommand());
     // teammatePass.toggleOnTrue(new TeammatePassCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
   }
 

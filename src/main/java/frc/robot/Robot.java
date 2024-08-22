@@ -7,11 +7,12 @@ package frc.robot;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.DriveCommands.RiptideCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.vision.CavbotsPhotonCamera;
 import frc.robot.vision.Limelight;
 
 /**
