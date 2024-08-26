@@ -85,7 +85,7 @@ public class RobotContainer {
   public Command getUltrashotAutonCommand() {
     return new SequentialCommandGroup(
       new UltrashotAndSpinupCommand(shooterSubsystem, driveSubsystem).withTimeout(1.0),
-      new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(.25)
+      new UltrashotAndKickCommand(shooterSubsystem, driveSubsystem).withTimeout(0.75)
     );
   }
   
