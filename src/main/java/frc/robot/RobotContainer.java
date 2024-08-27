@@ -164,10 +164,10 @@ public class RobotContainer {
     ampMode.toggleOnTrue(getAmpScoringCommand(operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
     ampMode.toggleOnFalse(new RetractAmpBarCommand(ampBarSubsystem));
 
-    subwooferMode.toggleOnTrue(new SubwooferScoringCommand(shooterSubsystem, operator::getLeftTriggerAxis));
+    subwooferMode.toggleOnTrue(new SubwooferScoringCommand(shooterSubsystem, operator::getLeftTriggerAxis).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     retractIntake.whileTrue(new ForceIntakeUpCommand(intake));
-    forceOutIntake.whileTrue(new ReverseIntakeCommand(intake));
+    forceOutIntake.toggleOnTrue(new ReverseIntakeCommand(intake));
 
     teammatePass.toggleOnTrue(new TeammatePassCommand(shooterSubsystem));
     teammatePass.toggleOnFalse(new TeammatePassFinishCommand(shooterSubsystem).withTimeout(.25));
