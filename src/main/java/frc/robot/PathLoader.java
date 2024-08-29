@@ -42,7 +42,8 @@ public class PathLoader {
         "BLUEMID_2note",
         "REDMID_2note",
         "REDBOTTOM_2note",
-        "REDTOP_2note"
+        "REDTOP_2note",
+        "simple3note"
     };
 
     public static PathPlannerPath getPath(String path) {
@@ -50,7 +51,7 @@ public class PathLoader {
     }
 
     public static Boolean getShouldFlipPath() {
-        return false;
+        return true;
     }
 
     public static void configureAutoBuilder(DriveSubsystem driveSub) {
