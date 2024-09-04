@@ -171,7 +171,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void updatePoseEstimator() {
     estimator.update(getAngle(), getSwerveModulePositions());
     PoseTimestampPair ptp = cpc.fetchPose(previPose2d);
-    if(ptp != null && !DriverStation.isAutonomous()) {
+    if(ptp != null) {
       previPose2d = ptp.getPose2d();
       setYaw(ptp.getPose2d().getRotation().getDegrees());
       estimator.addVisionMeasurement(ptp.getPose2d(), ptp.getTimestamp());

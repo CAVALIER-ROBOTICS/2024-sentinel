@@ -51,7 +51,7 @@ public class PathLoader {
     }
 
     public static Boolean getShouldFlipPath() {
-        return true;
+        return false;
     }
 
     public static void configureAutoBuilder(DriveSubsystem driveSub) {

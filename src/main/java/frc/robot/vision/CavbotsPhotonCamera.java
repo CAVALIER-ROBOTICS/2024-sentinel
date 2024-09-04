@@ -22,7 +22,7 @@ public class CavbotsPhotonCamera {
     PhotonCamera camera;
     PhotonPoseEstimator estimator;
 
-    Transform3d cameraInBotSpace = new Transform3d(new Translation3d(0.127, 0, 0.65), new Rotation3d(0, 0, Math.PI));
+    Transform3d cameraInBotSpace = new Transform3d(new Translation3d(0.127, 0, 0.65), new Rotation3d(0, -Math.PI / 12, Math.PI));
     AprilTagFieldLayout fieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
     public CavbotsPhotonCamera(String camName) {
