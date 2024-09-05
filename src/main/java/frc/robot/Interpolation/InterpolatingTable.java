@@ -13,7 +13,7 @@ import static java.util.Map.entry;
 public class InterpolatingTable {
     private static final TreeMap<Double, ShotParam> map = new TreeMap<>(Map.ofEntries(
         entry(.7, new ShotParam(60, .5)),
-        entry(1.4, new ShotParam(52, .5)),
+        entry(1.4, new ShotParam(55, .5)),
         entry(2.0, new ShotParam(46.5, .5)), //51
         entry(2.2, new ShotParam(44.5, .5)),
         entry(2.3, new ShotParam(42.5, .5)),
