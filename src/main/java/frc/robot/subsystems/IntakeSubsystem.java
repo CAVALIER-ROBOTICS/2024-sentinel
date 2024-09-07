@@ -86,7 +86,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Intake Encoder" , enc.getAbsolutePosition());
     SmartDashboard.putNumber("Sensor Proximty", distanceSensor.getRange());
-    checkSensor();
+    // checkSensor();
     // controller.setP(SmartDashboard.getNumber("Intake angle P", 0));
     // SmartDashboard.putNumber("Current P", controller.getP());
     // goToAbsolutePos(currentGoalPos);
