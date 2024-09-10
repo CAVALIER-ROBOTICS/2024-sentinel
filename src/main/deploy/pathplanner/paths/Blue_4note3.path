@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.103224574494797,
-        "y": 5.199611426326988
+        "x": 1.4194171612308972,
+        "y": 5.211322262872771
       },
       "isLocked": false,
       "linkedName": "zing"
     },
     {
       "anchor": {
-        "x": 3.550789412563132,
-        "y": 4.180768646843998
+        "x": 2.496814123442796,
+        "y": 4.087081954477746
       },
       "prevControl": {
-        "x": 2.0752240077946613,
-        "y": 3.6303593291922684
+        "x": 1.0212487186743253,
+        "y": 3.536672636826016
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.2,
-    "maxAcceleration": 6.75,
+    "maxAcceleration": 2.1,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

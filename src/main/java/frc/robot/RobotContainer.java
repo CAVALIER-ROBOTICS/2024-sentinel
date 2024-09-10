@@ -26,6 +26,7 @@ import frc.robot.commands.ShooterCommands.ForceIntakeUpCommand;
 import frc.robot.commands.ShooterCommands.ForceSendbackCommand;
 import frc.robot.commands.ShooterCommands.InterpolationShootingCommand;
 import frc.robot.commands.ShooterCommands.RotateTowardsTarget;
+import frc.robot.commands.ShooterCommands.ShooterShakeCommand;
 import frc.robot.commands.ShooterCommands.SubwooferScoringCommand;
 import frc.robot.commands.ShooterCommands.TeammatePassCommand;
 import frc.robot.commands.ShooterCommands.TeammatePassFinishCommand;
@@ -44,6 +45,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -51,8 +53,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 public class RobotContainer {
   XboxController driver = new XboxController(0);
@@ -74,11 +78,17 @@ public class RobotContainer {
   }
 
   public Command getUltrashotDrivingCommand() {
+
+      // return new ParallelCommandGroup(
+      //   new SequentialCommandGroup(
+      //     new WaitCommand(2.5)
+      //   )
+      // );
       return new UltrashotCommand(
-      shooterSubsystem, driveSubsystem, ampBarSubsystem,
-      () -> -driver.getLeftY() * 4.2,
-      () -> -driver.getLeftX() * 4.2,
-      operator::getLeftTriggerAxis
+        shooterSubsystem, driveSubsystem, ampBarSubsystem,
+        () -> -driver.getLeftY() * 4.2,
+        () -> -driver.getLeftX() * 4.2,
+        operator::getLeftTriggerAxis
       );
   }
 
@@ -118,6 +128,10 @@ public class RobotContainer {
     configureBindings();
   }
 
+  public void setOperatorHapticFeedback(double feedback) {
+    operator.setRumble(RumbleType.kBothRumble, feedback);
+  }
+  
   public Optional<Rotation2d> getRotationTargetOverride(){
     return shooterSubsystem.getRotationOverride();
   }
@@ -151,18 +165,19 @@ public class RobotContainer {
     JoystickButton toggleIntake = new JoystickButton(driver, 5);
     JoystickButton zeroGyro = new JoystickButton(driver, 4);
     JoystickButton targetTrack = new JoystickButton(operator, 2);
-    JoystickButton ampMode = new JoystickButton(driver, 3);
+    // JoystickButton ampMode = new JoystickButton(driver, 3);
     JoystickButton subwooferMode = new JoystickButton(operator, 4);
     JoystickButton retractIntake = new JoystickButton(operator, 1);
     JoystickButton forceOutIntake = new JoystickButton(operator, 3);
     JoystickButton teammatePass = new JoystickButton(driver, 6);
+    POVButton shakeShooter = new POVButton(operator, 180);
 
     toggleIntake.toggleOnTrue(intake());
     
     zeroGyro.onTrue(new InstantCommand(driveSubsystem::resetGyroFieldDrive));
 
-    ampMode.toggleOnTrue(getAmpScoringCommand(operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
-    ampMode.toggleOnFalse(new RetractAmpBarCommand(ampBarSubsystem));
+    // ampMode.toggleOnTrue(getAmpScoringCommand(operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
+    // ampMode.toggleOnFalse(new RetractAmpBarCommand(ampBarSubsystem));
 
     subwooferMode.toggleOnTrue(new SubwooferScoringCommand(shooterSubsystem, operator::getLeftTriggerAxis).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
@@ -173,6 +188,8 @@ public class RobotContainer {
     teammatePass.toggleOnFalse(new TeammatePassFinishCommand(shooterSubsystem).withTimeout(.25));
 
     targetTrack.whileTrue(getUltrashotDrivingCommand());
+
+    shakeShooter.whileTrue(new ShooterShakeCommand(shooterSubsystem, intake));
     // teammatePass.toggleOnTrue(new TeammatePassCommand(shooterSubsystem, operator::getRightTriggerAxis, operator::getLeftTriggerAxis));
   }
 

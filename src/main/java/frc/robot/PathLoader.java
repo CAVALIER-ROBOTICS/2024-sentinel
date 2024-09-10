@@ -43,7 +43,9 @@ public class PathLoader {
         "REDMID_2note",
         "REDBOTTOM_2note",
         "REDTOP_2note",
-        "simple3note"
+        "simple3note",
+        "BLUE_4NOTE",
+        "RED_4NOTE"
     };
 
     public static PathPlannerPath getPath(String path) {

@@ -4,25 +4,25 @@
 
 package frc.robot.commands.ShooterCommands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class TeammatePassFinishCommand extends Command {
-  /** Creates a new AmpScoringCommand. */
+public class ShooterShakeCommand extends Command {
+  /** Creates a new ShooterShakeCommand. */
   ShooterSubsystem shooterSubsystem;
-  double angle = Math.PI / 3;
-  double speed = 1;
+  IntakeSubsystem intakeSubsystem;
+  double step = 0.0;
 
-  public TeammatePassFinishCommand(ShooterSubsystem shooterSubsystem) {
+  public ShooterShakeCommand(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
     this.shooterSubsystem = shooterSubsystem;
-    addRequirements(shooterSubsystem);
+    this.intakeSubsystem = intakeSubsystem;
+    addRequirements(shooterSubsystem, intakeSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
@@ -30,15 +30,19 @@ public class TeammatePassFinishCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooterSubsystem.gotoAngle(angle, 0); //lmao
-    shooterSubsystem.setKickerSpeed(-1.0);
-    // shooterSubsystem.setFlywheelSpeed(speed, .3);
+    step += .1;
+    double angle = (Math.PI / 2.5) * (Math.sin(step));
+    angle = Math.abs(angle);
+    shooterSubsystem.gotoAngle(angle, 0.0);
+
+    intakeSubsystem.setPosition(IntakeConstants.EXTENDED_POS);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     shooterSubsystem.stopAll();
+    intakeSubsystem.setAnglePercentOutput(0.0);
   }
 
   // Returns true when the command should end.
