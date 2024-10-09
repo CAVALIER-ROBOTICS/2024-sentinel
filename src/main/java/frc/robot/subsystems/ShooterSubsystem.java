@@ -13,6 +13,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -46,7 +47,7 @@ public class ShooterSubsystem extends SubsystemBase {
   DigitalInput limit = new DigitalInput(ShooterConstants.SHOOTER_LIMIT_SWITCH_ID);
 
   DutyCycleEncoder enc = new DutyCycleEncoder(5);
-  PIDController angleController = new PIDController(.5, 0.015, 0.0);
+  PIDController angleController = new PIDController(.8, 0.015, 0.0);
   ArmFeedforward armFeedforward = new ArmFeedforward(0.0, .15, 1.46);
 
   RelativeEncoder rpmEncoderTop, rpmEncoderBottom;
@@ -176,7 +177,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void shootFromShotParameter(ShotParam param) {
     setFlywheelSpeed(param.getFlywheelSpeed());
-    gotoAngle(Math.toRadians(param.getShooterAngle()), 0.0);
+    double angDeg = param.getShooterAngle();
+    gotoAngle(Math.toRadians(angDeg), 0.0);
   }
 
   @Override

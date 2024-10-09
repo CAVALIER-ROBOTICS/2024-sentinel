@@ -28,7 +28,7 @@ public final class Constants {
     public static final double MAX_RPM_FLYWHEEL = 3350;
     public static final double MAX_POSITION_SHOOTER = 0.822;
     public static final double MIN_POSITITON_SHOOTER = 0.572;
-    public static final double SHOOTER_HORIZONTAL = 0.558720013968;
+    public static final double SHOOTER_HORIZONTAL = 0.7175;
     public static final double SHOOTER_45_DEGREE = 0.703; 
     public static final double SHOOTER_VERTICAL = 0.822;
     public static final double SHOOTER_LINEUP_POSITION = 0.15;
@@ -44,7 +44,7 @@ public final class Constants {
 
   public final class IntakeConstants {
     public static final I2C.Port INTAKE_SENSOR_PORT = I2C.Port.kOnboard;
-    public static final int MINIMUM_PROXIMITY_TRIGGER = 9;
+    public static final double MINIMUM_PROXIMITY_TRIGGER = 12;
 
     public static final double RETRACTED_POS = 0.77851161951279;
     public static final double EXTENDED_POS = 0.079076751851919;

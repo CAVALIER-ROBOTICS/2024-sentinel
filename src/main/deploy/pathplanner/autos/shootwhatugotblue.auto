@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.8338753339419096,
+      "y": 6.733731013831331
+    },
+    "rotation": 57.724355685422175
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootStation"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shartpath"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

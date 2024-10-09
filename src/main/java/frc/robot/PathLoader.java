@@ -34,7 +34,18 @@ public class PathLoader {
 
     static String[] validAutonPaths = {
         "redside",
-        "blueside"
+        "blueside",
+        "shootwhatugotred",
+        "shootwhatugotblue",
+        "BLUEBOTTOM_2note",
+        "BLUETOP_2note",
+        "BLUEMID_2note",
+        "REDMID_2note",
+        "REDBOTTOM_2note",
+        "REDTOP_2note",
+        "simple3note",
+        "BLUE_4NOTE",
+        "RED_4NOTE"
     };
 
     public static PathPlannerPath getPath(String path) {
